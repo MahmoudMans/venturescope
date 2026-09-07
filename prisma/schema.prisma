@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum RevenueMode {
+  DIRECT
+  CUSTOMER_DRIVEN
+}
+
+enum ScenarioType {
+  BASE
+  BULL
+  BEAR
+  CUSTOM
+}
+
+enum FinancingType {
+  EQUITY
+  DEBT
+  GRANT
+  OTHER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  projects Project[]
+
+  @@index([createdAt])
+}
+
+model Project {
+  id String @id @default(cuid())
+
+  userId String
+
+  name          String
+  industry      String?
+  currency      String      @default("EUR")
+  startMonth    DateTime     @db.Date
+  horizonMonths Int          @default(36)
+  revenueMode   RevenueMode  @default(CUSTOMER_DRIVEN)
+
+  baseAssumptions Json   @default("{}") @db.JsonB
+  modelVersion    String @default("1.0")
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  user User @relation(
+    fields: [userId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  scenarios       Scenario[]
+  financingEvents FinancingEvent[]
+  monthlyOverrides MonthlyOverride[]
+
+  @@index([userId])
+  @@index([userId, updatedAt])
+}
+
+model Scenario {
+  id String @id @default(cuid())
+
+  projectId String
+
+  name      String
+  type      ScenarioType
+  modifiers Json         @default("{}") @db.JsonB
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  project Project @relation(
+    fields: [projectId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  overrides MonthlyOverride[]
+
+  @@index([projectId])
+  @@index([projectId, type])
+}
+
+model FinancingEvent {
+  id String @id @default(cuid())
+
+  projectId String
+
+  name   String
+  type   FinancingType
+  month  DateTime      @db.Date
+  amount Decimal       @db.Decimal(20, 2)
+
+  apr                 Decimal? @db.Decimal(9, 6)
+  termMonths          Int?
+  repaymentStartMonth DateTime? @db.Date
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  project Project @relation(
+    fields: [projectId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  @@index([projectId])
+  @@index([projectId, month])
+}
+
+model MonthlyOverride {
+  id String @id @default(cuid())
+
+  projectId  String
+  scenarioId String?
+
+  month  DateTime @db.Date
+  values Json     @db.JsonB
+  note   String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  project Project @relation(
+    fields: [projectId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  scenario Scenario? @relation(
+    fields: [scenarioId],
+    references: [id],
+    onDelete: SetNull
+  )
+
+  @@index([projectId])
+  @@index([scenarioId])
+  @@index([projectId, month])
+}

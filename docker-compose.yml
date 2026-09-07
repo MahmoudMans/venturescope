@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: venturescope-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: venturescope
+      POSTGRES_USER: venturescope
+      POSTGRES_PASSWORD: venturescope_dev
+
+    ports:
+      - "5438:5432"
+
+    volumes:
+      - venturescope_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U venturescope -d venturescope"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  venturescope_postgres_data:

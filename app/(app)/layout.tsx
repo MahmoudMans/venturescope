@@ -3,21 +3,33 @@ import {
   BriefcaseBusiness,
   LayoutDashboard,
   LockKeyhole,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 
-import { LogoutButton } from "@/components/app/logout-button";
-import { VentureScopeLogo } from "@/components/brand/venturescope-logo";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { Badge } from "@/components/ui/badge";
-import { requireUser } from "@/lib/auth/require-user";
+import {
+  LogoutButton,
+} from "@/components/app/logout-button";
+import {
+  VentureScopeLogo,
+} from "@/components/brand/venturescope-logo";
+import {
+  ThemeToggle,
+} from "@/components/theme/theme-toggle";
+import {
+  Badge,
+} from "@/components/ui/badge";
+import {
+  requireUser,
+} from "@/lib/auth/require-user";
 
 export default async function ApplicationLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = await requireUser();
+  const user =
+    await requireUser();
 
   return (
     <div className="min-h-svh bg-muted/20">
@@ -34,7 +46,7 @@ export default async function ApplicationLayout({
 
             <Link
               href="/dashboard"
-              className="flex h-10 items-center gap-3 rounded-lg bg-muted px-3 text-sm font-medium"
+              className="flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors hover:bg-muted"
             >
               <LayoutDashboard
                 className="size-4"
@@ -44,21 +56,29 @@ export default async function ApplicationLayout({
               Dashboard
             </Link>
 
-            <div className="mt-1 flex h-10 cursor-not-allowed items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground">
+            <Link
+              href="/dashboard#models"
+              className="flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors hover:bg-muted"
+            >
               <BriefcaseBusiness
                 className="size-4"
                 aria-hidden="true"
               />
 
               Financial models
+            </Link>
 
-              <Badge
-                variant="outline"
-                className="ml-auto text-[9px]"
-              >
-                NEXT
-              </Badge>
-            </div>
+            <Link
+              href="/projects/new"
+              className="flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors hover:bg-muted"
+            >
+              <Plus
+                className="size-4"
+                aria-hidden="true"
+              />
+
+              Create model
+            </Link>
           </div>
 
           <div>
@@ -73,6 +93,13 @@ export default async function ApplicationLayout({
               />
 
               Financial analysis
+
+              <Badge
+                variant="outline"
+                className="ml-auto px-1.5 text-[8px]"
+              >
+                LATER
+              </Badge>
             </div>
           </div>
         </nav>
@@ -80,7 +107,8 @@ export default async function ApplicationLayout({
         <div className="border-t p-4">
           <div className="rounded-xl bg-muted/60 p-3">
             <div className="truncate text-sm font-medium">
-              {user.name ?? "VentureScope user"}
+              {user.name ??
+                "VentureScope user"}
             </div>
 
             <div className="mt-1 truncate text-xs text-muted-foreground">
@@ -93,7 +121,9 @@ export default async function ApplicationLayout({
       <div className="lg:pl-64">
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b bg-background/95 px-5 backdrop-blur lg:px-8">
           <div className="lg:hidden">
-            <VentureScopeLogo compact />
+            <VentureScopeLogo
+              compact
+            />
           </div>
 
           <div className="hidden lg:block">

@@ -7,6 +7,12 @@ import {
   checkRateLimit,
 } from "@/lib/security/rate-limit";
 
+import {
+  createRequestId,
+  normalizeRequestId,
+} from "@/lib/observability/request-id";
+
+
 const STATE_CHANGING_METHODS =
   new Set([
     "POST",
@@ -187,8 +193,57 @@ function tooManyRequests(
 export function proxy(
   request: NextRequest,
 ) {
+
+  /*
+   * Establish one request correlation identifier at ingress.
+   *
+   * Safe caller-provided IDs are preserved. Missing or malformed
+   * identifiers are generated once here and forwarded explicitly
+   * to downstream Route Handlers.
+   */
+  const correlationId =
+    normalizeRequestId(
+      request.headers.get(
+        "x-request-id",
+      ),
+    ) ??
+    createRequestId();
+
+
+  const forwardedRequestHeaders =
+    new Headers(
+      request.headers,
+    );
+
+
+  forwardedRequestHeaders.set(
+    "x-request-id",
+    correlationId,
+  );
+
+
+  const continueWithCorrelationId =
+    () => {
+      const response =
+        NextResponse.next({
+          request: {
+            headers:
+              forwardedRequestHeaders,
+          },
+        });
+
+
+      response.headers.set(
+        "X-Request-Id",
+        correlationId,
+      );
+
+
+      return response;
+    };
+
   const requestId =
-    globalThis.crypto.randomUUID();
+    correlationId;
 
   if (
     STATE_CHANGING_METHODS.has(
@@ -296,7 +351,7 @@ export function proxy(
   }
 
   const response =
-    NextResponse.next();
+    continueWithCorrelationId();
 
   response.headers.set(
     "X-Request-Id",

@@ -27,7 +27,9 @@
     "release:gate": "bash scripts/release-gate.sh",
     "deploy:production": "bash scripts/deploy-production.sh",
     "deploy:rollback": "bash scripts/rollback-production.sh",
-    "deploy:selftest": "bash scripts/deployment-selftest.sh"
+    "deploy:selftest": "bash scripts/deployment-selftest.sh",
+    "test:observability": "vitest run tests/observability",
+    "ops:diagnostics": "bash scripts/diagnostics-smoke.sh"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

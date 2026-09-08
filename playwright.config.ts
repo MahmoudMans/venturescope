@@ -122,6 +122,12 @@ export default defineConfig({
       PLAYWRIGHT_TEST:
         "1",
 
+      VENTURESCOPE_DIAGNOSTICS_TOKEN:
+        "venturescope-e2e-diagnostics-token-20260908-secure",
+
+      VENTURESCOPE_SLOW_REQUEST_MS:
+        "750",
+
       PORT:
         "3100",
 

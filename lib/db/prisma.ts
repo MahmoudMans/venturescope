@@ -1,27 +1,44 @@
-import { PrismaPg } from "@prisma/adapter-pg";
+import {
+  PrismaPg,
+} from "@prisma/adapter-pg";
 
-import { PrismaClient } from "@/generated/prisma/client";
+import {
+  PrismaClient,
+} from "@/generated/prisma/client";
+import {
+  getServerEnvironment,
+} from "@/lib/env/server";
 
-const databaseUrl = process.env.DATABASE_URL;
+const globalForPrisma =
+  globalThis as unknown as {
+    venturescopePrisma?:
+      PrismaClient;
+  };
 
-if (!databaseUrl) {
-  throw new Error(
-    "DATABASE_URL is not configured. Add it to the VentureScope environment.",
-  );
+function createPrismaClient() {
+  const environment =
+    getServerEnvironment();
+
+  const adapter =
+    new PrismaPg({
+      connectionString:
+        environment.DATABASE_URL,
+    });
+
+  return new PrismaClient({
+    adapter,
+  });
 }
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
-
 export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    adapter: new PrismaPg({
-      connectionString: databaseUrl,
-    }),
-  });
+  globalForPrisma
+    .venturescopePrisma ??
+  createPrismaClient();
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+if (
+  process.env.NODE_ENV !==
+  "production"
+) {
+  globalForPrisma.venturescopePrisma =
+    prisma;
 }

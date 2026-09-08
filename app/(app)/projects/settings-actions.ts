@@ -1,6 +1,10 @@
 "use server";
 
 import {
+  auditSecurityEvent,
+} from "@/lib/security/audit";
+
+import {
   revalidatePath,
 } from "next/cache";
 
@@ -491,6 +495,21 @@ export async function updateProjectSettingsAction(
     };
   }
 
+  auditSecurityEvent({
+    action:
+      "model.settings.update",
+
+    userId:
+      user.id,
+
+    projectId:
+      project.id,
+
+    metadata: {
+      revenueModeChanged,
+    },
+  });
+
   revalidateProjectSurfaces(
     project.id,
   );
@@ -596,6 +615,17 @@ export async function resetFinancialAssumptionsAction(
     return;
   }
 
+  auditSecurityEvent({
+    action:
+      "model.assumptions.reset",
+
+    userId:
+      owned.userId,
+
+    projectId:
+      owned.projectId,
+  });
+
   revalidateProjectSurfaces(
     owned.projectId,
   );
@@ -634,6 +664,17 @@ export async function clearFinancingEventsAction(
     return;
   }
 
+  auditSecurityEvent({
+    action:
+      "model.financing.clear",
+
+    userId:
+      owned.userId,
+
+    projectId:
+      owned.projectId,
+  });
+
   revalidateProjectSurfaces(
     owned.projectId,
   );
@@ -671,6 +712,17 @@ export async function clearMonthlyOverridesAction(
 
     return;
   }
+
+  auditSecurityEvent({
+    action:
+      "model.overrides.clear",
+
+    userId:
+      owned.userId,
+
+    projectId:
+      owned.projectId,
+  });
 
   revalidateProjectSurfaces(
     owned.projectId,
@@ -747,6 +799,17 @@ export async function resetScenarioLibraryAction(
 
     return;
   }
+
+  auditSecurityEvent({
+    action:
+      "model.scenarios.reset",
+
+    userId:
+      owned.userId,
+
+    projectId:
+      owned.projectId,
+  });
 
   revalidateProjectSurfaces(
     owned.projectId,

@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: venturescope
+      POSTGRES_USER: venturescope
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+
+    volumes:
+      - venturescope-production-postgres:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U venturescope -d venturescope",
+        ]
+
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+
+    environment:
+      DATABASE_URL: postgresql://venturescope:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}@postgres:5432/venturescope?schema=public
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    restart: "no"
+
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+
+    restart: unless-stopped
+
+    environment:
+      DATABASE_URL: postgresql://venturescope:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}@postgres:5432/venturescope?schema=public
+
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET must be set}
+
+      AUTH_URL: ${APP_ORIGIN:-http://localhost:3000}
+
+      TRUST_PROXY_HEADERS: ${TRUST_PROXY_HEADERS:-false}
+
+      APP_VERSION: ${APP_VERSION:-production}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      migrate:
+        condition: service_completed_successfully
+
+    ports:
+      - "${PORT:-3000}:3000"
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+
+volumes:
+  venturescope-production-postgres:

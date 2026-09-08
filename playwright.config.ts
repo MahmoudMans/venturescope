@@ -81,7 +81,7 @@ export default defineConfig({
 
   webServer: {
     command:
-      "pnpm exec next start -p 3100",
+      "node .next/standalone/server.js",
 
     url:
       baseURL,
@@ -116,6 +116,12 @@ export default defineConfig({
 
       PLAYWRIGHT_TEST:
         "1",
+
+      PORT:
+        "3100",
+
+      HOSTNAME:
+        "127.0.0.1",
     },
   },
 });

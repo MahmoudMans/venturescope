@@ -1,6 +1,10 @@
 "use server";
 
 import {
+  auditSecurityEvent,
+} from "@/lib/security/audit";
+
+import {
   revalidatePath,
 } from "next/cache";
 
@@ -744,6 +748,20 @@ export async function deleteMonthlyOverrideAction(
 
     return;
   }
+
+  auditSecurityEvent({
+    action:
+      "override.delete",
+
+    userId:
+      user.id,
+
+    projectId:
+      project.id,
+
+    targetId:
+      parsed.data.overrideId,
+  });
 
   revalidateOverrideOutputs(
     project.id,

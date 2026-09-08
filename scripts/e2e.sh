@@ -96,6 +96,26 @@ rm -rf .next
 pnpm build
 
 echo
+echo "[E2E 4B/5] Preparing standalone runtime assets..."
+
+if [[ ! -f ".next/standalone/server.js" ]]; then
+  echo "[ERROR] Next standalone server was not generated."
+  exit 1
+fi
+
+mkdir -p   .next/standalone/.next
+
+rm -rf   .next/standalone/.next/static   .next/standalone/public
+
+cp -R   .next/static   .next/standalone/.next/static
+
+if [[ -d "public" ]]; then
+  cp -R     public     .next/standalone/public
+fi
+
+echo "[PASS] Standalone static assets prepared"
+
+echo
 echo "[E2E 5/5] Running Chromium browser suite..."
 
 ARGS=(

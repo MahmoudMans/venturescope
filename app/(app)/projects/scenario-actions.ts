@@ -1,6 +1,10 @@
 "use server";
 
 import {
+  auditSecurityEvent,
+} from "@/lib/security/audit";
+
+import {
   revalidatePath,
 } from "next/cache";
 
@@ -715,6 +719,20 @@ export async function deleteScenarioAction(
 
     return;
   }
+
+  auditSecurityEvent({
+    action:
+      "scenario.delete",
+
+    userId:
+      user.id,
+
+    projectId:
+      project.id,
+
+    targetId:
+      parsed.data.scenarioId,
+  });
 
   revalidateScenarioOutputs(
     project.id,

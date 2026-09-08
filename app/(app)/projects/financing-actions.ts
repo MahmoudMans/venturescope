@@ -1,6 +1,10 @@
 "use server";
 
 import {
+  auditSecurityEvent,
+} from "@/lib/security/audit";
+
+import {
   revalidatePath,
 } from "next/cache";
 
@@ -643,6 +647,20 @@ export async function deleteFinancingEventAction(
 
     return;
   }
+
+  auditSecurityEvent({
+    action:
+      "financing.delete",
+
+    userId:
+      user.id,
+
+    projectId:
+      project.id,
+
+    targetId:
+      parsed.data.eventId,
+  });
 
   revalidateFinancingOutputs(
     project.id,

@@ -1,41 +1,51 @@
 import {
   ArrowLeft,
+  SearchX,
 } from "lucide-react";
 import Link from "next/link";
 
-import { VentureScopeLogo } from "@/components/brand/venturescope-logo";
-import { Button } from "@/components/ui/button";
+import {
+  Button,
+} from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-svh flex-col items-center justify-center px-5 text-center">
-      <VentureScopeLogo />
-
-      <div className="mt-10 text-sm font-medium text-muted-foreground">
-        404
-      </div>
-
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-        This page does not exist.
-      </h1>
-
-      <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
-        The VentureScope resource you requested could not be found.
-      </p>
-
-      <Button
-        asChild
-        className="mt-7"
-      >
-        <Link href="/">
-          <ArrowLeft
-            className="size-4"
+    <main className="flex min-h-svh items-center justify-center bg-background p-6">
+      <div className="w-full max-w-lg text-center">
+        <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-muted">
+          <SearchX
+            className="size-5"
             aria-hidden="true"
           />
+        </div>
 
-          Return home
-        </Link>
-      </Button>
+        <div className="mt-6 text-sm font-semibold text-muted-foreground">
+          404
+        </div>
+
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+          Resource not found
+        </h1>
+
+        <p className="mt-4 text-sm leading-6 text-muted-foreground">
+          This resource does not exist or is not available to your account.
+        </p>
+
+        <Button
+          asChild
+          variant="outline"
+          className="mt-6"
+        >
+          <Link href="/">
+            <ArrowLeft
+              className="size-4"
+              aria-hidden="true"
+            />
+
+            Return home
+          </Link>
+        </Button>
+      </div>
     </main>
   );
 }

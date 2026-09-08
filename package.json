@@ -13,7 +13,10 @@
     "postinstall": "prisma generate",
     "e2e:install": "playwright install chromium",
     "test:e2e": "bash scripts/e2e.sh",
-    "test:e2e:headed": "E2E_HEADED=1 bash scripts/e2e.sh"
+    "test:e2e:headed": "E2E_HEADED=1 bash scripts/e2e.sh",
+    "security:check": "eslint . --max-warnings=0 && pnpm typecheck && pnpm test",
+    "docker:build": "docker build --target runner -t venturescope:local .",
+    "production:config": "docker compose -f compose.production.yaml config"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

@@ -36,131 +36,180 @@ export function ProjectWorkspaceNav({
   const pathname =
     usePathname();
 
-  const activeItems = [
+  const workspaceItems = [
     {
-      label: "Overview",
+      label:
+        "Overview",
+
       icon:
         LayoutDashboard,
+
       href:
         `/projects/${projectId}/overview`,
     },
+  ];
 
+  const modelItems = [
     {
-      label: "Assumptions",
+      label:
+        "Assumptions",
+
       icon:
         SlidersHorizontal,
+
       href:
         `/projects/${projectId}/assumptions`,
     },
 
     {
-      label: "Revenue",
+      label:
+        "Revenue",
+
       icon:
         TrendingUp,
+
       href:
         `/projects/${projectId}/revenue`,
     },
 
     {
-      label: "Expenses",
+      label:
+        "Expenses",
+
       icon:
         WalletCards,
+
       href:
         `/projects/${projectId}/expenses`,
     },
   ];
 
+  const analysisItems = [
+    {
+      label:
+        "Forecast",
+
+      icon:
+        BarChart3,
+
+      href:
+        `/projects/${projectId}/forecast`,
+    },
+
+    {
+      label:
+        "P&L",
+
+      icon:
+        Calculator,
+
+      href:
+        `/projects/${projectId}/pnl`,
+    },
+
+    {
+      label:
+        "Cash Flow",
+
+      icon:
+        BadgeDollarSign,
+
+      href:
+        `/projects/${projectId}/cash-flow`,
+    },
+
+    {
+      label:
+        "Customers",
+
+      icon:
+        Users,
+
+      href:
+        `/projects/${projectId}/customers`,
+    },
+  ];
+
   const futureModelItems = [
     {
-      label: "Financing",
-      icon: Banknote,
+      label:
+        "Financing",
+
+      icon:
+        Banknote,
     },
   ];
 
   const futureAnalysisItems = [
     {
-      label: "Forecast",
-      icon: BarChart3,
-    },
-    {
-      label: "P&L",
-      icon: Calculator,
-    },
-    {
-      label: "Cash Flow",
+      label:
+        "Scenarios",
+
       icon:
-        BadgeDollarSign,
-    },
-    {
-      label: "Customers",
-      icon: Users,
-    },
-    {
-      label: "Scenarios",
-      icon: Gauge,
+        Gauge,
     },
   ];
 
   const futureOutputItems = [
     {
-      label: "Reports",
-      icon: FileText,
+      label:
+        "Reports",
+
+      icon:
+        FileText,
     },
+
     {
-      label: "Settings",
-      icon: Settings2,
+      label:
+        "Settings",
+
+      icon:
+        Settings2,
     },
   ];
 
   return (
     <nav className="space-y-6">
       <NavSection label="Workspace">
-        {activeItems
-          .slice(
-            0,
-            1,
-          )
-          .map(
-            (
-              item,
-            ) => (
-              <ActiveItem
-                key={
-                  item.href
-                }
-                item={
-                  item
-                }
-                active={
-                  pathname ===
-                  item.href
-                }
-              />
-            ),
-          )}
+        {workspaceItems.map(
+          (
+            item,
+          ) => (
+            <ActiveItem
+              key={
+                item.href
+              }
+              item={
+                item
+              }
+              active={
+                pathname ===
+                item.href
+              }
+            />
+          ),
+        )}
       </NavSection>
 
       <NavSection label="Model">
-        {activeItems
-          .slice(1)
-          .map(
-            (
-              item,
-            ) => (
-              <ActiveItem
-                key={
-                  item.href
-                }
-                item={
-                  item
-                }
-                active={
-                  pathname ===
-                  item.href
-                }
-              />
-            ),
-          )}
+        {modelItems.map(
+          (
+            item,
+          ) => (
+            <ActiveItem
+              key={
+                item.href
+              }
+              item={
+                item
+              }
+              active={
+                pathname ===
+                item.href
+              }
+            />
+          ),
+        )}
 
         {futureModelItems.map(
           (
@@ -177,6 +226,25 @@ export function ProjectWorkspaceNav({
       </NavSection>
 
       <NavSection label="Analysis">
+        {analysisItems.map(
+          (
+            item,
+          ) => (
+            <ActiveItem
+              key={
+                item.href
+              }
+              item={
+                item
+              }
+              active={
+                pathname ===
+                item.href
+              }
+            />
+          ),
+        )}
+
         {futureAnalysisItems.map(
           (
             item,
@@ -214,7 +282,9 @@ function NavSection({
   children,
 }: {
   label: string;
-  children: React.ReactNode;
+
+  children:
+    React.ReactNode;
 }) {
   return (
     <div>
@@ -232,13 +302,17 @@ function NavSection({
 type ActiveItemProps = {
   item: {
     label: string;
+
     href: string;
-    icon: React.ComponentType<{
-      className?: string;
-    }>;
+
+    icon:
+      React.ComponentType<{
+        className?: string;
+      }>;
   };
 
-  active: boolean;
+  active:
+    boolean;
 };
 
 function ActiveItem({
@@ -250,7 +324,9 @@ function ActiveItem({
 
   return (
     <Link
-      href={item.href}
+      href={
+        item.href
+      }
       className={cn(
         "flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
         active
@@ -263,7 +339,9 @@ function ActiveItem({
         aria-hidden="true"
       />
 
-      {item.label}
+      {
+        item.label
+      }
     </Link>
   );
 }
@@ -271,9 +349,10 @@ function ActiveItem({
 type FutureItemProps = {
   label: string;
 
-  icon: React.ComponentType<{
-    className?: string;
-  }>;
+  icon:
+    React.ComponentType<{
+      className?: string;
+    }>;
 };
 
 function FutureItem({

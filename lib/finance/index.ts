@@ -3,8 +3,28 @@ export {
 } from "@/lib/finance/aggregation";
 
 export {
+  aggregateCashAnalytics,
+  calculateCashForecastSummary,
+} from "@/lib/finance/cash-analytics";
+
+export type {
+  AnnualCashAnalytics,
+  CashForecastSummary,
+} from "@/lib/finance/cash-analytics";
+
+export {
   generateScenarioComparison,
 } from "@/lib/finance/comparison";
+
+export {
+  aggregateCustomerAnalytics,
+  calculateCustomerForecastSummary,
+} from "@/lib/finance/customer-analytics";
+
+export type {
+  AnnualCustomerAnalytics,
+  CustomerForecastSummary,
+} from "@/lib/finance/customer-analytics";
 
 export {
   calculateCustomerRevenueMonth,
@@ -34,6 +54,24 @@ export {
 export {
   calculateFinancingForMonth,
 } from "@/lib/finance/financing-engine";
+
+export {
+  formatCompactCurrencyValue,
+  formatCurrencyValue,
+  formatCustomerValue,
+  formatExpenseCurrencyValue,
+  formatLongMonthKey,
+  formatMonthKey,
+  formatNumberValue,
+  formatPercentageValue,
+  formatRunway,
+  formatRunwayDetail,
+  resolveAnalysisTableView,
+} from "@/lib/finance/formatting";
+
+export type {
+  AnalysisTableView,
+} from "@/lib/finance/formatting";
 
 export {
   calculateFinancialMetrics,

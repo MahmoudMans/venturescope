@@ -40,6 +40,38 @@ export type FinancingEventInput = {
   repaymentStartMonth?: MonthKey | null;
 };
 
+export type MonthlyOverrideValues = {
+  revenue?: string;
+
+  marketing?: string;
+
+  salaries?: string;
+
+  rent?: string;
+
+  cogs?: string;
+
+  cac?: string;
+
+  churnRate?: string;
+
+  arpu?: string;
+};
+
+export type MonthlyOverrideInput = {
+  id?: string;
+
+  projectId?: string;
+
+  scenarioId?: string | null;
+
+  month: MonthKey;
+
+  values: MonthlyOverrideValues;
+
+  note?: string | null;
+};
+
 export type FinancialModelInput = {
   projectId: string;
   projectName: string;
@@ -56,6 +88,8 @@ export type FinancialModelInput = {
   assumptions: FinancialAssumptionsV1;
 
   financingEvents?: FinancingEventInput[];
+
+  monthlyOverrides?: MonthlyOverrideInput[];
 
   scenario?: FinancialScenarioInput;
 };

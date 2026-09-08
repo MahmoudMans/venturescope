@@ -108,6 +108,10 @@ function revalidateScenarioOutputs(
   );
 
   revalidatePath(
+    `/projects/${projectId}/timeline`,
+  );
+
+  revalidatePath(
     `/projects/${projectId}/overview`,
   );
 
@@ -677,19 +681,32 @@ export async function deleteScenarioAction(
   }
 
   try {
-    await prisma.scenario.deleteMany({
-      where: {
-        id:
-          parsed.data
-            .scenarioId,
+    await prisma.$transaction([
+      prisma.monthlyOverride.deleteMany({
+        where: {
+          projectId:
+            project.id,
 
-        projectId:
-          project.id,
+          scenarioId:
+            parsed.data
+              .scenarioId,
+        },
+      }),
 
-        type:
-          "CUSTOM",
-      },
-    });
+      prisma.scenario.deleteMany({
+        where: {
+          id:
+            parsed.data
+              .scenarioId,
+
+          projectId:
+            project.id,
+
+          type:
+            "CUSTOM",
+        },
+      }),
+    ]);
   } catch (error) {
     console.error(
       "VentureScope scenario deletion failed:",

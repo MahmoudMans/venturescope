@@ -4,11 +4,15 @@ import {
 import {
   parseStoredFinancialAssumptions,
 } from "@/lib/finance/assumptions/storage";
+import {
+  parseMonthlyOverrideValues,
+} from "@/lib/finance/override-engine";
 import type {
   FinancialModelInput,
   FinancialScenarioInput,
   FinancingEventInput,
   FinancingType,
+  MonthlyOverrideInput,
   RevenueMode,
   ScenarioType,
 } from "@/lib/finance/types";
@@ -48,6 +52,24 @@ type PersistedFinancingEvent = {
     | null;
 };
 
+type PersistedMonthlyOverride = {
+  id?: string;
+
+  projectId?: string;
+
+  scenarioId?:
+    | string
+    | null;
+
+  month: Date;
+
+  values: unknown;
+
+  note?:
+    | string
+    | null;
+};
+
 type PersistedScenario = {
   id?: string;
 
@@ -62,11 +84,13 @@ type PersistedScenario = {
 
 export type PersistedProjectFinancialSource = {
   id: string;
+
   name: string;
 
   currency: string;
 
   startMonth: Date;
+
   horizonMonths: number;
 
   revenueMode:
@@ -78,6 +102,8 @@ export type PersistedProjectFinancialSource = {
   baseAssumptions: unknown;
 
   financingEvents?: PersistedFinancingEvent[];
+
+  monthlyOverrides?: PersistedMonthlyOverride[];
 };
 
 function asString(
@@ -203,6 +229,36 @@ function mapFinancingEvent(
   };
 }
 
+function mapMonthlyOverride(
+  override: PersistedMonthlyOverride,
+): MonthlyOverrideInput {
+  return {
+    id:
+      override.id,
+
+    projectId:
+      override.projectId,
+
+    scenarioId:
+      override.scenarioId ??
+      null,
+
+    month:
+      dateToMonthKey(
+        override.month,
+      ),
+
+    values:
+      parseMonthlyOverrideValues(
+        override.values,
+      ),
+
+    note:
+      override.note ??
+      null,
+  };
+}
+
 export function mapPersistedScenario(
   scenario: PersistedScenario,
 ): FinancialScenarioInput {
@@ -265,6 +321,14 @@ export function buildFinancialModelInput(
         []
       ).map(
         mapFinancingEvent,
+      ),
+
+    monthlyOverrides:
+      (
+        project.monthlyOverrides ??
+        []
+      ).map(
+        mapMonthlyOverride,
       ),
 
     scenario:

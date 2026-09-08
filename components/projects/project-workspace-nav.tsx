@@ -4,6 +4,7 @@ import {
   BadgeDollarSign,
   Banknote,
   BarChart3,
+  CalendarRange,
   Calculator,
   FileText,
   Gauge,
@@ -92,6 +93,17 @@ export function ProjectWorkspaceNav({
 
       href:
         `/projects/${projectId}/financing`,
+    },
+
+    {
+      label:
+        "Timeline",
+
+      icon:
+        CalendarRange,
+
+      href:
+        `/projects/${projectId}/timeline`,
     },
   ];
 

@@ -135,6 +135,10 @@ export function LiveScenarioSimulator({
           ...baseInput,
 
           scenario: {
+            id:
+              baseInput.scenario
+                ?.id,
+
             name:
               "Live Simulation",
 

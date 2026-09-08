@@ -11,6 +11,14 @@ import {
   percentageToRate,
 } from "@/lib/finance/math";
 
+export type CustomerRevenueRuntimeOverrides = {
+  cac?: string;
+
+  monthlyChurnRate?: string;
+
+  arpu?: string;
+};
+
 export type CustomerRevenueMonthResult = {
   openingCustomers: Decimal;
 
@@ -36,9 +44,11 @@ export function calculateCustomerRevenueMonth(
   monthIndex: number,
   openingCustomers: Decimal,
   monthlyMarketingBudget: Decimal,
+  runtimeOverrides: CustomerRevenueRuntimeOverrides = {},
 ): CustomerRevenueMonthResult {
   const cac =
     decimal(
+      runtimeOverrides.cac ??
       assumptions.cac,
     );
 
@@ -90,6 +100,7 @@ export function calculateCustomerRevenueMonth(
 
   const churnRate =
     percentageToRate(
+      runtimeOverrides.monthlyChurnRate ??
       assumptions
         .monthlyChurnRate,
     );
@@ -117,11 +128,16 @@ export function calculateCustomerRevenueMonth(
     );
 
   const arpu =
-    compoundValue(
-      assumptions.arpu,
-      arpuGrowthRate,
-      monthIndex,
-    );
+    runtimeOverrides.arpu !==
+    undefined
+      ? decimal(
+          runtimeOverrides.arpu,
+        )
+      : compoundValue(
+          assumptions.arpu,
+          arpuGrowthRate,
+          monthIndex,
+        );
 
   const mrr =
     endingCustomers.mul(

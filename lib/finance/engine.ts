@@ -35,6 +35,12 @@ import {
   calculateDirectRevenueMonth,
 } from "@/lib/finance/revenue-engine";
 import {
+  applyMonthlyExpenseOverrides,
+  applyMonthlyRevenueOverride,
+  customerRuntimeOverrides,
+  resolveMonthlyOverride,
+} from "@/lib/finance/override-engine";
+import {
   applyScenarioToAssumptions,
 } from "@/lib/finance/scenario-engine";
 import type {
@@ -195,10 +201,24 @@ export function generateFinancialForecast(
         index
       ];
 
-    const expenseProfile =
+    const resolvedOverride =
+      resolveMonthlyOverride(
+        input.monthlyOverrides ??
+        [],
+        scenario.id,
+        month,
+      );
+
+    let expenseProfile =
       calculateMonthlyExpenseProfile(
         assumptions.expenses,
         index,
+      );
+
+    expenseProfile =
+      applyMonthlyExpenseOverrides(
+        expenseProfile,
+        resolvedOverride.values,
       );
 
     let openingCustomersOutput:
@@ -292,6 +312,9 @@ export function generateFinancialForecast(
           index,
           openingCustomers,
           expenseProfile.marketing,
+          customerRuntimeOverrides(
+            resolvedOverride.values,
+          ),
         );
 
       openingCustomersOutput =
@@ -331,11 +354,65 @@ export function generateFinancialForecast(
         revenueResult.totalRevenue;
     }
 
+    const revenueOverrideResult =
+      applyMonthlyRevenueOverride({
+        revenueMode:
+          input.revenueMode,
+
+        overrideRevenue:
+          resolvedOverride.values
+            .revenue,
+
+        recurringRevenuePercentage:
+          assumptions.directRevenue
+            .recurringRevenuePercentage,
+
+        recurringRevenue,
+
+        nonRecurringRevenue,
+
+        oneTimeRevenue,
+
+        totalRevenue:
+          revenue,
+
+        mrr,
+      });
+
+    recurringRevenue =
+      revenueOverrideResult
+        .recurringRevenue;
+
+    nonRecurringRevenue =
+      revenueOverrideResult
+        .nonRecurringRevenue;
+
+    oneTimeRevenue =
+      revenueOverrideResult
+        .oneTimeRevenue;
+
+    revenue =
+      revenueOverrideResult
+        .totalRevenue;
+
+    mrr =
+      revenueOverrideResult
+        .mrr;
+
     const cogs =
-      calculateCogs(
-        expenseProfile,
-        revenue,
-      );
+      resolvedOverride.values
+        .cogs !==
+      undefined
+        ? maxZero(
+            decimal(
+              resolvedOverride.values
+                .cogs,
+            ),
+          )
+        : calculateCogs(
+            expenseProfile,
+            revenue,
+          );
 
     const grossProfit =
       revenue.minus(

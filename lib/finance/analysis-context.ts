@@ -43,6 +43,19 @@ export async function getFinancialAnalysis(
           },
         },
 
+        monthlyOverrides: {
+          orderBy: [
+            {
+              month:
+                "asc",
+            },
+            {
+              createdAt:
+                "asc",
+            },
+          ],
+        },
+
         scenarios: {
           orderBy: {
             createdAt:

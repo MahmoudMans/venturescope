@@ -172,6 +172,10 @@ function revalidateFinancingOutputs(
   );
 
   revalidatePath(
+    `/projects/${projectId}/timeline`,
+  );
+
+  revalidatePath(
     `/projects/${projectId}/overview`,
   );
 

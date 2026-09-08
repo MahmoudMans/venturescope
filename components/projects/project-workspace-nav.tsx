@@ -21,9 +21,6 @@ import {
 } from "next/navigation";
 
 import {
-  Badge,
-} from "@/components/ui/badge";
-import {
   cn,
 } from "@/lib/utils";
 
@@ -175,15 +172,16 @@ export function ProjectWorkspaceNav({
       href:
         `/projects/${projectId}/reports`,
     },
-  ];
 
-  const futureOutputItems = [
     {
       label:
         "Settings",
 
       icon:
         Settings2,
+
+      href:
+        `/projects/${projectId}/settings`,
     },
   ];
 
@@ -271,19 +269,6 @@ export function ProjectWorkspaceNav({
             />
           ),
         )}
-
-        {futureOutputItems.map(
-          (
-            item,
-          ) => (
-            <FutureItem
-              key={
-                item.label
-              }
-              {...item}
-            />
-          ),
-        )}
       </NavSection>
     </nav>
   );
@@ -356,39 +341,5 @@ function ActiveItem({
         item.label
       }
     </Link>
-  );
-}
-
-function FutureItem({
-  label,
-  icon: Icon,
-}: {
-  label: string;
-
-  icon:
-    React.ComponentType<{
-      className?: string;
-    }>;
-}) {
-  return (
-    <div className="flex h-10 cursor-not-allowed items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground">
-      <Icon
-        className="size-4"
-        aria-hidden="true"
-      />
-
-      <span className="truncate">
-        {
-          label
-        }
-      </span>
-
-      <Badge
-        variant="outline"
-        className="ml-auto px-1.5 text-[8px]"
-      >
-        LATER
-      </Badge>
-    </div>
   );
 }

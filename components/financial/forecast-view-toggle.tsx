@@ -11,16 +11,44 @@ type ForecastViewToggleProps = {
   pathname: string;
 
   view: AnalysisTableView;
+
+  scenarioId?: string;
 };
 
 export function ForecastViewToggle({
   pathname,
   view,
+  scenarioId,
 }: ForecastViewToggleProps) {
+  function href(
+    nextView: AnalysisTableView,
+  ) {
+    const params =
+      new URLSearchParams();
+
+    params.set(
+      "view",
+      nextView,
+    );
+
+    if (
+      scenarioId
+    ) {
+      params.set(
+        "scenario",
+        scenarioId,
+      );
+    }
+
+    return `${pathname}?${params.toString()}`;
+  }
+
   return (
     <div className="inline-flex rounded-lg border bg-background p-1">
       <Link
-        href={`${pathname}?view=monthly`}
+        href={href(
+          "monthly",
+        )}
         className={cn(
           "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
           view ===
@@ -33,7 +61,9 @@ export function ForecastViewToggle({
       </Link>
 
       <Link
-        href={`${pathname}?view=annual`}
+        href={href(
+          "annual",
+        )}
         className={cn(
           "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
           view ===

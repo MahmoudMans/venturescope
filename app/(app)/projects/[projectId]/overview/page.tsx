@@ -31,11 +31,11 @@ import {
   FinancialPageHeader,
 } from "@/components/financial/financial-page-header";
 import {
+  ScenarioSwitcher,
+} from "@/components/scenarios/scenario-switcher";
+import {
   Badge,
 } from "@/components/ui/badge";
-import {
-  Button,
-} from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -47,7 +47,7 @@ import {
   requireUser,
 } from "@/lib/auth/require-user";
 import {
-  getBaseFinancialAnalysis,
+  getFinancialAnalysis,
 } from "@/lib/finance/analysis-context";
 import {
   buildFinancialDashboardData,
@@ -70,22 +70,43 @@ export const metadata: Metadata = {
 
 export default async function ProjectOverviewPage({
   params,
+  searchParams,
 }: {
   params: Promise<{
     projectId: string;
+  }>;
+
+  searchParams?: Promise<{
+    scenario?:
+      | string
+      | string[];
   }>;
 }) {
   const {
     projectId,
   } = await params;
 
+  const resolvedSearchParams =
+    await searchParams;
+
+  const scenarioId =
+    Array.isArray(
+      resolvedSearchParams
+        ?.scenario,
+    )
+      ? resolvedSearchParams
+          ?.scenario[0]
+      : resolvedSearchParams
+          ?.scenario;
+
   const user =
     await requireUser();
 
   const analysis =
-    await getBaseFinancialAnalysis(
+    await getFinancialAnalysis(
       user.id,
       projectId,
+      scenarioId,
     );
 
   const project =
@@ -104,51 +125,6 @@ export default async function ProjectOverviewPage({
           description="Complete the financial assumptions to activate VentureScope's interactive analytics dashboard."
           scenarioName="Base Case"
         />
-
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <FinancialKpiCard
-            label="Currency"
-            value={
-              project.currency
-            }
-            detail="Project reporting currency."
-            icon={
-              CircleDollarSign
-            }
-          />
-
-          <FinancialKpiCard
-            label="Forecast"
-            value={`${project.horizonMonths} mo`}
-            detail="Configured forecast horizon."
-            icon={
-              CalendarClock
-            }
-          />
-
-          <FinancialKpiCard
-            label="Revenue model"
-            value={formatRevenueMode(
-              project.revenueMode,
-            )}
-            detail="Revenue engine selected during project creation."
-            icon={
-              TrendingUp
-            }
-          />
-
-          <FinancialKpiCard
-            label="Financing events"
-            value={String(
-              project.financingEvents
-                .length,
-            )}
-            detail="Funding events currently configured."
-            icon={
-              Landmark
-            }
-          />
-        </section>
 
         <AnalysisSetupRequired
           projectId={
@@ -176,6 +152,18 @@ export default async function ProjectOverviewPage({
       .breakEven
       .sustainedBreakEvenMonth;
 
+  const activeScenarioId =
+    analysis.selectedScenario
+      ?.id ??
+    "";
+
+  const scenarioSuffix =
+    activeScenarioId
+      ? `?scenario=${encodeURIComponent(
+          activeScenarioId,
+        )}`
+      : "";
+
   const quickLinks = [
     {
       label:
@@ -185,7 +173,7 @@ export default async function ProjectOverviewPage({
         "Detailed monthly and annual forecast.",
 
       href:
-        `/projects/${project.id}/forecast`,
+        `/projects/${project.id}/forecast${scenarioSuffix}`,
 
       icon:
         BarChart3,
@@ -199,7 +187,7 @@ export default async function ProjectOverviewPage({
         "Revenue, margins and profitability.",
 
       href:
-        `/projects/${project.id}/pnl`,
+        `/projects/${project.id}/pnl${scenarioSuffix}`,
 
       icon:
         Calculator,
@@ -213,7 +201,7 @@ export default async function ProjectOverviewPage({
         "Burn, runway and cash movements.",
 
       href:
-        `/projects/${project.id}/cash-flow`,
+        `/projects/${project.id}/cash-flow${scenarioSuffix}`,
 
       icon:
         Wallet,
@@ -233,6 +221,20 @@ export default async function ProjectOverviewPage({
         Landmark,
     },
 
+    {
+      label:
+        "Scenarios",
+
+      description:
+        "Compare and simulate alternative cases.",
+
+      href:
+        `/projects/${project.id}/scenarios`,
+
+      icon:
+        Gauge,
+    },
+
     ...(
       forecast.revenueMode ===
       "CUSTOMER_DRIVEN"
@@ -245,7 +247,7 @@ export default async function ProjectOverviewPage({
                 "Acquisition, churn and MRR.",
 
               href:
-                `/projects/${project.id}/customers`,
+                `/projects/${project.id}/customers${scenarioSuffix}`,
 
               icon:
                 Users,
@@ -262,10 +264,31 @@ export default async function ProjectOverviewPage({
         title={
           project.name
         }
-        description="Interactive Base Case analytics generated directly from the VentureScope financial engine."
+        description="Interactive analytics generated from the selected VentureScope financial scenario."
         scenarioName={
           forecast.scenario
             .name
+        }
+        scenarioControl={
+          <ScenarioSwitcher
+            scenarios={project.scenarios.map(
+              (
+                scenario,
+              ) => ({
+                id:
+                  scenario.id,
+
+                name:
+                  scenario.name,
+
+                type:
+                  scenario.type,
+              }),
+            )}
+            currentScenarioId={
+              activeScenarioId
+            }
+          />
         }
       />
 
@@ -380,7 +403,7 @@ export default async function ProjectOverviewPage({
             </CardTitle>
 
             <CardDescription>
-              Core margins and burn metrics generated from the current Base Case.
+              Core metrics generated from {forecast.scenario.name}.
             </CardDescription>
           </CardHeader>
 

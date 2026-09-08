@@ -28,10 +28,13 @@ import {
   ForecastViewToggle,
 } from "@/components/financial/forecast-view-toggle";
 import {
+  ScenarioSwitcher,
+} from "@/components/scenarios/scenario-switcher";
+import {
   requireUser,
 } from "@/lib/auth/require-user";
 import {
-  getBaseFinancialAnalysis,
+  getFinancialAnalysis,
 } from "@/lib/finance/analysis-context";
 import {
   formatCompactCurrencyValue,
@@ -61,6 +64,10 @@ export default async function ForecastPage({
     view?:
       | string
       | string[];
+
+    scenario?:
+      | string
+      | string[];
   }>;
 }) {
   const {
@@ -76,13 +83,24 @@ export default async function ForecastPage({
         ?.view,
     );
 
+  const scenarioId =
+    Array.isArray(
+      resolvedSearchParams
+        ?.scenario,
+    )
+      ? resolvedSearchParams
+          ?.scenario[0]
+      : resolvedSearchParams
+          ?.scenario;
+
   const user =
     await requireUser();
 
   const analysis =
-    await getBaseFinancialAnalysis(
+    await getFinancialAnalysis(
       user.id,
       projectId,
+      scenarioId,
     );
 
   if (
@@ -746,6 +764,29 @@ export default async function ForecastPage({
           forecast.scenario
             .name
         }
+        scenarioControl={
+          <ScenarioSwitcher
+            scenarios={analysis.project.scenarios.map(
+              (
+                scenario,
+              ) => ({
+                id:
+                  scenario.id,
+
+                name:
+                  scenario.name,
+
+                type:
+                  scenario.type,
+              }),
+            )}
+            currentScenarioId={
+              analysis.selectedScenario
+                ?.id ??
+              ""
+            }
+          />
+        }
       />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
@@ -858,6 +899,10 @@ export default async function ForecastPage({
             }
             view={
               view
+            }
+            scenarioId={
+              analysis.selectedScenario
+                ?.id
             }
           />
         </div>

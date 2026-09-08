@@ -139,22 +139,16 @@ export function ProjectWorkspaceNav({
       href:
         `/projects/${projectId}/customers`,
     },
-  ];
 
-  const futureModelItems: Array<{
-    label: string;
-    icon: React.ComponentType<{
-      className?: string;
-    }>;
-  }> = [];
-
-  const futureAnalysisItems = [
     {
       label:
         "Scenarios",
 
       icon:
         Gauge,
+
+      href:
+        `/projects/${projectId}/scenarios`,
     },
   ];
 
@@ -218,19 +212,6 @@ export function ProjectWorkspaceNav({
             />
           ),
         )}
-
-        {futureModelItems.map(
-          (
-            item,
-          ) => (
-            <FutureItem
-              key={
-                item.label
-              }
-              {...item}
-            />
-          ),
-        )}
       </NavSection>
 
       <NavSection label="Analysis">
@@ -249,19 +230,6 @@ export function ProjectWorkspaceNav({
                 pathname ===
                 item.href
               }
-            />
-          ),
-        )}
-
-        {futureAnalysisItems.map(
-          (
-            item,
-          ) => (
-            <FutureItem
-              key={
-                item.label
-              }
-              {...item}
             />
           ),
         )}
@@ -297,17 +265,24 @@ function NavSection({
   return (
     <div>
       <div className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-        {label}
+        {
+          label
+        }
       </div>
 
       <div className="space-y-1">
-        {children}
+        {
+          children
+        }
       </div>
     </div>
   );
 }
 
-type ActiveItemProps = {
+function ActiveItem({
+  item,
+  active,
+}: {
   item: {
     label: string;
 
@@ -319,14 +294,8 @@ type ActiveItemProps = {
       }>;
   };
 
-  active:
-    boolean;
-};
-
-function ActiveItem({
-  item,
-  active,
-}: ActiveItemProps) {
+  active: boolean;
+}) {
   const Icon =
     item.icon;
 
@@ -354,19 +323,17 @@ function ActiveItem({
   );
 }
 
-type FutureItemProps = {
+function FutureItem({
+  label,
+  icon: Icon,
+}: {
   label: string;
 
   icon:
     React.ComponentType<{
       className?: string;
     }>;
-};
-
-function FutureItem({
-  label,
-  icon: Icon,
-}: FutureItemProps) {
+}) {
   return (
     <div className="flex h-10 cursor-not-allowed items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground">
       <Icon
@@ -375,7 +342,9 @@ function FutureItem({
       />
 
       <span className="truncate">
-        {label}
+        {
+          label
+        }
       </span>
 
       <Badge

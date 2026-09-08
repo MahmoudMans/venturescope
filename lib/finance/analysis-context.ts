@@ -21,9 +21,10 @@ export type MissingAssumptionSection =
   | "revenue"
   | "expenses";
 
-export async function getBaseFinancialAnalysis(
+export async function getFinancialAnalysis(
   userId: string,
   projectId: string,
+  scenarioId?: string,
 ) {
   const project =
     await prisma.project.findFirst({
@@ -43,18 +44,10 @@ export async function getBaseFinancialAnalysis(
         },
 
         scenarios: {
-          where: {
-            type:
-              "BASE",
-          },
-
           orderBy: {
             createdAt:
               "asc",
           },
-
-          take:
-            1,
         },
       },
     });
@@ -103,6 +96,31 @@ export async function getBaseFinancialAnalysis(
     );
   }
 
+  const baseScenario =
+    project.scenarios.find(
+      (
+        scenario,
+      ) =>
+        scenario.type ===
+        "BASE",
+    );
+
+  const requestedScenario =
+    scenarioId
+      ? project.scenarios.find(
+          (
+            scenario,
+          ) =>
+            scenario.id ===
+            scenarioId,
+        )
+      : undefined;
+
+  const selectedScenario =
+    requestedScenario ??
+    baseScenario ??
+    project.scenarios[0];
+
   if (
     completedSections !==
     3
@@ -118,16 +136,17 @@ export async function getBaseFinancialAnalysis(
       completedSections,
 
       missingSections,
+
+      baseScenario,
+
+      selectedScenario,
     };
   }
-
-  const baseScenario =
-    project.scenarios[0];
 
   const input =
     buildFinancialModelInput(
       project,
-      baseScenario,
+      selectedScenario,
     );
 
   const forecast =
@@ -149,6 +168,18 @@ export async function getBaseFinancialAnalysis(
 
     baseScenario,
 
+    selectedScenario,
+
     forecast,
   };
+}
+
+export async function getBaseFinancialAnalysis(
+  userId: string,
+  projectId: string,
+) {
+  return getFinancialAnalysis(
+    userId,
+    projectId,
+  );
 }

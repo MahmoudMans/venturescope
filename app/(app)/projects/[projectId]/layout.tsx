@@ -13,9 +13,6 @@ import {
   ProjectWorkspaceNav,
 } from "@/components/projects/project-workspace-nav";
 import {
-  Badge,
-} from "@/components/ui/badge";
-import {
   Button,
 } from "@/components/ui/button";
 import {
@@ -85,9 +82,6 @@ export default async function ProjectLayout({
                     }
                   </h1>
 
-                  <Badge>
-                    BASE
-                  </Badge>
                 </div>
 
                 <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">

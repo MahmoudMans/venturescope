@@ -40,10 +40,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  ScenarioSwitcher,
+} from "@/components/scenarios/scenario-switcher";
+import {
   requireUser,
 } from "@/lib/auth/require-user";
 import {
-  getBaseFinancialAnalysis,
+  getFinancialAnalysis,
 } from "@/lib/finance/analysis-context";
 import {
   aggregateCustomerAnalytics,
@@ -73,6 +76,10 @@ export default async function CustomersPage({
     view?:
       | string
       | string[];
+
+    scenario?:
+      | string
+      | string[];
   }>;
 }) {
   const {
@@ -88,13 +95,24 @@ export default async function CustomersPage({
         ?.view,
     );
 
+  const scenarioId =
+    Array.isArray(
+      resolvedSearchParams
+        ?.scenario,
+    )
+      ? resolvedSearchParams
+          ?.scenario[0]
+      : resolvedSearchParams
+          ?.scenario;
+
   const user =
     await requireUser();
 
   const analysis =
-    await getBaseFinancialAnalysis(
+    await getFinancialAnalysis(
       user.id,
       projectId,
+      scenarioId,
     );
 
   if (
@@ -133,9 +151,32 @@ export default async function CustomersPage({
           title="Customer analytics"
           description="Customer acquisition and churn analytics are available for customer-driven financial models."
           scenarioName={
-            forecast.scenario
-              .name
-          }
+          forecast.scenario
+            .name
+        }
+        scenarioControl={
+          <ScenarioSwitcher
+            scenarios={analysis.project.scenarios.map(
+              (
+                scenario,
+              ) => ({
+                id:
+                  scenario.id,
+
+                name:
+                  scenario.name,
+
+                type:
+                  scenario.type,
+              }),
+            )}
+            currentScenarioId={
+              analysis.selectedScenario
+                ?.id ??
+              ""
+            }
+          />
+        }
         />
 
         <Card className="border-dashed">
@@ -545,6 +586,29 @@ export default async function CustomersPage({
           forecast.scenario
             .name
         }
+        scenarioControl={
+          <ScenarioSwitcher
+            scenarios={analysis.project.scenarios.map(
+              (
+                scenario,
+              ) => ({
+                id:
+                  scenario.id,
+
+                name:
+                  scenario.name,
+
+                type:
+                  scenario.type,
+              }),
+            )}
+            currentScenarioId={
+              analysis.selectedScenario
+                ?.id ??
+              ""
+            }
+          />
+        }
       />
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
@@ -649,6 +713,10 @@ export default async function CustomersPage({
             }
             view={
               view
+            }
+            scenarioId={
+              analysis.selectedScenario
+                ?.id
             }
           />
         </div>

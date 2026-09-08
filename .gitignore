@@ -43,3 +43,6 @@ next-env.d.ts
 !.env.example
 
 /generated/prisma/
+/playwright-report/
+/test-results/
+/blob-report/

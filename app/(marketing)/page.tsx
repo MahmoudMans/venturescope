@@ -1,54 +1,81 @@
 import {
   ArrowRight,
   BarChart3,
-  Calculator,
   Check,
+  CircleDollarSign,
   Gauge,
+  Layers3,
   LineChart,
-  ShieldCheck,
+  LockKeyhole,
+  Rocket,
+  SlidersHorizontal,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 
-import { VentureScopeLogo } from "@/components/brand/venturescope-logo";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import {
+  VentureScopeLogo,
+} from "@/components/brand/venturescope-logo";
+import {
+  ThemeToggle,
+} from "@/components/theme/theme-toggle";
+import {
+  Badge,
+} from "@/components/ui/badge";
+import {
+  Button,
+} from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
+import {
+  buildOrbitAnalyticsDemoForecast,
+} from "@/lib/demo/orbit-analytics";
+import {
+  formatCompactCurrencyValue,
+  formatLongMonthKey,
+  formatRunway,
+} from "@/lib/finance/formatting";
 
-const capabilities = [
-  {
-    title: "Financial forecasting",
-    description:
-      "Turn operating assumptions into structured monthly financial forecasts.",
-    icon: LineChart,
-  },
+export default function MarketingPage() {
+  const demo =
+    buildOrbitAnalyticsDemoForecast(
+      "demo-base",
+    );
 
-  {
-    title: "Scenario simulation",
-    description:
-      "Compare Base, Bull and Bear outcomes without rebuilding your model.",
-    icon: BarChart3,
-  },
-
-  {
-    title: "Runway intelligence",
-    description:
-      "Understand cash consumption, burn rate and the timing of funding needs.",
-    icon: Gauge,
-  },
-];
-
-export default function HomePage() {
   return (
-    <main className="min-h-svh bg-background">
-      <header className="border-b border-border/60">
+    <div className="min-h-svh bg-background">
+      <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
           <VentureScopeLogo />
 
-          <div className="flex items-center gap-1">
+          <nav className="hidden items-center gap-7 md:flex">
+            <Link
+              href="/demo"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Live demo
+            </Link>
+
+            <a
+              href="#platform"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Platform
+            </a>
+
+            <a
+              href="#workflow"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Workflow
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-2">
             <ThemeToggle />
 
             <Button
@@ -63,59 +90,355 @@ export default function HomePage() {
 
             <Button asChild>
               <Link href="/register">
-                Build a model
-
-                <ArrowRight
-                  className="size-4"
-                  aria-hidden="true"
-                />
+                Get started
               </Link>
             </Button>
           </div>
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-0 -z-10 bg-muted/20" />
+      <main>
+        <section className="relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,var(--muted),transparent_45%)]" />
 
-        <div className="mx-auto grid max-w-7xl gap-16 px-5 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-28">
-          <div className="flex flex-col justify-center">
-            <div className="mb-6 flex flex-wrap gap-2">
-              <Badge variant="secondary">
-                No paid financial API
+          <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-28">
+            <div>
+              <Badge
+                variant="outline"
+                className="mb-6"
+              >
+                <Sparkles
+                  className="mr-1 size-3"
+                  aria-hidden="true"
+                />
+
+                FINANCIAL PLANNING & SCENARIO SIMULATION
               </Badge>
 
-              <Badge variant="outline">
-                12–60 month forecasts
-              </Badge>
+              <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+                Model your startup.
+                <span className="block text-muted-foreground">
+                  Stress-test the future.
+                </span>
+              </h1>
 
-              <Badge variant="outline">
-                Base · Bull · Bear
-              </Badge>
+              <p className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
+                VentureScope turns operating assumptions into deterministic forecasts,
+                cash runway, scenario comparisons and executive financial reports—without
+                paid market-data APIs.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button
+                  asChild
+                  size="lg"
+                >
+                  <Link href="/register">
+                    Build a financial model
+
+                    <ArrowRight
+                      className="size-4"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </Button>
+
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                >
+                  <Link href="/demo">
+                    Explore live demo
+
+                    <Rocket
+                      className="size-4"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs text-muted-foreground">
+                <span className="flex items-center gap-2">
+                  <Check
+                    className="size-3.5"
+                    aria-hidden="true"
+                  />
+
+                  No paid API required
+                </span>
+
+                <span className="flex items-center gap-2">
+                  <Check
+                    className="size-3.5"
+                    aria-hidden="true"
+                  />
+
+                  Deterministic calculations
+                </span>
+
+                <span className="flex items-center gap-2">
+                  <Check
+                    className="size-3.5"
+                    aria-hidden="true"
+                  />
+
+                  Private workspaces
+                </span>
+              </div>
             </div>
 
-            <h1 className="max-w-3xl text-balance text-5xl font-semibold tracking-[-0.045em] sm:text-6xl lg:text-7xl">
-              Model your startup.
-              <br />
+            <Card className="overflow-hidden border-border/70 shadow-xl shadow-foreground/5">
+              <CardHeader className="border-b bg-muted/30">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                      Orbit Analytics
+                    </div>
 
-              <span className="text-muted-foreground">
-                Stress-test the future.
-              </span>
-            </h1>
+                    <CardTitle className="mt-2">
+                      Base Case
+                    </CardTitle>
+                  </div>
 
-            <p className="mt-7 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground">
-              VentureScope transforms revenue, customer,
-              expense and financing assumptions into
-              decision-ready financial forecasts.
-            </p>
+                  <Badge>
+                    LIVE DEMO
+                  </Badge>
+                </div>
+              </CardHeader>
 
-            <div className="mt-9 flex flex-wrap gap-3">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <HeroMetric
+                    label="First-year revenue"
+                    value={formatCompactCurrencyValue(
+                      demo.metrics
+                        .firstYearRevenue,
+                      demo.currency,
+                    )}
+                  />
+
+                  <HeroMetric
+                    label="Ending cash"
+                    value={formatCompactCurrencyValue(
+                      demo.metrics
+                        .endingCash,
+                      demo.currency,
+                    )}
+                  />
+
+                  <HeroMetric
+                    label="Runway"
+                    value={formatRunway(
+                      demo.metrics
+                        .runway,
+                    )}
+                  />
+
+                  <HeroMetric
+                    label="Break-even"
+                    value={
+                      demo.metrics
+                        .breakEven
+                        .sustainedBreakEvenMonth
+                        ? formatLongMonthKey(
+                            demo.metrics
+                              .breakEven
+                              .sustainedBreakEvenMonth,
+                          )
+                        : "Not reached"
+                    }
+                  />
+                </div>
+
+                <div className="mt-6 rounded-2xl border bg-muted/20 p-5">
+                  <div className="flex h-40 items-end gap-2">
+                    {demo.months
+                      .slice(
+                        0,
+                        18,
+                      )
+                      .map(
+                        (
+                          month,
+                          index,
+                        ) => {
+                          const maxRevenue =
+                            Math.max(
+                              ...demo.months
+                                .slice(
+                                  0,
+                                  18,
+                                )
+                                .map(
+                                  (
+                                    candidate,
+                                  ) =>
+                                    Number(
+                                      candidate.revenue,
+                                    ),
+                                ),
+                              1,
+                            );
+
+                          const height =
+                            Math.max(
+                              8,
+                              (
+                                Number(
+                                  month.revenue,
+                                ) /
+                                maxRevenue
+                              ) *
+                                100,
+                            );
+
+                          return (
+                            <div
+                              key={
+                                month.month
+                              }
+                              className="flex flex-1 items-end"
+                              title={
+                                month.month
+                              }
+                            >
+                              <div
+                                className="w-full rounded-t-sm bg-foreground/80"
+                                style={{
+                                  height:
+                                    `${height}%`,
+                                }}
+                              />
+                            </div>
+                          );
+                        },
+                      )}
+                  </div>
+
+                  <div className="mt-3 flex justify-between text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                    <span>
+                      Revenue
+                    </span>
+
+                    <span>
+                      First 18 months
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  asChild
+                  variant="outline"
+                  className="mt-6 w-full"
+                >
+                  <Link href="/demo">
+                    Open Orbit Analytics
+
+                    <ArrowRight
+                      className="size-4"
+                      aria-hidden="true"
+                    />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section
+          id="platform"
+          className="border-y bg-muted/20"
+        >
+          <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+            <div className="max-w-3xl">
+              <div className="text-sm font-semibold text-muted-foreground">
+                ONE FINANCIAL ENGINE
+              </div>
+
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+                From assumptions to decision-ready analysis.
+              </h2>
+            </div>
+
+            <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <CapabilityCard
+                icon={
+                  SlidersHorizontal
+                }
+                title="Operating assumptions"
+                description="Revenue, customers, CAC, churn, ARPU, salaries, rent, marketing, COGS, tax and custom expenses."
+              />
+
+              <CapabilityCard
+                icon={
+                  LineChart
+                }
+                title="Deterministic forecasting"
+                description="Monthly and annual Revenue, P&L, cash flow, customers, burn, runway and break-even."
+              />
+
+              <CapabilityCard
+                icon={
+                  Layers3
+                }
+                title="Scenario analysis"
+                description="Base, Bull, Bear and custom scenarios with side-by-side financial outcomes."
+              />
+
+              <CapabilityCard
+                icon={
+                  Gauge
+                }
+                title="Live simulation"
+                description="Experiment with growth, CAC, churn, ARPU and COGS without modifying the saved model."
+              />
+
+              <CapabilityCard
+                icon={
+                  CircleDollarSign
+                }
+                title="Financing"
+                description="Equity, grants, debt, APR, principal repayment and runway impact."
+              />
+
+              <CapabilityCard
+                icon={
+                  BarChart3
+                }
+                title="Executive reporting"
+                description="Professional dashboards plus CSV and PDF exports generated without paid services."
+              />
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="workflow"
+          className="mx-auto max-w-7xl px-5 py-20 lg:px-8"
+        >
+          <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr]">
+            <div>
+              <Badge variant="outline">
+                WORKFLOW
+              </Badge>
+
+              <h2 className="mt-5 text-3xl font-semibold tracking-tight">
+                Build the model once. Explore many futures.
+              </h2>
+
+              <p className="mt-4 text-sm leading-7 text-muted-foreground">
+                VentureScope separates persistent assumptions from calculated outputs,
+                so every dashboard, scenario and report comes from the same financial authority.
+              </p>
+
               <Button
                 asChild
-                size="lg"
+                className="mt-6"
               >
-                <Link href="/register">
-                  Start modelling
+                <Link href="/demo">
+                  See the complete workflow
 
                   <ArrowRight
                     className="size-4"
@@ -123,244 +446,190 @@ export default function HomePage() {
                   />
                 </Link>
               </Button>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                [
+                  "01",
+                  "Create the financial model",
+                  "Company, currency, horizon and revenue engine.",
+                ],
+
+                [
+                  "02",
+                  "Configure operating assumptions",
+                  "Revenue, customer economics, expenses and cash.",
+                ],
+
+                [
+                  "03",
+                  "Add financing and timeline events",
+                  "Funding rounds, debt and month-specific planning changes.",
+                ],
+
+                [
+                  "04",
+                  "Run scenarios",
+                  "Base, Bull, Bear and custom stress cases.",
+                ],
+
+                [
+                  "05",
+                  "Analyze and report",
+                  "Dashboards, tables, CSV and executive PDF output.",
+                ],
+              ].map(
+                (
+                  [
+                    number,
+                    title,
+                    description,
+                  ],
+                ) => (
+                  <div
+                    key={
+                      number
+                    }
+                    className="grid gap-3 rounded-2xl border p-5 sm:grid-cols-[54px_1fr]"
+                  >
+                    <div className="text-sm font-semibold text-muted-foreground">
+                      {
+                        number
+                      }
+                    </div>
+
+                    <div>
+                      <div className="font-medium">
+                        {
+                          title
+                        }
+                      </div>
+
+                      <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                        {
+                          description
+                        }
+                      </p>
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-t bg-foreground text-background">
+          <div className="mx-auto grid max-w-7xl items-center gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:px-8">
+            <div>
+              <div className="flex items-center gap-2 text-sm text-background/60">
+                <LockKeyhole
+                  className="size-4"
+                  aria-hidden="true"
+                />
+
+                Private financial workspaces
+              </div>
+
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+                Ready to model your own company?
+              </h2>
+
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-background/70">
+                Start from your own assumptions or explore Orbit Analytics first.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+              >
+                <Link href="/register">
+                  Create account
+                </Link>
+              </Button>
 
               <Button
                 asChild
-                variant="outline"
                 size="lg"
+                variant="outline"
+                className="border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background"
               >
-                <Link href="/login">
-                  Open workspace
+                <Link href="/demo">
+                  Open demo
                 </Link>
               </Button>
             </div>
-
-            <div className="mt-9 grid max-w-xl gap-3 text-sm text-muted-foreground sm:grid-cols-2">
-              {[
-                "P&L forecasting",
-                "Cash-flow projections",
-                "Burn & runway",
-                "MRR & customer modelling",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-2"
-                >
-                  <div className="flex size-5 items-center justify-center rounded-full bg-foreground text-background">
-                    <Check
-                      className="size-3"
-                      aria-hidden="true"
-                    />
-                  </div>
-
-                  {item}
-                </div>
-              ))}
-            </div>
           </div>
+        </section>
+      </main>
+    </div>
+  );
+}
 
-          <div className="flex items-center">
-            <Card className="w-full overflow-hidden border-border/70 shadow-2xl shadow-black/10">
-              <div className="flex items-center justify-between border-b bg-muted/30 px-5 py-4">
-                <div>
-                  <div className="text-sm font-semibold">
-                    Orbit Analytics
-                  </div>
+function HeroMetric({
+  label,
+  value,
+}: {
+  label: string;
 
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    Base Case · 36 months
-                  </div>
-                </div>
+  value: string;
+}) {
+  return (
+    <div className="rounded-xl border bg-background p-4">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+        {
+          label
+        }
+      </div>
 
-                <Badge>
-                  BASE
-                </Badge>
-              </div>
+      <div className="mt-2 text-lg font-semibold">
+        {
+          value
+        }
+      </div>
+    </div>
+  );
+}
 
-              <CardContent className="p-0">
-                <div className="grid grid-cols-2 border-b sm:grid-cols-4">
-                  {[
-                    ["Revenue", "€620K", "+23.4%"],
-                    ["EBITDA", "€87K", "14.0%"],
-                    ["Runway", "24 mo", "+6 mo"],
-                    ["MRR", "€51.7K", "+18.6%"],
-                  ].map(
-                    ([
-                      label,
-                      value,
-                      change,
-                    ]) => (
-                      <div
-                        key={label}
-                        className="border-b p-4 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0"
-                      >
-                        <div className="text-xs text-muted-foreground">
-                          {label}
-                        </div>
+function CapabilityCard({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon:
+    React.ComponentType<{
+      className?: string;
+    }>;
 
-                        <div className="mt-2 text-xl font-semibold tracking-tight">
-                          {value}
-                        </div>
+  title: string;
 
-                        <div className="mt-1 text-xs text-muted-foreground">
-                          {change}
-                        </div>
-                      </div>
-                    ),
-                  )}
-                </div>
-
-                <div className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-medium">
-                        Revenue & expenses
-                      </div>
-
-                      <div className="text-xs text-muted-foreground">
-                        Illustrative financial trajectory
-                      </div>
-                    </div>
-
-                    <LineChart
-                      className="size-5 text-muted-foreground"
-                      aria-hidden="true"
-                    />
-                  </div>
-
-                  <div className="mt-8 flex h-44 items-end gap-2">
-                    {[
-                      31,
-                      38,
-                      35,
-                      48,
-                      52,
-                      58,
-                      65,
-                      71,
-                      74,
-                      82,
-                      88,
-                      96,
-                    ].map(
-                      (
-                        height,
-                        index,
-                      ) => (
-                        <div
-                          key={`${height}-${index}`}
-                          className="relative flex h-full flex-1 items-end"
-                        >
-                          <div
-                            className="w-full rounded-sm bg-foreground/90"
-                            style={{
-                              height: `${height}%`,
-                            }}
-                          />
-                        </div>
-                      ),
-                    )}
-                  </div>
-
-                  <div className="mt-4 flex justify-between text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                    <span>
-                      Jan
-                    </span>
-
-                    <span>
-                      Dec
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid gap-px border-t bg-border sm:grid-cols-3">
-                  {[
-                    {
-                      icon: Calculator,
-                      value: "71%",
-                      label: "Gross margin",
-                    },
-                    {
-                      icon: ShieldCheck,
-                      value: "Sep 27",
-                      label: "Break-even",
-                    },
-                    {
-                      icon: Gauge,
-                      value: "€213K",
-                      label: "Ending cash",
-                    },
-                  ].map((metric) => {
-                    const Icon = metric.icon;
-
-                    return (
-                      <div
-                        key={metric.label}
-                        className="bg-background p-4"
-                      >
-                        <Icon
-                          className="mb-3 size-4 text-muted-foreground"
-                          aria-hidden="true"
-                        />
-
-                        <div className="font-semibold">
-                          {metric.value}
-                        </div>
-
-                        <div className="mt-1 text-xs text-muted-foreground">
-                          {metric.label}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <div className="max-w-2xl">
-          <div className="text-sm font-medium text-muted-foreground">
-            Built for decisions
-          </div>
-
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Financial modelling without spreadsheet chaos.
-          </h2>
+  description: string;
+}) {
+  return (
+    <Card className="border-border/70">
+      <CardContent className="p-6">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background">
+          <Icon
+            className="size-4"
+            aria-hidden="true"
+          />
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {capabilities.map((capability) => {
-            const Icon = capability.icon;
-
-            return (
-              <Card
-                key={capability.title}
-                className="border-border/70"
-              >
-                <CardContent className="p-6">
-                  <div className="flex size-10 items-center justify-center rounded-xl bg-muted">
-                    <Icon
-                      className="size-5"
-                      aria-hidden="true"
-                    />
-                  </div>
-
-                  <h3 className="mt-6 font-semibold">
-                    {capability.title}
-                  </h3>
-
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {capability.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="mt-5 font-semibold">
+          {
+            title
+          }
         </div>
-      </section>
-    </main>
+
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {
+            description
+          }
+        </p>
+      </CardContent>
+    </Card>
   );
 }

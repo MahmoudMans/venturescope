@@ -29,7 +29,9 @@
     "deploy:rollback": "bash scripts/rollback-production.sh",
     "deploy:selftest": "bash scripts/deployment-selftest.sh",
     "test:observability": "vitest run tests/observability",
-    "ops:diagnostics": "bash scripts/diagnostics-smoke.sh"
+    "ops:diagnostics": "bash scripts/diagnostics-smoke.sh",
+    "test:account-security": "vitest run tests/account-security",
+    "db:migrations:selftest": "bash scripts/migration-selftest.sh"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

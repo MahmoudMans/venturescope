@@ -1,0 +1,3 @@
+ALTER TABLE "User"
+ADD COLUMN "authVersion" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN "passwordChangedAt" TIMESTAMP(3);

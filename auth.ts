@@ -5,6 +5,12 @@ import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db/prisma";
 import { loginSchema } from "@/lib/validation/auth";
 
+import {
+  enforceJwtSessionSecurity,
+  enforceSessionSecurity,
+} from "@/lib/auth/session-security";
+
+
 export const {
   handlers,
   auth,
@@ -81,23 +87,24 @@ export const {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
-      if (user?.id) {
-        token.id = user.id;
-      }
-
-      return token;
+    async jwt({
+      token,
+      user,
+    }) {
+      return enforceJwtSessionSecurity(
+        token,
+        user,
+      );
     },
 
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id =
-          typeof token.id === "string"
-            ? token.id
-            : token.sub ?? "";
-      }
-
-      return session;
+    session({
+      session,
+      token,
+    }) {
+      return enforceSessionSecurity(
+        session,
+        token,
+      );
     },
   },
 });

@@ -49,7 +49,7 @@ export function FinancialTable({
             <tr className="border-b bg-muted/40">
               <th
                 scope="col"
-                className="sticky left-0 z-20 min-w-56 border-r bg-muted/95 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground backdrop-blur"
+                className="sticky left-0 z-20 min-w-56 border-r bg-muted/95 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-foreground backdrop-blur"
               >
                 Metric
               </th>

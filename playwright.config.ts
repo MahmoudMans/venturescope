@@ -56,6 +56,11 @@ export default defineConfig({
   use: {
     baseURL,
 
+    // Test harness only: Axe is injected by Playwright.
+    // Production CSP remains active and is tested independently.
+    bypassCSP:
+      true,
+
     trace:
       "retain-on-failure",
 

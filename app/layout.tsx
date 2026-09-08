@@ -1,3 +1,6 @@
+import {
+  SkipToContent,
+} from "@/components/accessibility/skip-to-content";
 import type {
   Metadata,
 } from "next";
@@ -45,6 +48,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-svh bg-background text-foreground antialiased`}
       >
+        <SkipToContent />
+
+        <span
+          id="main-content"
+          tabIndex={-1}
+          className="sr-only"
+        >
+          Main content
+        </span>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

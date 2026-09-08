@@ -80,7 +80,7 @@ export default function AuthLayout({
           </div>
         </div>
 
-        <div className="relative z-10 text-xs text-background/40">
+        <div className="relative z-10 text-xs text-background/70">
           VentureScope · Financial Planning & Scenario Simulation
         </div>
       </section>

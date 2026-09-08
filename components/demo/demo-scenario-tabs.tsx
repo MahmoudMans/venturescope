@@ -16,7 +16,7 @@ export function DemoScenarioTabs({
   activeScenarioId: string;
 }) {
   return (
-    <div className="inline-flex max-w-full overflow-x-auto rounded-xl border bg-background p-1">
+    <div className="flex w-full max-w-full overflow-x-auto rounded-xl border bg-background p-1 sm:inline-flex sm:w-auto">
       {scenarios.map(
         (
           scenario,

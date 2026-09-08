@@ -82,6 +82,33 @@ export const metadata: Metadata = {
 
   description:
     "Explore VentureScope with the public Orbit Analytics financial model.",
+
+  alternates: {
+    canonical:
+      "/demo",
+  },
+
+  openGraph: {
+    title:
+      "VentureScope Live Demo",
+
+    description:
+      "Explore a complete startup financial model with Base, Bull and Bear scenarios.",
+
+    url:
+      "/demo",
+
+    type:
+      "website",
+  },
+
+  robots: {
+    index:
+      true,
+
+    follow:
+      true,
+  },
 };
 
 export default async function DemoPage({
@@ -295,7 +322,7 @@ export default async function DemoPage({
     ];
 
   return (
-    <div className="min-h-svh bg-muted/20">
+    <div className="min-h-svh w-full max-w-full overflow-x-hidden bg-muted/20">
       <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-5 lg:px-8">
           <VentureScopeLogo />
@@ -329,7 +356,7 @@ export default async function DemoPage({
         </div>
       </header>
 
-      <main>
+      <main className="min-w-0 max-w-full">
         <section className="border-b bg-background">
           <div className="mx-auto max-w-[1600px] px-5 py-10 lg:px-8 lg:py-14">
             <div className="mb-6 flex flex-wrap items-center gap-2">

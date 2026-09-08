@@ -12,6 +12,10 @@ import {
 import {
   ProjectWorkspaceNav,
 } from "@/components/projects/project-workspace-nav";
+
+import {
+  ProjectMobileWorkspaceNav,
+} from "@/components/projects/project-mobile-workspace-nav";
 import {
   Button,
 } from "@/components/ui/button";
@@ -147,7 +151,15 @@ export default async function ProjectLayout({
       </div>
 
       <div className="grid lg:grid-cols-[220px_minmax(0,1fr)]">
-        <aside className="border-b bg-background p-4 lg:min-h-[calc(100svh-9.5rem)] lg:border-b-0 lg:border-r">
+        <div className="relative z-30 border-b px-4 py-3 lg:hidden">
+          <ProjectMobileWorkspaceNav
+            projectId={
+              project.id
+            }
+          />
+        </div>
+
+        <aside className="border-b bg-background p-4 lg:min-h-[calc(100svh-9.5rem)] lg:border-b-0 lg:border-r hidden lg:block">
           <ProjectWorkspaceNav
             projectId={
               project.id

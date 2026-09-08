@@ -558,6 +558,7 @@ export function LiveScenarioSimulator({
               />
 
               <Line
+            isAnimationActive={false}
                 type="monotone"
                 dataKey="baseRevenue"
                 name="Base Case"
@@ -568,6 +569,7 @@ export function LiveScenarioSimulator({
               />
 
               <Line
+            isAnimationActive={false}
                 type="monotone"
                 dataKey="simulatedRevenue"
                 name="Live Simulation"

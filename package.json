@@ -16,7 +16,9 @@
     "test:e2e:headed": "E2E_HEADED=1 bash scripts/e2e.sh",
     "security:check": "eslint . --max-warnings=0 && pnpm typecheck && pnpm test",
     "docker:build": "docker build --target runner -t venturescope:local .",
-    "production:config": "docker compose -f compose.production.yaml config"
+    "production:config": "docker compose -f compose.production.yaml config",
+    "release:check": "prisma validate && eslint . --max-warnings=0 && pnpm typecheck && pnpm test && pnpm test:e2e",
+    "release:docker": "docker build --target runner -t venturescope:release ."
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",
@@ -41,6 +43,7 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",

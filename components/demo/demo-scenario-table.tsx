@@ -119,7 +119,7 @@ export function DemoScenarioTable({
         <table className="w-max min-w-full text-sm">
           <thead>
             <tr className="border-b bg-muted/40">
-              <th className="sticky left-0 z-10 min-w-52 border-r bg-muted/95 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              <th className="sticky left-0 z-10 min-w-52 border-r bg-muted/95 px-4 py-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-foreground">
                 Metric
               </th>
 

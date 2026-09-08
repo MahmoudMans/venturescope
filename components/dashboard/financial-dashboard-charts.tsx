@@ -159,7 +159,7 @@ export function FinancialDashboardCharts({
             TrendingUp
           }
         >
-          <ChartContainer>
+          <ChartContainer label="Revenue and expenses by forecast month">
             <LineChart
               data={
                 visiblePoints
@@ -247,6 +247,7 @@ export function FinancialDashboardCharts({
               ) : null}
 
               <Line
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="revenue"
                 name="Revenue"
@@ -259,6 +260,7 @@ export function FinancialDashboardCharts({
               />
 
               <Line
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="totalExpenses"
                 name="Expenses"
@@ -277,7 +279,7 @@ export function FinancialDashboardCharts({
             Wallet
           }
         >
-          <ChartContainer>
+          <ChartContainer label="Ending cash and financing inflows by forecast month">
             <ComposedChart
               data={
                 visiblePoints
@@ -360,6 +362,7 @@ export function FinancialDashboardCharts({
               />
 
               <Area
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="endingCash"
                 name="Ending cash"
@@ -370,6 +373,7 @@ export function FinancialDashboardCharts({
               />
 
               <Bar
+                isAnimationActive={false}
                 dataKey="financingInflow"
                 name="Financing"
                 fill="var(--chart-3)"
@@ -392,7 +396,7 @@ export function FinancialDashboardCharts({
             BarChart3
           }
         >
-          <ChartContainer>
+          <ChartContainer label="Revenue and EBITDA by forecast month">
             <BarChart
               data={
                 visiblePoints
@@ -475,6 +479,7 @@ export function FinancialDashboardCharts({
               />
 
               <Bar
+                isAnimationActive={false}
                 dataKey="revenue"
                 name="Revenue"
                 fill="var(--chart-1)"
@@ -487,6 +492,7 @@ export function FinancialDashboardCharts({
               />
 
               <Bar
+                isAnimationActive={false}
                 dataKey="ebitda"
                 name="EBITDA"
                 fill="var(--chart-4)"
@@ -508,7 +514,7 @@ export function FinancialDashboardCharts({
             Banknote
           }
         >
-          <ChartContainer>
+          <ChartContainer label="Monthly recurring revenue by forecast month">
             <AreaChart
               data={
                 visiblePoints
@@ -578,6 +584,7 @@ export function FinancialDashboardCharts({
               />
 
               <Area
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="mrr"
                 name="MRR"
@@ -597,7 +604,7 @@ export function FinancialDashboardCharts({
             Flame
           }
         >
-          <ChartContainer>
+          <ChartContainer label="Gross and net burn by forecast month">
             <LineChart
               data={
                 visiblePoints
@@ -674,6 +681,7 @@ export function FinancialDashboardCharts({
               />
 
               <Line
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="grossBurn"
                 name="Gross burn"
@@ -683,6 +691,7 @@ export function FinancialDashboardCharts({
               />
 
               <Line
+                isAnimationActive={false}
                 type="monotone"
                 dataKey="netBurn"
                 name="Net burn"
@@ -703,7 +712,7 @@ export function FinancialDashboardCharts({
               Users
             }
           >
-            <ChartContainer>
+            <ChartContainer label="Active, acquired and churned customers by forecast month">
               <LineChart
                 data={
                   visiblePoints
@@ -783,6 +792,7 @@ export function FinancialDashboardCharts({
                 />
 
                 <Line
+                isAnimationActive={false}
                   type="monotone"
                   dataKey="endingCustomers"
                   name="Active customers"
@@ -792,6 +802,7 @@ export function FinancialDashboardCharts({
                 />
 
                 <Line
+                isAnimationActive={false}
                   type="monotone"
                   dataKey="newCustomers"
                   name="New customers"
@@ -801,6 +812,7 @@ export function FinancialDashboardCharts({
                 />
 
                 <Line
+                isAnimationActive={false}
                   type="monotone"
                   dataKey="churnedCustomers"
                   name="Churned customers"
@@ -941,21 +953,38 @@ function DashboardRangeSelector({
 
 function ChartContainer({
   children,
+  label,
 }: {
   children:
     React.ReactNode;
+
+  label: string;
 }) {
   return (
-    <div className="h-[300px] w-full">
-      <ResponsiveContainer
-        width="100%"
-        height="100%"
-      >
-        {
-          children
+    <figure>
+      <div
+        role="img"
+        aria-label={
+          label
         }
-      </ResponsiveContainer>
-    </div>
+        className="h-[300px] w-full"
+      >
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+        >
+          {
+            children
+          }
+        </ResponsiveContainer>
+      </div>
+
+      <figcaption className="sr-only">
+        {
+          label
+        }. Equivalent financial values are also available in VentureScope&apos;s tabular analysis views.
+      </figcaption>
+    </figure>
   );
 }
 

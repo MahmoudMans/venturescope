@@ -141,6 +141,7 @@ export function ScenarioComparisonChart({
           />
 
           <Bar
+            isAnimationActive={false}
             dataKey="revenue"
             name="First-year revenue"
             fill="var(--chart-1)"
@@ -153,6 +154,7 @@ export function ScenarioComparisonChart({
           />
 
           <Bar
+            isAnimationActive={false}
             dataKey="ebitda"
             name="First-year EBITDA"
             fill="var(--chart-4)"
@@ -165,6 +167,7 @@ export function ScenarioComparisonChart({
           />
 
           <Bar
+            isAnimationActive={false}
             dataKey="cash"
             name="Ending cash"
             fill="var(--chart-3)"

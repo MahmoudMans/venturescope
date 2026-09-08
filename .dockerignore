@@ -22,3 +22,4 @@ playwright.config.ts
 /tmp
 *.log
 .DS_Store
+backups

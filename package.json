@@ -18,7 +18,13 @@
     "docker:build": "docker build --target runner -t venturescope:local .",
     "production:config": "docker compose -f compose.production.yaml config",
     "release:check": "prisma validate && eslint . --max-warnings=0 && pnpm typecheck && pnpm test && pnpm test:e2e",
-    "release:docker": "docker build --target runner -t venturescope:release ."
+    "release:docker": "docker build --target runner -t venturescope:release .",
+    "ops:smoke": "bash scripts/production-smoke.sh",
+    "db:backup": "bash scripts/db-backup.sh",
+    "db:backup:verify": "bash scripts/db-verify-backup.sh",
+    "db:restore": "bash scripts/db-restore.sh",
+    "db:ops:selftest": "bash scripts/db-ops-selftest.sh",
+    "release:gate": "bash scripts/release-gate.sh"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

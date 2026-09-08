@@ -23,3 +23,4 @@ playwright.config.ts
 *.log
 .DS_Store
 backups
+.venturescope

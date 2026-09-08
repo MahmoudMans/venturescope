@@ -49,3 +49,4 @@ next-env.d.ts
 
 !.env.production.example
 /backups/
+/.venturescope/

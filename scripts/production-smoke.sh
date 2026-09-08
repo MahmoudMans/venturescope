@@ -166,7 +166,7 @@ done
 VERSION_BODY="${TMP_DIR}/_api_version.body"
 
 python3 \
-  - "${VERSION_BODY}" \
+  - "${VERSION_BODY}" "${VENTURESCOPE_EXPECTED_VERSION:-}" \
   <<'PY'
 import json
 import sys
@@ -176,6 +176,14 @@ payload = json.loads(
     Path(
         sys.argv[1]
     ).read_text()
+)
+
+expected_version = (
+    sys.argv[2].strip()
+    if len(
+        sys.argv
+    ) > 2
+    else ""
 )
 
 if (
@@ -189,11 +197,24 @@ if (
         "[ERROR] /api/version returned unexpected service identity."
     )
 
-if not payload.get(
+version = payload.get(
     "version"
-):
+)
+
+if not version:
     raise SystemExit(
         "[ERROR] /api/version returned an empty version."
+    )
+
+if (
+    expected_version
+    and
+    version !=
+    expected_version
+):
+    raise SystemExit(
+        "[ERROR] Deployed version mismatch: "
+        f"expected {expected_version!r}, received {version!r}."
     )
 
 if not payload.get(
@@ -217,6 +238,11 @@ for forbidden in [
 print(
     "[PASS] /api/version payload is operational and non-secret"
 )
+
+if expected_version:
+    print(
+        f"[PASS] Expected release version is active: {expected_version}"
+    )
 PY
 
 

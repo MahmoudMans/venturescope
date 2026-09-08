@@ -164,15 +164,20 @@ export function ProjectWorkspaceNav({
     },
   ];
 
-  const futureOutputItems = [
+  const outputItems = [
     {
       label:
         "Reports",
 
       icon:
         FileText,
-    },
 
+      href:
+        `/projects/${projectId}/reports`,
+    },
+  ];
+
+  const futureOutputItems = [
     {
       label:
         "Settings",
@@ -248,6 +253,25 @@ export function ProjectWorkspaceNav({
       </NavSection>
 
       <NavSection label="Output">
+        {outputItems.map(
+          (
+            item,
+          ) => (
+            <ActiveItem
+              key={
+                item.href
+              }
+              item={
+                item
+              }
+              active={
+                pathname ===
+                item.href
+              }
+            />
+          ),
+        )}
+
         {futureOutputItems.map(
           (
             item,

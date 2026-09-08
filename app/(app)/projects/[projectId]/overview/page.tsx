@@ -15,6 +15,7 @@ import {
   TrendingUp,
   Users,
   Wallet,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -233,6 +234,20 @@ export default async function ProjectOverviewPage({
 
       icon:
         Gauge,
+    },
+
+    {
+      label:
+        "Reports",
+
+      description:
+        "Executive report and CSV/PDF exports.",
+
+      href:
+        `/projects/${project.id}/reports${scenarioSuffix}`,
+
+      icon:
+        FileText,
     },
 
     ...(

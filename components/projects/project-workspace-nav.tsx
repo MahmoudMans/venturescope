@@ -82,6 +82,17 @@ export function ProjectWorkspaceNav({
       href:
         `/projects/${projectId}/expenses`,
     },
+
+    {
+      label:
+        "Financing",
+
+      icon:
+        Banknote,
+
+      href:
+        `/projects/${projectId}/financing`,
+    },
   ];
 
   const analysisItems = [
@@ -130,15 +141,12 @@ export function ProjectWorkspaceNav({
     },
   ];
 
-  const futureModelItems = [
-    {
-      label:
-        "Financing",
-
-      icon:
-        Banknote,
-    },
-  ];
+  const futureModelItems: Array<{
+    label: string;
+    icon: React.ComponentType<{
+      className?: string;
+    }>;
+  }> = [];
 
   const futureAnalysisItems = [
     {

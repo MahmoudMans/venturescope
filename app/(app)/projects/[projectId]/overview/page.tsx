@@ -5,11 +5,14 @@ import {
   ArrowRight,
   Building2,
   CalendarRange,
+  CheckCircle2,
+  Circle,
   CircleDollarSign,
   Layers3,
   SlidersHorizontal,
   TrendingUp,
 } from "lucide-react";
+import Link from "next/link";
 
 import {
   Badge,
@@ -27,6 +30,10 @@ import {
 import {
   requireUser,
 } from "@/lib/auth/require-user";
+import {
+  countCompletedAssumptionSections,
+  parseStoredFinancialAssumptions,
+} from "@/lib/finance/assumptions/storage";
 import {
   requireOwnedProject,
 } from "@/lib/projects/project-access";
@@ -64,29 +71,56 @@ export default async function ProjectOverviewPage({
       projectId,
     );
 
+  const assumptions =
+    parseStoredFinancialAssumptions(
+      project.baseAssumptions,
+    );
+
+  const completedSections =
+    countCompletedAssumptionSections(
+      assumptions,
+    );
+
+  const assumptionsComplete =
+    completedSections ===
+    3;
+
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
-      <section>
-        <div className="text-sm font-medium text-muted-foreground">
-          Model overview
+      <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+        <div>
+          <div className="text-sm font-medium text-muted-foreground">
+            Model overview
+          </div>
+
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight">
+            {
+              project.name
+            }
+          </h2>
+
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+            Configure the operating assumptions that will
+            power this model&apos;s deterministic financial forecast.
+          </p>
         </div>
 
-        <h2 className="mt-2 text-3xl font-semibold tracking-tight">
-          {
-            project.name
+        <Badge
+          variant={
+            assumptionsComplete
+              ? "default"
+              : "outline"
           }
-        </h2>
-
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-          The financial model structure is ready.
-          Assumptions and calculations begin in the
-          next development phase.
-        </p>
+        >
+          {completedSections}/3 assumption sections
+        </Badge>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <OverviewMetric
-          icon={Building2}
+          icon={
+            Building2
+          }
           label="Industry"
           value={
             project.industry ??
@@ -105,13 +139,17 @@ export default async function ProjectOverviewPage({
         />
 
         <OverviewMetric
-          icon={CalendarRange}
+          icon={
+            CalendarRange
+          }
           label="Forecast"
           value={`${project.horizonMonths} months`}
         />
 
         <OverviewMetric
-          icon={TrendingUp}
+          icon={
+            TrendingUp
+          }
           label="Revenue model"
           value={formatRevenueMode(
             project.revenueMode,
@@ -125,11 +163,131 @@ export default async function ProjectOverviewPage({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <CardTitle>
+                  Assumption setup
+                </CardTitle>
+
+                <CardDescription className="mt-1">
+                  Complete all three model-input sections before financial calculations begin.
+                </CardDescription>
+              </div>
+
+              <SlidersHorizontal
+                className="size-5 text-muted-foreground"
+                aria-hidden="true"
+              />
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-3">
+            <AssumptionSetupRow
+              href={`/projects/${project.id}/assumptions`}
+              label="General assumptions"
+              detail="Starting cash and corporate tax"
+              complete={
+                assumptions.completion
+                  .general
+              }
+            />
+
+            <AssumptionSetupRow
+              href={`/projects/${project.id}/revenue`}
+              label="Revenue assumptions"
+              detail={formatRevenueMode(
+                project.revenueMode,
+              )}
+              complete={
+                assumptions.completion
+                  .revenue
+              }
+            />
+
+            <AssumptionSetupRow
+              href={`/projects/${project.id}/expenses`}
+              label="Expense assumptions"
+              detail="Salaries, rent, marketing, COGS and operating costs"
+              complete={
+                assumptions.completion
+                  .expenses
+              }
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/70">
+          <CardHeader>
+            <CardTitle>
+              Model configuration
+            </CardTitle>
+
+            <CardDescription>
+              Persistent structural information.
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <ConfigurationRow
+              label="Forecast start"
+              value={formatProjectStartMonth(
+                project.startMonth,
+              )}
+            />
+
+            <ConfigurationRow
+              label="Forecast horizon"
+              value={`${project.horizonMonths} months`}
+            />
+
+            <ConfigurationRow
+              label="Revenue engine"
+              value={formatRevenueMode(
+                project.revenueMode,
+              )}
+            />
+
+            <ConfigurationRow
+              label="Model version"
+              value={
+                project.modelVersion
+              }
+            />
+
+            <ConfigurationRow
+              label="Financing events"
+              value={String(
+                project._count
+                  .financingEvents,
+              )}
+            />
+
+            <ConfigurationRow
+              label="Monthly overrides"
+              value={String(
+                project._count
+                  .monthlyOverrides,
+              )}
+            />
+
+            <ConfigurationRow
+              label="Last updated"
+              value={formatProjectUpdatedAt(
+                project.updatedAt,
+              )}
+            />
+          </CardContent>
+        </Card>
+      </section>
+
+      <section>
+        <Card className="border-border/70">
+          <CardHeader>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <CardTitle>
                   Scenario structure
                 </CardTitle>
 
                 <CardDescription className="mt-1">
-                  Every new model starts with three scenario definitions.
+                  Scenario definitions are stored now. The scenario engine will apply them later.
                 </CardDescription>
               </div>
 
@@ -190,80 +348,10 @@ export default async function ProjectOverviewPage({
                         ? "scenario modifier"
                         : "scenario modifiers"}
                     </div>
-
-                    <p className="mt-4 text-xs leading-5 text-muted-foreground">
-                      {scenario.type ===
-                      "BASE"
-                        ? "Uses the project's exact assumptions without scenario adjustments."
-                        : "Modifiers are stored now and will be applied by the financial engine later."}
-                    </p>
                   </div>
                 );
               },
             )}
-          </CardContent>
-        </Card>
-
-        <Card className="border-border/70">
-          <CardHeader>
-            <CardTitle>
-              Model configuration
-            </CardTitle>
-
-            <CardDescription>
-              Persistent structural information for this model.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            <ConfigurationRow
-              label="Forecast start"
-              value={formatProjectStartMonth(
-                project.startMonth,
-              )}
-            />
-
-            <ConfigurationRow
-              label="Forecast horizon"
-              value={`${project.horizonMonths} months`}
-            />
-
-            <ConfigurationRow
-              label="Revenue engine"
-              value={formatRevenueMode(
-                project.revenueMode,
-              )}
-            />
-
-            <ConfigurationRow
-              label="Model version"
-              value={
-                project.modelVersion
-              }
-            />
-
-            <ConfigurationRow
-              label="Financing events"
-              value={String(
-                project._count
-                  .financingEvents,
-              )}
-            />
-
-            <ConfigurationRow
-              label="Monthly overrides"
-              value={String(
-                project._count
-                  .monthlyOverrides,
-              )}
-            />
-
-            <ConfigurationRow
-              label="Last updated"
-              value={formatProjectUpdatedAt(
-                project.updatedAt,
-              )}
-            />
           </CardContent>
         </Card>
       </section>
@@ -281,27 +369,35 @@ export default async function ProjectOverviewPage({
 
               <div>
                 <div className="font-semibold">
-                  Next: Financial assumptions
+                  {assumptionsComplete
+                    ? "Financial assumptions are ready"
+                    : "Complete the financial assumptions"}
                 </div>
 
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-                  The next step will introduce the complete
-                  assumption model for revenue, customers,
-                  expenses, starting cash, COGS and tax.
+                  {assumptionsComplete
+                    ? "The model now contains all core inputs required for the financial calculation engine."
+                    : `${3 - completedSections} assumption section${3 - completedSections === 1 ? "" : "s"} remain before the model is calculation-ready.`}
                 </p>
               </div>
             </div>
 
             <Button
-              disabled
+              asChild
               className="shrink-0"
             >
-              Configure assumptions
+              <Link
+                href={`/projects/${project.id}/assumptions`}
+              >
+                {assumptionsComplete
+                  ? "Review assumptions"
+                  : "Configure assumptions"}
 
-              <ArrowRight
-                className="size-4"
-                aria-hidden="true"
-              />
+                <ArrowRight
+                  className="size-4"
+                  aria-hidden="true"
+                />
+              </Link>
             </Button>
           </CardContent>
         </Card>
@@ -314,6 +410,7 @@ type OverviewMetricProps = {
   icon: React.ComponentType<{
     className?: string;
   }>;
+
   label: string;
   value: string;
 };
@@ -344,6 +441,52 @@ function OverviewMetric({
         </CardTitle>
       </CardHeader>
     </Card>
+  );
+}
+
+function AssumptionSetupRow({
+  href,
+  label,
+  detail,
+  complete,
+}: {
+  href: string;
+  label: string;
+  detail: string;
+  complete: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-4 rounded-xl border p-4 transition-colors hover:bg-muted/30"
+    >
+      {complete ? (
+        <CheckCircle2
+          className="size-5 shrink-0"
+          aria-hidden="true"
+        />
+      ) : (
+        <Circle
+          className="size-5 shrink-0 text-muted-foreground"
+          aria-hidden="true"
+        />
+      )}
+
+      <div className="min-w-0 flex-1">
+        <div className="text-sm font-medium">
+          {label}
+        </div>
+
+        <div className="mt-1 truncate text-xs text-muted-foreground">
+          {detail}
+        </div>
+      </div>
+
+      <ArrowRight
+        className="size-4 shrink-0 text-muted-foreground"
+        aria-hidden="true"
+      />
+    </Link>
   );
 }
 

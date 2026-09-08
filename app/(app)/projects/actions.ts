@@ -7,7 +7,15 @@ import {
   redirect,
 } from "next/navigation";
 
-import { requireUser } from "@/lib/auth/require-user";
+import {
+  requireUser,
+} from "@/lib/auth/require-user";
+import {
+  createDefaultFinancialAssumptions,
+} from "@/lib/finance/assumptions/defaults";
+import {
+  financialAssumptionsToJson,
+} from "@/lib/finance/assumptions/storage";
 import type {
   CreateProjectState,
   RenameProjectState,
@@ -23,7 +31,9 @@ import {
 import {
   DEFAULT_PROJECT_SCENARIOS,
 } from "@/lib/projects/scenario-defaults";
-import { prisma } from "@/lib/db/prisma";
+import {
+  prisma,
+} from "@/lib/db/prisma";
 
 export async function createProjectAction(
   _previousState: CreateProjectState,
@@ -35,16 +45,24 @@ export async function createProjectAction(
   const parsed =
     createProjectSchema.safeParse({
       name:
-        formData.get("name"),
+        formData.get(
+          "name",
+        ),
 
       industry:
-        formData.get("industry"),
+        formData.get(
+          "industry",
+        ),
 
       currency:
-        formData.get("currency"),
+        formData.get(
+          "currency",
+        ),
 
       startMonth:
-        formData.get("startMonth"),
+        formData.get(
+          "startMonth",
+        ),
 
       horizonMonths:
         formData.get(
@@ -57,13 +75,16 @@ export async function createProjectAction(
         ),
     });
 
-  if (!parsed.success) {
+  if (
+    !parsed.success
+  ) {
     return {
       message:
         "Please correct the highlighted model information.",
 
       errors:
-        parsed.error.flatten()
+        parsed.error
+          .flatten()
           .fieldErrors,
     };
   }
@@ -78,17 +99,21 @@ export async function createProjectAction(
             user.id,
 
           name:
-            parsed.data.name,
+            parsed.data
+              .name,
 
           industry:
-            parsed.data.industry,
+            parsed.data
+              .industry,
 
           currency:
-            parsed.data.currency,
+            parsed.data
+              .currency,
 
           startMonth:
             monthInputToUtcDate(
-              parsed.data.startMonth,
+              parsed.data
+                .startMonth,
             ),
 
           horizonMonths:
@@ -96,7 +121,13 @@ export async function createProjectAction(
               .horizonMonths,
 
           revenueMode:
-            parsed.data.revenueMode,
+            parsed.data
+              .revenueMode,
+
+          baseAssumptions:
+            financialAssumptionsToJson(
+              createDefaultFinancialAssumptions(),
+            ),
 
           modelVersion:
             "1.0",
@@ -163,16 +194,21 @@ export async function renameProjectAction(
         ),
 
       name:
-        formData.get("name"),
+        formData.get(
+          "name",
+        ),
     });
 
-  if (!parsed.success) {
+  if (
+    !parsed.success
+  ) {
     return {
       message:
         "Enter a valid model name.",
 
       errors:
-        parsed.error.flatten()
+        parsed.error
+          .flatten()
           .fieldErrors,
     };
   }
@@ -191,12 +227,14 @@ export async function renameProjectAction(
 
         data: {
           name:
-            parsed.data.name,
+            parsed.data
+              .name,
         },
       });
 
     if (
-      result.count === 0
+      result.count ===
+      0
     ) {
       return {
         message:
@@ -216,7 +254,8 @@ export async function renameProjectAction(
   }
 
   const projectId =
-    parsed.data.projectId;
+    parsed.data
+      .projectId;
 
   revalidatePath(
     "/dashboard",
@@ -258,7 +297,9 @@ export async function deleteProjectAction(
       ),
     );
 
-  if (!parsed.success) {
+  if (
+    !parsed.success
+  ) {
     redirect(
       "/dashboard",
     );
@@ -301,7 +342,9 @@ export async function duplicateProjectAction(
       projectId,
     );
 
-  if (!parsed.success) {
+  if (
+    !parsed.success
+  ) {
     redirect(
       "/dashboard",
     );
@@ -320,19 +363,22 @@ export async function duplicateProjectAction(
       include: {
         scenarios: {
           orderBy: {
-            createdAt: "asc",
+            createdAt:
+              "asc",
           },
         },
 
         financingEvents: {
           orderBy: {
-            month: "asc",
+            month:
+              "asc",
           },
         },
 
         monthlyOverrides: {
           orderBy: {
-            month: "asc",
+            month:
+              "asc",
           },
         },
       },
@@ -436,7 +482,8 @@ export async function duplicateProjectAction(
           if (
             source
               .financingEvents
-              .length > 0
+              .length >
+            0
           ) {
             await transaction
               .financingEvent
@@ -477,7 +524,8 @@ export async function duplicateProjectAction(
           if (
             source
               .monthlyOverrides
-              .length > 0
+              .length >
+            0
           ) {
             await transaction
               .monthlyOverride

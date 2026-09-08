@@ -262,7 +262,6 @@ export default function MarketingPage() {
                       .map(
                         (
                           month,
-                          index,
                         ) => {
                           const maxRevenue =
                             Math.max(

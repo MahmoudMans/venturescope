@@ -1,4 +1,4 @@
-import type Decimal from "decimal.js";
+import Decimal from "decimal.js";
 
 import type {
   CustomerRevenueAssumptions,
@@ -72,10 +72,9 @@ export function calculateCustomerRevenueMonth(
       ? monthlyMarketingBudget.div(
           cac,
         )
-      : new (
-          monthlyMarketingBudget
-            .constructor as typeof Decimal
-        )(0);
+      : new Decimal(
+          0,
+        );
 
   const organicAcquisitionBase =
     decimal(

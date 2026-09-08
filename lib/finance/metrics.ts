@@ -1,5 +1,3 @@
-import Decimal from "decimal.js";
-
 import {
   averageDecimals,
   decimal,

@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import {
   useActionState,
-  useEffect,
   useState,
 } from "react";
 
@@ -92,24 +91,7 @@ export function FinancingEventActions({
     updateFinancingEventAction,
     initialFinancingActionState,
   );
-
-  useEffect(
-    () => {
-      if (
-        state.status ===
-        "success"
-      ) {
-        setEditOpen(
-          false,
-        );
-      }
-    },
-    [
-      state.status,
-    ],
-  );
-
-  return (
+return (
     <>
       <div className="flex items-center gap-1">
         <Button

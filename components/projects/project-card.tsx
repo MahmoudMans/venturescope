@@ -11,9 +11,6 @@ import {
   ProjectActions,
 } from "@/components/projects/project-actions";
 import {
-  Badge,
-} from "@/components/ui/badge";
-import {
   Button,
 } from "@/components/ui/button";
 import {

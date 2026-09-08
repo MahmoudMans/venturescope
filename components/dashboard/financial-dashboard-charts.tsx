@@ -38,7 +38,6 @@ import {
 } from "@/components/ui/button";
 import type {
   FinancialDashboardData,
-  FinancialDashboardPoint,
 } from "@/lib/finance/dashboard-data";
 import {
   formatCompactCurrencyValue,

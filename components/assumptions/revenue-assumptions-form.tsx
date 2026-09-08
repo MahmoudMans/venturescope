@@ -2,7 +2,6 @@
 
 import {
   CircleDollarSign,
-  Percent,
   TrendingUp,
   Users,
 } from "lucide-react";

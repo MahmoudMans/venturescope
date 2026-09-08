@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import {
   useActionState,
-  useEffect,
   useState,
 } from "react";
 
@@ -115,36 +114,7 @@ export function CreateProjectWizard({
     createProjectAction,
     initialCreateProjectState,
   );
-
-  useEffect(() => {
-    const errors =
-      state.errors;
-
-    if (!errors) {
-      return;
-    }
-
-    if (
-      errors.name ||
-      errors.industry ||
-      errors.currency ||
-      errors.startMonth ||
-      errors.horizonMonths
-    ) {
-      setStep(1);
-      return;
-    }
-
-    if (
-      errors.revenueMode
-    ) {
-      setStep(2);
-    }
-  }, [
-    state,
-  ]);
-
-  function continueToRevenue() {
+function continueToRevenue() {
     setLocalError(
       undefined,
     );

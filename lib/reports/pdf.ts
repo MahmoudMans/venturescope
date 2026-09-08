@@ -861,7 +861,7 @@ function drawLineChart(
           0,
         ];
 
-  let minimum =
+  const minimum =
     Math.min(
       ...safeValues,
       0,

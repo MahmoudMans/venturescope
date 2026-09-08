@@ -59,6 +59,14 @@ function numericValue(
     return undefined;
   }
 
+  if (
+    !/^-?(?:\d+|\d+\.\d+|\.\d+)$/.test(
+      normalized,
+    )
+  ) {
+    return undefined;
+  }
+
   const parsed =
     decimal(
       normalized,

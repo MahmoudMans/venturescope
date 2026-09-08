@@ -4,28 +4,42 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import {
-  useEffect,
-  useState,
+  useTheme,
+} from "next-themes";
+import {
+  useSyncExternalStore,
 } from "react";
 
-import { Button } from "@/components/ui/button";
+import {
+  Button,
+} from "@/components/ui/button";
+
+function subscribeToHydration() {
+  return () => {};
+}
+
+function getClientSnapshot() {
+  return true;
+}
+
+function getServerSnapshot() {
+  return false;
+}
 
 export function ThemeToggle() {
   const {
     resolvedTheme,
     setTheme,
-  } = useTheme();
+  } =
+    useTheme();
 
-  const [
-    mounted,
-    setMounted,
-  ] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted =
+    useSyncExternalStore(
+      subscribeToHydration,
+      getClientSnapshot,
+      getServerSnapshot,
+    );
 
   if (!mounted) {
     return (
@@ -33,8 +47,8 @@ export function ThemeToggle() {
         type="button"
         variant="ghost"
         size="icon"
-        aria-label="Change color theme"
         disabled
+        aria-label="Theme control loading"
       >
         <Sun
           className="size-4"
@@ -44,25 +58,27 @@ export function ThemeToggle() {
     );
   }
 
-  const dark = resolvedTheme === "dark";
+  const dark =
+    resolvedTheme ===
+    "dark";
 
   return (
     <Button
       type="button"
       variant="ghost"
       size="icon"
+      onClick={() =>
+        setTheme(
+          dark
+            ? "light"
+            : "dark",
+        )
+      }
       aria-label={
         dark
           ? "Switch to light theme"
           : "Switch to dark theme"
       }
-      onClick={() => {
-        setTheme(
-          dark
-            ? "light"
-            : "dark",
-        );
-      }}
     >
       {dark ? (
         <Sun

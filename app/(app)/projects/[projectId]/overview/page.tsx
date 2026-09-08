@@ -3,17 +3,33 @@ import type {
 } from "next";
 import {
   ArrowRight,
-  Building2,
-  CalendarRange,
-  CheckCircle2,
-  Circle,
+  Banknote,
+  BarChart3,
+  CalendarClock,
+  Calculator,
   CircleDollarSign,
-  Layers3,
-  SlidersHorizontal,
+  Gauge,
+  Landmark,
+  Percent,
+  ReceiptText,
   TrendingUp,
+  Users,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 
+import {
+  FinancialDashboardCharts,
+} from "@/components/dashboard/financial-dashboard-charts";
+import {
+  AnalysisSetupRequired,
+} from "@/components/financial/analysis-setup-required";
+import {
+  FinancialKpiCard,
+} from "@/components/financial/financial-kpi-card";
+import {
+  FinancialPageHeader,
+} from "@/components/financial/financial-page-header";
 import {
   Badge,
 } from "@/components/ui/badge";
@@ -31,24 +47,25 @@ import {
   requireUser,
 } from "@/lib/auth/require-user";
 import {
-  countCompletedAssumptionSections,
-  parseStoredFinancialAssumptions,
-} from "@/lib/finance/assumptions/storage";
+  getBaseFinancialAnalysis,
+} from "@/lib/finance/analysis-context";
 import {
-  requireOwnedProject,
-} from "@/lib/projects/project-access";
+  buildFinancialDashboardData,
+} from "@/lib/finance/dashboard-data";
 import {
-  formatProjectStartMonth,
-  formatProjectUpdatedAt,
-} from "@/lib/projects/project-dates";
+  formatCompactCurrencyValue,
+  formatLongMonthKey,
+  formatPercentageValue,
+  formatRunway,
+  formatRunwayDetail,
+} from "@/lib/finance/formatting";
 import {
-  countScenarioModifiers,
   formatRevenueMode,
-  formatScenarioType,
 } from "@/lib/projects/project-formatting";
 
 export const metadata: Metadata = {
-  title: "Financial model",
+  title:
+    "Overview",
 };
 
 export default async function ProjectOverviewPage({
@@ -65,340 +82,455 @@ export default async function ProjectOverviewPage({
   const user =
     await requireUser();
 
-  const project =
-    await requireOwnedProject(
+  const analysis =
+    await getBaseFinancialAnalysis(
       user.id,
       projectId,
     );
 
-  const assumptions =
-    parseStoredFinancialAssumptions(
-      project.baseAssumptions,
-    );
+  const project =
+    analysis.project;
 
-  const completedSections =
-    countCompletedAssumptionSections(
-      assumptions,
-    );
-
-  const assumptionsComplete =
-    completedSections ===
-    3;
-
-  return (
-    <div className="mx-auto max-w-7xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
-      <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div>
-          <div className="text-sm font-medium text-muted-foreground">
-            Model overview
-          </div>
-
-          <h2 className="mt-2 text-3xl font-semibold tracking-tight">
-            {
-              project.name
-            }
-          </h2>
-
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Configure the operating assumptions that will
-            power this model&apos;s deterministic financial forecast.
-          </p>
-        </div>
-
-        <Badge
-          variant={
-            assumptionsComplete
-              ? "default"
-              : "outline"
+  if (
+    !analysis.ready
+  ) {
+    return (
+      <div className="mx-auto max-w-7xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
+        <FinancialPageHeader
+          eyebrow="Overview"
+          title={
+            project.name
           }
-        >
-          {completedSections}/3 assumption sections
-        </Badge>
-      </section>
-
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <OverviewMetric
-          icon={
-            Building2
-          }
-          label="Industry"
-          value={
-            project.industry ??
-            "Not specified"
-          }
+          description="Complete the financial assumptions to activate VentureScope's interactive analytics dashboard."
+          scenarioName="Base Case"
         />
 
-        <OverviewMetric
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <FinancialKpiCard
+            label="Currency"
+            value={
+              project.currency
+            }
+            detail="Project reporting currency."
+            icon={
+              CircleDollarSign
+            }
+          />
+
+          <FinancialKpiCard
+            label="Forecast"
+            value={`${project.horizonMonths} mo`}
+            detail="Configured forecast horizon."
+            icon={
+              CalendarClock
+            }
+          />
+
+          <FinancialKpiCard
+            label="Revenue model"
+            value={formatRevenueMode(
+              project.revenueMode,
+            )}
+            detail="Revenue engine selected during project creation."
+            icon={
+              TrendingUp
+            }
+          />
+
+          <FinancialKpiCard
+            label="Financing events"
+            value={String(
+              project.financingEvents
+                .length,
+            )}
+            detail="Funding events currently configured."
+            icon={
+              Landmark
+            }
+          />
+        </section>
+
+        <AnalysisSetupRequired
+          projectId={
+            project.id
+          }
+          missingSections={
+            analysis.missingSections
+          }
+        />
+      </div>
+    );
+  }
+
+  const forecast =
+    analysis.forecast;
+
+  const dashboardData =
+    buildFinancialDashboardData(
+      forecast.months,
+      forecast.revenueMode,
+    );
+
+  const breakEvenMonth =
+    forecast.metrics
+      .breakEven
+      .sustainedBreakEvenMonth;
+
+  const quickLinks = [
+    {
+      label:
+        "Forecast",
+
+      description:
+        "Detailed monthly and annual forecast.",
+
+      href:
+        `/projects/${project.id}/forecast`,
+
+      icon:
+        BarChart3,
+    },
+
+    {
+      label:
+        "P&L",
+
+      description:
+        "Revenue, margins and profitability.",
+
+      href:
+        `/projects/${project.id}/pnl`,
+
+      icon:
+        Calculator,
+    },
+
+    {
+      label:
+        "Cash Flow",
+
+      description:
+        "Burn, runway and cash movements.",
+
+      href:
+        `/projects/${project.id}/cash-flow`,
+
+      icon:
+        Wallet,
+    },
+
+    {
+      label:
+        "Financing",
+
+      description:
+        "Funding events and debt schedule.",
+
+      href:
+        `/projects/${project.id}/financing`,
+
+      icon:
+        Landmark,
+    },
+
+    ...(
+      forecast.revenueMode ===
+      "CUSTOMER_DRIVEN"
+        ? [
+            {
+              label:
+                "Customers",
+
+              description:
+                "Acquisition, churn and MRR.",
+
+              href:
+                `/projects/${project.id}/customers`,
+
+              icon:
+                Users,
+            },
+          ]
+        : []
+    ),
+  ];
+
+  return (
+    <div className="mx-auto max-w-[1600px] space-y-8 px-5 py-8 lg:px-8 lg:py-10">
+      <FinancialPageHeader
+        eyebrow="Overview"
+        title={
+          project.name
+        }
+        description="Interactive Base Case analytics generated directly from the VentureScope financial engine."
+        scenarioName={
+          forecast.scenario
+            .name
+        }
+      />
+
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+        <FinancialKpiCard
+          label="First-year revenue"
+          value={formatCompactCurrencyValue(
+            forecast.metrics
+              .firstYearRevenue,
+            forecast.currency,
+          )}
+          detail="Revenue within the first forecast calendar year."
           icon={
             CircleDollarSign
           }
-          label="Currency"
-          value={
-            project.currency
-          }
         />
 
-        <OverviewMetric
-          icon={
-            CalendarRange
-          }
-          label="Forecast"
-          value={`${project.horizonMonths} months`}
-        />
-
-        <OverviewMetric
+        <FinancialKpiCard
+          label="First-year EBITDA"
+          value={formatCompactCurrencyValue(
+            forecast.metrics
+              .firstYearEbitda,
+            forecast.currency,
+          )}
+          detail={`Forecast EBITDA margin: ${formatPercentageValue(
+            forecast.metrics
+              .ebitdaMarginPercentage,
+          )}`}
           icon={
             TrendingUp
           }
-          label="Revenue model"
-          value={formatRevenueMode(
-            project.revenueMode,
+        />
+
+        <FinancialKpiCard
+          label="Ending cash"
+          value={formatCompactCurrencyValue(
+            forecast.metrics
+              .endingCash,
+            forecast.currency,
           )}
+          detail={`Final month of the ${forecast.horizonMonths}-month forecast.`}
+          icon={
+            Wallet
+          }
+        />
+
+        <FinancialKpiCard
+          label="Runway"
+          value={formatRunway(
+            forecast.metrics
+              .runway,
+          )}
+          detail={formatRunwayDetail(
+            forecast.metrics
+              .runway,
+          )}
+          icon={
+            Gauge
+          }
+        />
+
+        <FinancialKpiCard
+          label="Ending MRR"
+          value={formatCompactCurrencyValue(
+            forecast.metrics
+              .endingMrr,
+            forecast.currency,
+          )}
+          detail={`ARR equivalent: ${formatCompactCurrencyValue(
+            forecast.metrics
+              .endingArr,
+            forecast.currency,
+          )}`}
+          icon={
+            Banknote
+          }
+        />
+
+        <FinancialKpiCard
+          label="Break-even"
+          value={
+            breakEvenMonth
+              ? formatLongMonthKey(
+                  breakEvenMonth,
+                )
+              : "Not reached"
+          }
+          detail="First month of three consecutive EBITDA-positive months."
+          icon={
+            CalendarClock
+          }
         />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
-        <Card className="border-border/70">
-          <CardHeader>
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <CardTitle>
-                  Assumption setup
-                </CardTitle>
+      <FinancialDashboardCharts
+        data={
+          dashboardData
+        }
+        currency={
+          forecast.currency
+        }
+        sustainedBreakEvenMonth={
+          breakEvenMonth
+        }
+      />
 
-                <CardDescription className="mt-1">
-                  Complete all three model-input sections before financial calculations begin.
-                </CardDescription>
-              </div>
-
-              <SlidersHorizontal
-                className="size-5 text-muted-foreground"
-                aria-hidden="true"
-              />
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-3">
-            <AssumptionSetupRow
-              href={`/projects/${project.id}/assumptions`}
-              label="General assumptions"
-              detail="Starting cash and corporate tax"
-              complete={
-                assumptions.completion
-                  .general
-              }
-            />
-
-            <AssumptionSetupRow
-              href={`/projects/${project.id}/revenue`}
-              label="Revenue assumptions"
-              detail={formatRevenueMode(
-                project.revenueMode,
-              )}
-              complete={
-                assumptions.completion
-                  .revenue
-              }
-            />
-
-            <AssumptionSetupRow
-              href={`/projects/${project.id}/expenses`}
-              label="Expense assumptions"
-              detail="Salaries, rent, marketing, COGS and operating costs"
-              complete={
-                assumptions.completion
-                  .expenses
-              }
-            />
-          </CardContent>
-        </Card>
-
+      <section className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr]">
         <Card className="border-border/70">
           <CardHeader>
             <CardTitle>
-              Model configuration
+              Financial health
             </CardTitle>
 
             <CardDescription>
-              Persistent structural information.
+              Core margins and burn metrics generated from the current Base Case.
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <ConfigurationRow
-              label="Forecast start"
-              value={formatProjectStartMonth(
-                project.startMonth,
+            <HealthRow
+              label="Gross margin"
+              value={formatPercentageValue(
+                forecast.metrics
+                  .grossMarginPercentage,
               )}
-            />
-
-            <ConfigurationRow
-              label="Forecast horizon"
-              value={`${project.horizonMonths} months`}
-            />
-
-            <ConfigurationRow
-              label="Revenue engine"
-              value={formatRevenueMode(
-                project.revenueMode,
-              )}
-            />
-
-            <ConfigurationRow
-              label="Model version"
-              value={
-                project.modelVersion
+              icon={
+                Percent
               }
             />
 
-            <ConfigurationRow
-              label="Financing events"
-              value={String(
-                project._count
-                  .financingEvents,
+            <HealthRow
+              label="EBITDA margin"
+              value={formatPercentageValue(
+                forecast.metrics
+                  .ebitdaMarginPercentage,
               )}
+              icon={
+                TrendingUp
+              }
             />
 
-            <ConfigurationRow
-              label="Monthly overrides"
-              value={String(
-                project._count
-                  .monthlyOverrides,
+            <HealthRow
+              label="Net margin"
+              value={formatPercentageValue(
+                forecast.metrics
+                  .netMarginPercentage,
               )}
+              icon={
+                ReceiptText
+              }
             />
 
-            <ConfigurationRow
-              label="Last updated"
-              value={formatProjectUpdatedAt(
-                project.updatedAt,
+            <HealthRow
+              label="3-month average gross burn"
+              value={formatCompactCurrencyValue(
+                forecast.metrics
+                  .initialThreeMonthAverageGrossBurn,
+                forecast.currency,
               )}
+              icon={
+                Wallet
+              }
+            />
+
+            <HealthRow
+              label="3-month average net burn"
+              value={formatCompactCurrencyValue(
+                forecast.metrics
+                  .initialThreeMonthAverageNetBurn,
+                forecast.currency,
+              )}
+              icon={
+                Gauge
+              }
+            />
+
+            <HealthRow
+              label="Initial break-even revenue"
+              value={
+                forecast.metrics
+                  .initialBreakEvenRevenue
+                  ? formatCompactCurrencyValue(
+                      forecast.metrics
+                        .initialBreakEvenRevenue,
+                      forecast.currency,
+                    )
+                  : "Not achievable"
+              }
+              icon={
+                CircleDollarSign
+              }
             />
           </CardContent>
         </Card>
-      </section>
 
-      <section>
         <Card className="border-border/70">
           <CardHeader>
             <div className="flex items-center justify-between gap-4">
               <div>
                 <CardTitle>
-                  Scenario structure
+                  Analysis workspace
                 </CardTitle>
 
                 <CardDescription className="mt-1">
-                  Scenario definitions are stored now. The scenario engine will apply them later.
+                  Open a detailed VentureScope analysis surface.
                 </CardDescription>
               </div>
 
-              <Layers3
-                className="size-5 text-muted-foreground"
-                aria-hidden="true"
-              />
+              <Badge variant="outline">
+                {
+                  formatRevenueMode(
+                    forecast.revenueMode,
+                  )
+                }
+              </Badge>
             </div>
           </CardHeader>
 
-          <CardContent className="grid gap-4 md:grid-cols-3">
-            {project.scenarios.map(
+          <CardContent className="grid gap-3 sm:grid-cols-2">
+            {quickLinks.map(
               (
-                scenario,
+                item,
               ) => {
-                const modifierCount =
-                  countScenarioModifiers(
-                    scenario.modifiers,
-                  );
+                const Icon =
+                  item.icon;
 
                 return (
-                  <div
+                  <Link
                     key={
-                      scenario.id
+                      item.href
                     }
-                    className="rounded-xl border p-5"
+                    href={
+                      item.href
+                    }
+                    className="group rounded-xl border p-4 transition-colors hover:bg-muted/40"
                   >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="font-medium">
-                        {
-                          scenario.name
-                        }
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex size-9 items-center justify-center rounded-xl bg-muted">
+                        <Icon
+                          className="size-4"
+                          aria-hidden="true"
+                        />
                       </div>
 
-                      <Badge
-                        variant={
-                          scenario.type ===
-                          "BASE"
-                            ? "secondary"
-                            : "outline"
-                        }
-                      >
-                        {formatScenarioType(
-                          scenario.type,
-                        )}
-                      </Badge>
+                      <ArrowRight
+                        className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+                        aria-hidden="true"
+                      />
                     </div>
 
-                    <div className="mt-6 text-2xl font-semibold">
+                    <div className="mt-4 font-medium">
                       {
-                        modifierCount
+                        item.label
                       }
                     </div>
 
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      {modifierCount ===
-                      1
-                        ? "scenario modifier"
-                        : "scenario modifiers"}
-                    </div>
-                  </div>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                      {
+                        item.description
+                      }
+                    </p>
+                  </Link>
                 );
               },
             )}
-          </CardContent>
-        </Card>
-      </section>
-
-      <section>
-        <Card className="overflow-hidden border-dashed">
-          <CardContent className="flex flex-col justify-between gap-6 p-7 md:flex-row md:items-center">
-            <div className="flex gap-4">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-foreground text-background">
-                <SlidersHorizontal
-                  className="size-5"
-                  aria-hidden="true"
-                />
-              </div>
-
-              <div>
-                <div className="font-semibold">
-                  {assumptionsComplete
-                    ? "Financial assumptions are ready"
-                    : "Complete the financial assumptions"}
-                </div>
-
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
-                  {assumptionsComplete
-                    ? "The model now contains all core inputs required for the financial calculation engine."
-                    : `${3 - completedSections} assumption section${3 - completedSections === 1 ? "" : "s"} remain before the model is calculation-ready.`}
-                </p>
-              </div>
-            </div>
-
-            <Button
-              asChild
-              className="shrink-0"
-            >
-              <Link
-                href={`/projects/${project.id}/assumptions`}
-              >
-                {assumptionsComplete
-                  ? "Review assumptions"
-                  : "Configure assumptions"}
-
-                <ArrowRight
-                  className="size-4"
-                  aria-hidden="true"
-                />
-              </Link>
-            </Button>
           </CardContent>
         </Card>
       </section>
@@ -406,105 +538,41 @@ export default async function ProjectOverviewPage({
   );
 }
 
-type OverviewMetricProps = {
-  icon: React.ComponentType<{
-    className?: string;
-  }>;
-
-  label: string;
-  value: string;
-};
-
-function OverviewMetric({
-  icon: Icon,
+function HealthRow({
   label,
   value,
-}: OverviewMetricProps) {
-  return (
-    <Card className="border-border/70">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardDescription>
-            {label}
-          </CardDescription>
-
-          <div className="flex size-8 items-center justify-center rounded-lg bg-muted">
-            <Icon
-              className="size-4"
-              aria-hidden="true"
-            />
-          </div>
-        </div>
-
-        <CardTitle className="mt-2 truncate text-xl">
-          {value}
-        </CardTitle>
-      </CardHeader>
-    </Card>
-  );
-}
-
-function AssumptionSetupRow({
-  href,
-  label,
-  detail,
-  complete,
+  icon: Icon,
 }: {
-  href: string;
   label: string;
-  detail: string;
-  complete: boolean;
+
+  value: string;
+
+  icon:
+    React.ComponentType<{
+      className?: string;
+    }>;
 }) {
   return (
-    <Link
-      href={href}
-      className="flex items-center gap-4 rounded-xl border p-4 transition-colors hover:bg-muted/30"
-    >
-      {complete ? (
-        <CheckCircle2
-          className="size-5 shrink-0"
-          aria-hidden="true"
-        />
-      ) : (
-        <Circle
-          className="size-5 shrink-0 text-muted-foreground"
-          aria-hidden="true"
-        />
-      )}
-
-      <div className="min-w-0 flex-1">
-        <div className="text-sm font-medium">
-          {label}
+    <div className="flex items-center justify-between gap-5 border-b pb-4 last:border-b-0 last:pb-0">
+      <div className="flex items-center gap-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted">
+          <Icon
+            className="size-4"
+            aria-hidden="true"
+          />
         </div>
 
-        <div className="mt-1 truncate text-xs text-muted-foreground">
-          {detail}
-        </div>
+        <span className="text-sm text-muted-foreground">
+          {
+            label
+          }
+        </span>
       </div>
 
-      <ArrowRight
-        className="size-4 shrink-0 text-muted-foreground"
-        aria-hidden="true"
-      />
-    </Link>
-  );
-}
-
-function ConfigurationRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 border-b pb-3 last:border-b-0 last:pb-0">
-      <span className="text-sm text-muted-foreground">
-        {label}
-      </span>
-
-      <span className="text-right text-sm font-medium">
-        {value}
+      <span className="text-right text-sm font-semibold">
+        {
+          value
+        }
       </span>
     </div>
   );

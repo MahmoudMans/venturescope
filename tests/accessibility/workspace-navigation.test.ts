@@ -60,6 +60,7 @@ describe(
           "Planning Templates",
           "Portfolio Dashboard",
           "Alert Inbox",
+          "Approval Center",
           "P&L",
           "Cash Flow",
           "Customers",

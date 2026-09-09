@@ -63,6 +63,9 @@ model User {
 
   projectAlertReceipts ProjectAlertReceipt[] @relation("ProjectAlertReceiptUser")
 
+  approvalRequestsRequested ApprovalRequest[] @relation("ApprovalRequestRequester")
+  approvalRequestsDecided   ApprovalRequest[] @relation("ApprovalRequestDecider")
+
   @@index([createdAt])
 }
 
@@ -114,6 +117,8 @@ model Project {
   financialPeriodEvents FinancialPeriodEvent[]
 
   alertReceipts ProjectAlertReceipt[] @relation("ProjectAlertReceiptProject")
+
+  approvalRequests ApprovalRequest[]
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -470,4 +475,33 @@ model ProjectAlertReceipt {
   @@index([userId, projectId, updatedAt])
   @@index([projectId, alertKey])
   @@index([userId, snoozedUntil])
+}
+
+model ApprovalRequest {
+  id                String    @id @default(cuid())
+  projectId         String
+  requestType       String
+  subjectType       String?
+  subjectId         String?
+  title             String
+  description       String?
+  status            String    @default("PENDING")
+  requestedByUserId String?
+  requestedAt       DateTime  @default(now())
+  decidedByUserId   String?
+  decidedAt         DateTime?
+  decisionNote      String?
+  cancelledAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  project     Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  requestedBy User?   @relation("ApprovalRequestRequester", fields: [requestedByUserId], references: [id], onDelete: SetNull)
+  decidedBy   User?   @relation("ApprovalRequestDecider", fields: [decidedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([projectId, status, requestedAt])
+  @@index([projectId, requestType, requestedAt])
+  @@index([requestedByUserId, status])
+  @@index([decidedByUserId, decidedAt])
+  @@index([projectId, subjectType, subjectId])
 }

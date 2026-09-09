@@ -310,6 +310,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/alerts`,
         },
+        {
+          label:
+            "Approval Center",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/approvals`,
+        },
 
         {
           label:

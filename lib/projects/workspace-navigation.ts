@@ -230,6 +230,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/sensitivity-lab`,
         },
+        {
+          label:
+            "Scorecard",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/scorecard`,
+        },
 
         {
           label:

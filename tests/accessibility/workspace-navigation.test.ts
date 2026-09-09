@@ -52,6 +52,7 @@ describe(
           "Model Diff",
           "Scenario Comparison",
           "Sensitivity Lab",
+          "Scorecard",
           "P&L",
           "Cash Flow",
           "Customers",

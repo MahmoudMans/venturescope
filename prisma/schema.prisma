@@ -57,6 +57,8 @@ model User {
 
   executiveReviewsCreated ExecutiveReview[] @relation("ExecutiveReviewCreator")
 
+  kpiTargetsCreated ProjectKpiTarget[] @relation("ProjectKpiTargetCreator")
+
   @@index([createdAt])
 }
 
@@ -99,6 +101,8 @@ model Project {
   decisionActions DecisionAction[]
 
   executiveReviews ExecutiveReview[]
+
+  kpiTargets ProjectKpiTarget[]
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -332,5 +336,25 @@ model ExecutiveReview {
 
   @@index([projectId, periodKey, createdAt])
   @@index([projectId, createdAt])
+  @@index([createdByUserId])
+}
+
+model ProjectKpiTarget {
+  id              String   @id @default(cuid())
+  projectId       String
+  periodKey       String
+  metricCode      String
+  targetValue     Decimal  @db.Decimal(18, 4)
+  ownerName       String?
+  note            String?
+  createdByUserId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User?   @relation("ProjectKpiTargetCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, periodKey, metricCode])
+  @@index([projectId, periodKey])
   @@index([createdByUserId])
 }

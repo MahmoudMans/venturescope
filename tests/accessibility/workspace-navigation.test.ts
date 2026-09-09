@@ -47,6 +47,7 @@ describe(
           "Planning Cycle",
           "Risk Center",
           "Capital Planning",
+          "Decision Center",
           "P&L",
           "Cash Flow",
           "Customers",

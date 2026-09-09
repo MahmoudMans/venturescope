@@ -53,6 +53,8 @@ model User {
 
   forecastBaselines ForecastBaseline[] @relation("ForecastBaselineCreator")
 
+  decisionActionsCreated DecisionAction[] @relation("DecisionActionCreator")
+
   @@index([createdAt])
 }
 
@@ -91,6 +93,8 @@ model Project {
   forecastBaselines ForecastBaseline[]
 
   riskPolicy ProjectRiskPolicy?
+
+  decisionActions DecisionAction[]
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -285,4 +289,25 @@ model ProjectRiskPolicy {
   updatedAt             DateTime @updatedAt
 
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model DecisionAction {
+  id              String    @id @default(cuid())
+  projectId       String
+  title           String
+  details         String?
+  sourceCode      String?
+  priority        String    @default("MEDIUM")
+  status          String    @default("OPEN")
+  ownerName       String?
+  dueDate         DateTime?
+  createdByUserId String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User?   @relation("DecisionActionCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@index([projectId, status, dueDate])
+  @@index([createdByUserId])
 }

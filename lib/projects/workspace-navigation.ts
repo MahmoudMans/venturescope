@@ -180,6 +180,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/capital-planning`,
         },
+        {
+          label:
+            "Decision Center",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/decision-center`,
+        },
 
         {
           label:

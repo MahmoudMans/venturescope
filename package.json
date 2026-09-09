@@ -39,7 +39,8 @@
     "test:forecast-accuracy": "vitest run tests/forecast-accuracy",
     "test:planning-cycle": "vitest run tests/planning-cycle",
     "test:risk-center": "vitest run tests/risk-center",
-    "test:capital-planning": "vitest run tests/capital-planning"
+    "test:capital-planning": "vitest run tests/capital-planning",
+    "test:decision-center": "vitest run tests/decision-center"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

@@ -47,6 +47,7 @@ describe(
           "Customers",
           "Scenarios",
           "Reports",
+          "Analytics",
           "Settings",
         ]);
 

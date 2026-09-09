@@ -192,6 +192,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/reports`,
         },
+        {
+          label:
+            "Analytics",
+
+          icon:
+            FileText,
+
+          href:
+            `/projects/${projectId}/analytics`,
+        },
 
         {
           label:

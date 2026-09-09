@@ -34,7 +34,8 @@
     "db:migrations:selftest": "bash scripts/migration-selftest.sh",
     "test:collaboration": "vitest run tests/collaboration",
     "test:versioning": "vitest run tests/versioning",
-    "test:analytics": "vitest run tests/analytics"
+    "test:analytics": "vitest run tests/analytics",
+    "test:actuals": "vitest run tests/actuals"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

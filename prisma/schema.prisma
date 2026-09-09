@@ -84,6 +84,8 @@ model Project {
 
   revisions ProjectRevision[]
 
+  actualPeriods ActualPeriod[]
+
   @@index([userId])
   @@index([userId, updatedAt])
   @@index([workspaceId])
@@ -221,4 +223,27 @@ model ProjectRevision {
   @@index([projectId, createdAt])
   @@index([createdByUserId])
   @@index([sourceRevisionId])
+}
+
+model ActualPeriod {
+  id                String   @id @default(cuid())
+  projectId         String
+  period            DateTime
+  revenue           Decimal? @db.Decimal(18, 2)
+  cogs              Decimal? @db.Decimal(18, 2)
+  operatingExpenses Decimal? @db.Decimal(18, 2)
+  ebitda            Decimal? @db.Decimal(18, 2)
+  netIncome         Decimal? @db.Decimal(18, 2)
+  cashFlow          Decimal? @db.Decimal(18, 2)
+  cashBalance       Decimal? @db.Decimal(18, 2)
+  mrr               Decimal? @db.Decimal(18, 2)
+  customers         Int?
+  source            String   @default("CSV")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, period])
+  @@index([projectId, period])
 }

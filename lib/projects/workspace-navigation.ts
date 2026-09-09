@@ -130,6 +130,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/forecast`,
         },
+        {
+          label:
+            "Actuals",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/actuals`,
+        },
 
         {
           label:

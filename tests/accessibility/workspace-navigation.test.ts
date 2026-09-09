@@ -42,6 +42,7 @@ describe(
           "Financing",
           "Timeline",
           "Forecast",
+          "Actuals",
           "P&L",
           "Cash Flow",
           "Customers",

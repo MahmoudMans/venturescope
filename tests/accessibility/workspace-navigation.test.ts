@@ -49,6 +49,7 @@ describe(
           "Capital Planning",
           "Decision Center",
           "Board Room",
+          "Model Diff",
           "P&L",
           "Cash Flow",
           "Customers",

@@ -200,6 +200,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/board-room`,
         },
+        {
+          label:
+            "Model Diff",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/version-diff`,
+        },
 
         {
           label:

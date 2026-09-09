@@ -41,7 +41,8 @@
     "test:risk-center": "vitest run tests/risk-center",
     "test:capital-planning": "vitest run tests/capital-planning",
     "test:decision-center": "vitest run tests/decision-center",
-    "test:board-room": "vitest run tests/board-room"
+    "test:board-room": "vitest run tests/board-room",
+    "test:version-diff": "vitest run tests/version-diff"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

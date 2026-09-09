@@ -13,7 +13,7 @@ echo "============================================================"
 echo
 
 
-echo "[1/22] Prisma..."
+echo "[1/23] Prisma..."
 
 pnpm exec prisma format
 pnpm exec prisma validate
@@ -21,122 +21,128 @@ pnpm exec prisma generate
 
 
 echo
-echo "[2/22] ESLint..."
+echo "[2/23] ESLint..."
 
 pnpm exec eslint . \
   --max-warnings=0
 
 
 echo
-echo "[3/22] TypeScript..."
+echo "[3/23] TypeScript..."
 
 pnpm typecheck
 
 
 echo
-echo "[4/22] Vitest..."
+echo "[4/23] Vitest..."
 
 pnpm test
 
 
 echo
-echo "[5/22] Prisma migration chain..."
+echo "[5/23] Prisma migration chain..."
 
 pnpm db:migrations:selftest
 
 
 echo
-echo "[6/22] Database backup/restore operations..."
+echo "[6/23] Database backup/restore operations..."
 
 pnpm db:ops:selftest
 
 
 echo
-echo "[7/22] Deployment and rollback control plane..."
+echo "[7/23] Deployment and rollback control plane..."
 
 pnpm deploy:selftest
 
 
 echo
-echo "[8/22] Observability contract..."
+echo "[8/23] Observability contract..."
 
 pnpm test:observability
 
 
 echo
-echo "[9/22] Account security and session lifecycle..."
+echo "[9/23] Account security and session lifecycle..."
 
 pnpm test:account-security
 
 
 echo
-echo "[10/22] Collaboration authorization..."
+echo "[10/23] Collaboration authorization..."
 
 pnpm test:collaboration
 
 
 echo
 echo
-echo "[11/22] Model versioning and immutable restore..."
+echo "[11/23] Model versioning and immutable restore..."
 
 pnpm test:versioning
 
 
 echo
-echo "[12/22] Advanced financial analytics..."
+echo "[12/23] Advanced financial analytics..."
 
 pnpm test:analytics
 
 
 echo
-echo "[13/22] Actuals and forecast variance..."
+echo "[13/23] Actuals and forecast variance..."
 
 pnpm test:actuals
 
 
 echo
-echo "[14/22] Forecast accuracy and bias intelligence..."
+echo "[14/23] Forecast accuracy and bias intelligence..."
 
 pnpm test:forecast-accuracy
 
 
 echo
-echo "[15/22] Rolling reforecast and planning baselines..."
+echo "[15/23] Rolling reforecast and planning baselines..."
 
 pnpm test:planning-cycle
 
 
 echo
-echo "[16/22] Liquidity risk and financial guardrails..."
+echo "[16/23] Liquidity risk and financial guardrails..."
 
 pnpm test:risk-center
 
 
 echo
-echo "[17/22] Funding strategy and capital planning..."
+echo "[17/23] Funding strategy and capital planning..."
 
 pnpm test:capital-planning
 
 
 echo
-echo "[18/22] Executive decision center and action register..."
+echo "[18/23] Executive decision center and action register..."
 
 pnpm test:decision-center
 
 
 echo
-echo "[19/22] Board room and executive review snapshots..."
+echo "[19/23] Board room and executive review snapshots..."
 
 pnpm test:board-room
 
 
-echo "[20/22] Browser + security + accessibility + operations E2E..."
+echo
+echo "[20/23] Model version diff and change intelligence..."
+
+pnpm test:version-diff
+
+
+echo "[21/23] Browser + security + accessibility + operations E2E..."
 
 pnpm test:e2e
 
 
 echo
-echo "[21/22] Production Compose..."
+echo "[22/23] Production Compose..."
 
 AUTH_SECRET='venturescope-release-gate-secret-000000000000' \
 POSTGRES_PASSWORD='venturescope-release-gate-password' \
@@ -171,7 +177,7 @@ echo "[PASS] Release image override valid"
 
 
 echo
-echo "[22/22] Production Docker..."
+echo "[23/23] Production Docker..."
 
 rm -f \
   "${DOCKER_LOG}"
@@ -226,6 +232,9 @@ echo "LIQUIDITY_RISK=PASS"
 echo "CAPITAL_PLANNING=PASS"
 echo "DECISION_CENTER=PASS"
 echo "BOARD_ROOM=PASS"
+echo "MODEL_VERSION_DIFF=PASS"
+echo "CHANGE_INTELLIGENCE=PASS"
+echo "REVISION_IMMUTABILITY=PASS"
 echo "EXECUTIVE_REVIEWS=PASS"
 echo "REVIEW_IMMUTABILITY=PASS"
 echo "EXECUTIVE_SIGNALS=PASS"

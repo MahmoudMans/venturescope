@@ -330,6 +330,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/imports`,
         },
+        {
+          label:
+            "Consolidation Center",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/consolidation`,
+        },
 
         {
           label:

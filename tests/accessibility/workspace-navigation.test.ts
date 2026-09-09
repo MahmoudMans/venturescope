@@ -62,6 +62,7 @@ describe(
           "Alert Inbox",
           "Approval Center",
           "Data Import Center",
+          "Consolidation Center",
           "P&L",
           "Cash Flow",
           "Customers",

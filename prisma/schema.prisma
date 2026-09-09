@@ -68,6 +68,10 @@ model User {
 
   dataImportBatchesCreated DataImportBatch[] @relation("DataImportBatchCreator")
 
+  consolidationSettingsCreated WorkspaceConsolidationSettings[] @relation("ConsolidationSettingsCreator")
+  consolidationSettingsUpdated WorkspaceConsolidationSettings[] @relation("ConsolidationSettingsUpdater")
+  workspaceFxRatesCreated      WorkspaceFxRate[]                @relation("WorkspaceFxRateCreator")
+
   @@index([createdAt])
 }
 
@@ -205,6 +209,9 @@ model Workspace {
   members     WorkspaceMember[]
   invitations WorkspaceInvitation[]
   projects    Project[]
+
+  consolidationSettings WorkspaceConsolidationSettings?
+  fxRates               WorkspaceFxRate[]
 
   @@index([ownerId])
 }
@@ -532,4 +539,39 @@ model DataImportBatch {
   @@index([projectId, importType, createdAt])
   @@index([projectId, status, createdAt])
   @@index([createdByUserId, createdAt])
+}
+
+model WorkspaceConsolidationSettings {
+  workspaceId       String   @id
+  reportingCurrency String
+  createdByUserId   String?
+  updatedByUserId   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy User?     @relation("ConsolidationSettingsCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  updatedBy User?     @relation("ConsolidationSettingsUpdater", fields: [updatedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([reportingCurrency])
+}
+
+model WorkspaceFxRate {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  baseCurrency    String
+  quoteCurrency   String
+  rate            Decimal  @db.Decimal(18, 8)
+  effectiveDate   DateTime @db.Date
+  sourceLabel     String
+  createdByUserId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy User?     @relation("WorkspaceFxRateCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([workspaceId, baseCurrency, quoteCurrency, effectiveDate])
+  @@index([workspaceId, effectiveDate])
+  @@index([workspaceId, baseCurrency, quoteCurrency, effectiveDate])
 }

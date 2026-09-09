@@ -43,7 +43,8 @@
     "test:decision-center": "vitest run tests/decision-center",
     "test:board-room": "vitest run tests/board-room",
     "test:version-diff": "vitest run tests/version-diff",
-    "test:scenario-comparison": "vitest run tests/scenario-comparison"
+    "test:scenario-comparison": "vitest run tests/scenario-comparison",
+    "test:sensitivity-lab": "vitest run tests/sensitivity-lab"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

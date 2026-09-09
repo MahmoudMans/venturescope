@@ -51,6 +51,7 @@ describe(
           "Board Room",
           "Model Diff",
           "Scenario Comparison",
+          "Sensitivity Lab",
           "P&L",
           "Cash Flow",
           "Customers",

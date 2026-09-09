@@ -220,6 +220,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/scenario-comparison`,
         },
+        {
+          label:
+            "Sensitivity Lab",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/sensitivity-lab`,
+        },
 
         {
           label:

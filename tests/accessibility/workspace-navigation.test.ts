@@ -56,6 +56,7 @@ describe(
           "Variance Review",
           "Financial Close",
           "Activity Center",
+          "Board Pack",
           "P&L",
           "Cash Flow",
           "Customers",

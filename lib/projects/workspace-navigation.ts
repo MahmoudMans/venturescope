@@ -270,6 +270,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/activity`,
         },
+        {
+          label:
+            "Board Pack",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/board-pack`,
+        },
 
         {
           label:

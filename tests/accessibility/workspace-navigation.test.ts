@@ -45,6 +45,7 @@ describe(
           "Actuals",
           "Forecast Accuracy",
           "Planning Cycle",
+          "Risk Center",
           "P&L",
           "Cash Flow",
           "Customers",

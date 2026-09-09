@@ -90,6 +90,8 @@ model Project {
 
   forecastBaselines ForecastBaseline[]
 
+  riskPolicy ProjectRiskPolicy?
+
   @@index([userId])
   @@index([userId, updatedAt])
   @@index([workspaceId])
@@ -268,4 +270,19 @@ model ForecastBaseline {
   @@unique([projectId, name])
   @@index([projectId, createdAt])
   @@index([createdByUserId])
+}
+
+model ProjectRiskPolicy {
+  id                    String   @id @default(cuid())
+  projectId             String   @unique
+  minimumCash           Decimal? @db.Decimal(18, 2)
+  minimumRunwayMonths   Int      @default(6)
+  minimumEbitdaMargin   Decimal? @db.Decimal(8, 4)
+  maximumMonthlyBurn    Decimal? @db.Decimal(18, 2)
+  downsideRevenueShock  Decimal  @default(0.20) @db.Decimal(8, 4)
+  downsideCostInflation Decimal  @default(0.10) @db.Decimal(8, 4)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }

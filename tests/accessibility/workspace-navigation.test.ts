@@ -48,6 +48,7 @@ describe(
           "Risk Center",
           "Capital Planning",
           "Decision Center",
+          "Board Room",
           "P&L",
           "Cash Flow",
           "Customers",

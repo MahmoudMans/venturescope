@@ -190,6 +190,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/decision-center`,
         },
+        {
+          label:
+            "Board Room",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/board-room`,
+        },
 
         {
           label:

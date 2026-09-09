@@ -55,6 +55,8 @@ model User {
 
   decisionActionsCreated DecisionAction[] @relation("DecisionActionCreator")
 
+  executiveReviewsCreated ExecutiveReview[] @relation("ExecutiveReviewCreator")
+
   @@index([createdAt])
 }
 
@@ -95,6 +97,8 @@ model Project {
   riskPolicy ProjectRiskPolicy?
 
   decisionActions DecisionAction[]
+
+  executiveReviews ExecutiveReview[]
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -309,5 +313,24 @@ model DecisionAction {
   createdBy User?   @relation("DecisionActionCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
 
   @@index([projectId, status, dueDate])
+  @@index([createdByUserId])
+}
+
+model ExecutiveReview {
+  id              String   @id @default(cuid())
+  projectId       String
+  periodKey       String
+  title           String
+  commentary      String?
+  modelVersion    String
+  snapshot        Json
+  createdByUserId String?
+  createdAt       DateTime @default(now())
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User?   @relation("ExecutiveReviewCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@index([projectId, periodKey, createdAt])
+  @@index([projectId, createdAt])
   @@index([createdByUserId])
 }

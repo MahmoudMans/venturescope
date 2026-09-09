@@ -40,7 +40,8 @@
     "test:planning-cycle": "vitest run tests/planning-cycle",
     "test:risk-center": "vitest run tests/risk-center",
     "test:capital-planning": "vitest run tests/capital-planning",
-    "test:decision-center": "vitest run tests/decision-center"
+    "test:decision-center": "vitest run tests/decision-center",
+    "test:board-room": "vitest run tests/board-room"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

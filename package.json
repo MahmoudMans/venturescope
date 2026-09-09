@@ -53,7 +53,8 @@
     "test:planning-templates": "vitest run tests/planning-templates",
     "test:portfolio-dashboard": "vitest run tests/portfolio-dashboard",
     "test:alerts": "vitest run tests/alerts",
-    "test:approvals": "vitest run tests/approvals"
+    "test:approvals": "vitest run tests/approvals",
+    "test:data-import": "vitest run tests/data-import"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

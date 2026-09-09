@@ -61,6 +61,7 @@ describe(
           "Portfolio Dashboard",
           "Alert Inbox",
           "Approval Center",
+          "Data Import Center",
           "P&L",
           "Cash Flow",
           "Customers",

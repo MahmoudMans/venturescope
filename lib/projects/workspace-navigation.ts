@@ -320,6 +320,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/approvals`,
         },
+        {
+          label:
+            "Data Import Center",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/imports`,
+        },
 
         {
           label:

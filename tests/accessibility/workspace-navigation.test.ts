@@ -46,6 +46,7 @@ describe(
           "Forecast Accuracy",
           "Planning Cycle",
           "Risk Center",
+          "Capital Planning",
           "P&L",
           "Cash Flow",
           "Customers",

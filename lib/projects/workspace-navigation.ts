@@ -170,6 +170,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/risk-center`,
         },
+        {
+          label:
+            "Capital Planning",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/capital-planning`,
+        },
 
         {
           label:

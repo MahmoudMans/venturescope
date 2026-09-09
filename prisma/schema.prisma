@@ -59,6 +59,8 @@ model User {
 
   kpiTargetsCreated ProjectKpiTarget[] @relation("ProjectKpiTargetCreator")
 
+  varianceCommentariesCreated VarianceCommentary[] @relation("VarianceCommentaryCreator")
+
   @@index([createdAt])
 }
 
@@ -103,6 +105,8 @@ model Project {
   executiveReviews ExecutiveReview[]
 
   kpiTargets ProjectKpiTarget[]
+
+  varianceCommentaries VarianceCommentary[]
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -356,5 +360,30 @@ model ProjectKpiTarget {
 
   @@unique([projectId, periodKey, metricCode])
   @@index([projectId, periodKey])
+  @@index([createdByUserId])
+}
+
+model VarianceCommentary {
+  id                String   @id @default(cuid())
+  projectId         String
+  periodKey         String
+  metricCode        String
+  causeCode         String
+  varianceNature    String   @default("UNKNOWN")
+  explanation       String
+  correctiveAction  String?
+  ownerName         String?
+  recoveryPeriodKey String?
+  status            String   @default("OPEN")
+  createdByUserId   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User?   @relation("VarianceCommentaryCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, periodKey, metricCode])
+  @@index([projectId, periodKey])
+  @@index([projectId, status])
   @@index([createdByUserId])
 }

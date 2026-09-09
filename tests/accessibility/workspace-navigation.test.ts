@@ -53,6 +53,7 @@ describe(
           "Scenario Comparison",
           "Sensitivity Lab",
           "Scorecard",
+          "Variance Review",
           "P&L",
           "Cash Flow",
           "Customers",

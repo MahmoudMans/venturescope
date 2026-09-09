@@ -13,7 +13,7 @@ echo "============================================================"
 echo
 
 
-echo "[1/26] Prisma..."
+echo "[1/27] Prisma..."
 
 pnpm exec prisma format
 pnpm exec prisma validate
@@ -21,146 +21,152 @@ pnpm exec prisma generate
 
 
 echo
-echo "[2/26] ESLint..."
+echo "[2/27] ESLint..."
 
 pnpm exec eslint . \
   --max-warnings=0
 
 
 echo
-echo "[3/26] TypeScript..."
+echo "[3/27] TypeScript..."
 
 pnpm typecheck
 
 
 echo
-echo "[4/26] Vitest..."
+echo "[4/27] Vitest..."
 
 pnpm test
 
 
 echo
-echo "[5/26] Prisma migration chain..."
+echo "[5/27] Prisma migration chain..."
 
 pnpm db:migrations:selftest
 
 
 echo
-echo "[6/26] Database backup/restore operations..."
+echo "[6/27] Database backup/restore operations..."
 
 pnpm db:ops:selftest
 
 
 echo
-echo "[7/26] Deployment and rollback control plane..."
+echo "[7/27] Deployment and rollback control plane..."
 
 pnpm deploy:selftest
 
 
 echo
-echo "[8/26] Observability contract..."
+echo "[8/27] Observability contract..."
 
 pnpm test:observability
 
 
 echo
-echo "[9/26] Account security and session lifecycle..."
+echo "[9/27] Account security and session lifecycle..."
 
 pnpm test:account-security
 
 
 echo
-echo "[10/26] Collaboration authorization..."
+echo "[10/27] Collaboration authorization..."
 
 pnpm test:collaboration
 
 
 echo
 echo
-echo "[11/26] Model versioning and immutable restore..."
+echo "[11/27] Model versioning and immutable restore..."
 
 pnpm test:versioning
 
 
 echo
-echo "[12/26] Advanced financial analytics..."
+echo "[12/27] Advanced financial analytics..."
 
 pnpm test:analytics
 
 
 echo
-echo "[13/26] Actuals and forecast variance..."
+echo "[13/27] Actuals and forecast variance..."
 
 pnpm test:actuals
 
 
 echo
-echo "[14/26] Forecast accuracy and bias intelligence..."
+echo "[14/27] Forecast accuracy and bias intelligence..."
 
 pnpm test:forecast-accuracy
 
 
 echo
-echo "[15/26] Rolling reforecast and planning baselines..."
+echo "[15/27] Rolling reforecast and planning baselines..."
 
 pnpm test:planning-cycle
 
 
 echo
-echo "[16/26] Liquidity risk and financial guardrails..."
+echo "[16/27] Liquidity risk and financial guardrails..."
 
 pnpm test:risk-center
 
 
 echo
-echo "[17/26] Funding strategy and capital planning..."
+echo "[17/27] Funding strategy and capital planning..."
 
 pnpm test:capital-planning
 
 
 echo
-echo "[18/26] Executive decision center and action register..."
+echo "[18/27] Executive decision center and action register..."
 
 pnpm test:decision-center
 
 
 echo
-echo "[19/26] Board room and executive review snapshots..."
+echo "[19/27] Board room and executive review snapshots..."
 
 pnpm test:board-room
 
 
 echo
-echo "[20/26] Model version diff and change intelligence..."
+echo "[20/27] Model version diff and change intelligence..."
 
 pnpm test:version-diff
 
 
 echo
-echo "[21/26] Scenario comparison center and decision matrix..."
+echo "[21/27] Scenario comparison center and decision matrix..."
 
 pnpm test:scenario-comparison
 
 
 echo
-echo "[22/26] Financial sensitivity lab and stress surface..."
+echo "[22/27] Financial sensitivity lab and stress surface..."
 
 pnpm test:sensitivity-lab
 
 
 echo
-echo "[23/26] KPI targets and management scorecards..."
+echo "[23/27] KPI targets and management scorecards..."
 
 pnpm test:scorecard
 
 
-echo "[24/26] Browser + security + accessibility + operations E2E..."
+echo
+echo "[24/27] Variance commentary and management explanations..."
+
+pnpm test:variance-review
+
+
+echo "[25/27] Browser + security + accessibility + operations E2E..."
 
 pnpm test:e2e
 
 
 echo
-echo "[25/26] Production Compose..."
+echo "[26/27] Production Compose..."
 
 AUTH_SECRET='venturescope-release-gate-secret-000000000000' \
 POSTGRES_PASSWORD='venturescope-release-gate-password' \
@@ -195,7 +201,7 @@ echo "[PASS] Release image override valid"
 
 
 echo
-echo "[26/26] Production Docker..."
+echo "[27/27] Production Docker..."
 
 rm -f \
   "${DOCKER_LOG}"
@@ -254,6 +260,9 @@ echo "MODEL_VERSION_DIFF=PASS"
 echo "SCENARIO_COMPARISON=PASS"
 echo "SENSITIVITY_LAB=PASS"
 echo "KPI_TARGETS=PASS"
+echo "VARIANCE_REVIEW=PASS"
+echo "VARIANCE_COMMENTARY=PASS"
+echo "MANAGEMENT_EXPLANATIONS=PASS"
 echo "MANAGEMENT_SCORECARD=PASS"
 echo "KPI_TARGET_HEALTH=PASS"
 echo "STRESS_SURFACE=PASS"

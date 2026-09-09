@@ -240,6 +240,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/scorecard`,
         },
+        {
+          label:
+            "Variance Review",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/variance-review`,
+        },
 
         {
           label:

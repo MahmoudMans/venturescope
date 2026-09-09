@@ -13,7 +13,7 @@ echo "============================================================"
 echo
 
 
-echo "[1/17] Prisma..."
+echo "[1/18] Prisma..."
 
 pnpm exec prisma format
 pnpm exec prisma validate
@@ -21,92 +21,98 @@ pnpm exec prisma generate
 
 
 echo
-echo "[2/17] ESLint..."
+echo "[2/18] ESLint..."
 
 pnpm exec eslint . \
   --max-warnings=0
 
 
 echo
-echo "[3/17] TypeScript..."
+echo "[3/18] TypeScript..."
 
 pnpm typecheck
 
 
 echo
-echo "[4/17] Vitest..."
+echo "[4/18] Vitest..."
 
 pnpm test
 
 
 echo
-echo "[5/17] Prisma migration chain..."
+echo "[5/18] Prisma migration chain..."
 
 pnpm db:migrations:selftest
 
 
 echo
-echo "[6/17] Database backup/restore operations..."
+echo "[6/18] Database backup/restore operations..."
 
 pnpm db:ops:selftest
 
 
 echo
-echo "[7/17] Deployment and rollback control plane..."
+echo "[7/18] Deployment and rollback control plane..."
 
 pnpm deploy:selftest
 
 
 echo
-echo "[8/17] Observability contract..."
+echo "[8/18] Observability contract..."
 
 pnpm test:observability
 
 
 echo
-echo "[9/17] Account security and session lifecycle..."
+echo "[9/18] Account security and session lifecycle..."
 
 pnpm test:account-security
 
 
 echo
-echo "[10/17] Collaboration authorization..."
+echo "[10/18] Collaboration authorization..."
 
 pnpm test:collaboration
 
 
 echo
 echo
-echo "[11/17] Model versioning and immutable restore..."
+echo "[11/18] Model versioning and immutable restore..."
 
 pnpm test:versioning
 
 
 echo
-echo "[12/17] Advanced financial analytics..."
+echo "[12/18] Advanced financial analytics..."
 
 pnpm test:analytics
 
 
 echo
-echo "[13/17] Actuals and forecast variance..."
+echo "[13/18] Actuals and forecast variance..."
 
 pnpm test:actuals
 
 
 echo
-echo "[14/17] Forecast accuracy and bias intelligence..."
+echo "[14/18] Forecast accuracy and bias intelligence..."
 
 pnpm test:forecast-accuracy
 
 
-echo "[15/17] Browser + security + accessibility + operations E2E..."
+echo
+echo "[15/18] Rolling reforecast and planning baselines..."
+
+pnpm test:planning-cycle
+
+
+echo "[16/18] Browser + security + accessibility + operations E2E..."
 
 pnpm test:e2e
 
 
 echo
-echo "[16/17] Production Compose..."
+echo "[17/18] Production Compose..."
 
 AUTH_SECRET='venturescope-release-gate-secret-000000000000' \
 POSTGRES_PASSWORD='venturescope-release-gate-password' \
@@ -141,7 +147,7 @@ echo "[PASS] Release image override valid"
 
 
 echo
-echo "[17/17] Production Docker..."
+echo "[18/18] Production Docker..."
 
 rm -f \
   "${DOCKER_LOG}"
@@ -191,6 +197,9 @@ echo "MODEL_VERSIONING=PASS"
 echo "ADVANCED_ANALYTICS=PASS"
 echo "ACTUALS_VARIANCE=PASS"
 echo "FORECAST_ACCURACY=PASS"
+echo "ROLLING_REFORECAST=PASS"
+echo "FORECAST_BASELINES=PASS"
+echo "PLANNING_CYCLE=PASS"
 echo "FORECAST_BIAS=PASS"
 echo "ROLLING_ACCURACY=PASS"
 echo "ACTUALS_IMPORT=PASS"

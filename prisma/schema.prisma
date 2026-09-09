@@ -51,6 +51,8 @@ model User {
 
   projectRevisions ProjectRevision[] @relation("ProjectRevisionCreator")
 
+  forecastBaselines ForecastBaseline[] @relation("ForecastBaselineCreator")
+
   @@index([createdAt])
 }
 
@@ -85,6 +87,8 @@ model Project {
   revisions ProjectRevision[]
 
   actualPeriods ActualPeriod[]
+
+  forecastBaselines ForecastBaseline[]
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -246,4 +250,22 @@ model ActualPeriod {
 
   @@unique([projectId, period])
   @@index([projectId, period])
+}
+
+model ForecastBaseline {
+  id              String   @id @default(cuid())
+  projectId       String
+  name            String
+  kind            String
+  modelVersion    String
+  snapshot        Json
+  createdByUserId String?
+  createdAt       DateTime @default(now())
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User?   @relation("ForecastBaselineCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, name])
+  @@index([projectId, createdAt])
+  @@index([createdByUserId])
 }

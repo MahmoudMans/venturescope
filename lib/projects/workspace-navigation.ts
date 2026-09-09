@@ -150,6 +150,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/forecast-accuracy`,
         },
+        {
+          label:
+            "Planning Cycle",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/planning-cycle`,
+        },
 
         {
           label:

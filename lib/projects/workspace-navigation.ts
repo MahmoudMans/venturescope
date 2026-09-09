@@ -210,6 +210,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/version-diff`,
         },
+        {
+          label:
+            "Scenario Comparison",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/scenario-comparison`,
+        },
 
         {
           label:

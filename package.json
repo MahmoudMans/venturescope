@@ -42,7 +42,8 @@
     "test:capital-planning": "vitest run tests/capital-planning",
     "test:decision-center": "vitest run tests/decision-center",
     "test:board-room": "vitest run tests/board-room",
-    "test:version-diff": "vitest run tests/version-diff"
+    "test:version-diff": "vitest run tests/version-diff",
+    "test:scenario-comparison": "vitest run tests/scenario-comparison"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

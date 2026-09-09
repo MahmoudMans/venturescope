@@ -50,6 +50,7 @@ describe(
           "Decision Center",
           "Board Room",
           "Model Diff",
+          "Scenario Comparison",
           "P&L",
           "Cash Flow",
           "Customers",

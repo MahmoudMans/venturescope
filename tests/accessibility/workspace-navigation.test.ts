@@ -63,6 +63,7 @@ describe(
           "Approval Center",
           "Data Import Center",
           "Consolidation Center",
+          "Release Readiness",
           "P&L",
           "Cash Flow",
           "Customers",

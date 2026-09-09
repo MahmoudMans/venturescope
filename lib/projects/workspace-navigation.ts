@@ -340,6 +340,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/consolidation`,
         },
+        {
+          label:
+            "Release Readiness",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/release-readiness`,
+        },
 
         {
           label:

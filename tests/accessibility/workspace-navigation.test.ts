@@ -59,6 +59,7 @@ describe(
           "Board Pack",
           "Planning Templates",
           "Portfolio Dashboard",
+          "Alert Inbox",
           "P&L",
           "Cash Flow",
           "Customers",

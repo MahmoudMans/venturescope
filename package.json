@@ -51,7 +51,8 @@
     "test:activity-center": "vitest run tests/activity",
     "test:board-pack": "vitest run tests/board-pack",
     "test:planning-templates": "vitest run tests/planning-templates",
-    "test:portfolio-dashboard": "vitest run tests/portfolio-dashboard"
+    "test:portfolio-dashboard": "vitest run tests/portfolio-dashboard",
+    "test:alerts": "vitest run tests/alerts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

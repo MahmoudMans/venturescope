@@ -61,6 +61,8 @@ model User {
 
   varianceCommentariesCreated VarianceCommentary[] @relation("VarianceCommentaryCreator")
 
+  projectAlertReceipts ProjectAlertReceipt[] @relation("ProjectAlertReceiptUser")
+
   @@index([createdAt])
 }
 
@@ -110,6 +112,8 @@ model Project {
 
   financialPeriodStates FinancialPeriodState[]
   financialPeriodEvents FinancialPeriodEvent[]
+
+  alertReceipts ProjectAlertReceipt[] @relation("ProjectAlertReceiptProject")
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -445,4 +449,25 @@ model ProjectAuditEvent {
   @@index([projectId, action, createdAt])
   @@index([projectId, severity, createdAt])
   @@index([actorUserId, createdAt])
+}
+
+model ProjectAlertReceipt {
+  id           String    @id @default(cuid())
+  projectId    String
+  userId       String
+  alertKey     String
+  fingerprint  String
+  readAt       DateTime?
+  dismissedAt  DateTime?
+  snoozedUntil DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  project Project @relation("ProjectAlertReceiptProject", fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation("ProjectAlertReceiptUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId, alertKey])
+  @@index([userId, projectId, updatedAt])
+  @@index([projectId, alertKey])
+  @@index([userId, snoozedUntil])
 }

@@ -300,6 +300,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/portfolio`,
         },
+        {
+          label:
+            "Alert Inbox",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/alerts`,
+        },
 
         {
           label:

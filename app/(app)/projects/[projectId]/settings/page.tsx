@@ -42,6 +42,8 @@ import {
   formatProjectUpdatedAt,
 } from "@/lib/projects/project-dates";
 
+import Link from "next/link";
+
 export const metadata: Metadata = {
   title:
     "Project settings",
@@ -225,7 +227,25 @@ export default async function ProjectSettingsPage({
           project.id
         }
       />
-    </div>
+    
+
+      <section className="rounded-xl border bg-background p-5 sm:p-6">
+        <h2 className="text-lg font-semibold">
+          Model version history
+        </h2>
+
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Create immutable checkpoints, inspect historical revisions, and restore an earlier financial model safely.
+        </p>
+
+        <Link
+          href={`/projects/${project.id}/versions`}
+          className="mt-4 inline-flex h-10 items-center justify-center rounded-lg border px-4 text-sm font-medium"
+        >
+          Open version history
+        </Link>
+      </section>
+</div>
   );
 }
 

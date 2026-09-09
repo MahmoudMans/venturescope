@@ -49,6 +49,8 @@ model User {
   workspaceMemberships        WorkspaceMember[]
   workspaceInvitationsCreated WorkspaceInvitation[] @relation("WorkspaceInvitationCreator")
 
+  projectRevisions ProjectRevision[] @relation("ProjectRevisionCreator")
+
   @@index([createdAt])
 }
 
@@ -64,8 +66,9 @@ model Project {
   horizonMonths Int         @default(36)
   revenueMode   RevenueMode @default(CUSTOMER_DRIVEN)
 
-  baseAssumptions Json   @default("{}") @db.JsonB
-  modelVersion    String @default("1.0")
+  baseAssumptions  Json   @default("{}") @db.JsonB
+  modelVersion     String @default("1.0")
+  revisionSequence Int    @default(0)
 
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
@@ -78,6 +81,8 @@ model Project {
 
   workspaceId String?
   workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+
+  revisions ProjectRevision[]
 
   @@index([userId])
   @@index([userId, updatedAt])
@@ -196,4 +201,24 @@ model WorkspaceInvitation {
 
   @@index([workspaceId, emailNormalized])
   @@index([expiresAt])
+}
+
+model ProjectRevision {
+  id               String   @id @default(cuid())
+  projectId        String
+  version          Int
+  label            String?
+  reason           String?
+  snapshot         Json
+  sourceRevisionId String?
+  createdByUserId  String?
+  createdAt        DateTime @default(now())
+
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User?   @relation("ProjectRevisionCreator", fields: [createdByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([projectId, version])
+  @@index([projectId, createdAt])
+  @@index([createdByUserId])
+  @@index([sourceRevisionId])
 }

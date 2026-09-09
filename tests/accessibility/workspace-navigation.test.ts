@@ -43,6 +43,7 @@ describe(
           "Timeline",
           "Forecast",
           "Actuals",
+          "Forecast Accuracy",
           "P&L",
           "Cash Flow",
           "Customers",

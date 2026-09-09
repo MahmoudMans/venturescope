@@ -13,7 +13,7 @@ echo "============================================================"
 echo
 
 
-echo "[1/16] Prisma..."
+echo "[1/17] Prisma..."
 
 pnpm exec prisma format
 pnpm exec prisma validate
@@ -21,86 +21,92 @@ pnpm exec prisma generate
 
 
 echo
-echo "[2/16] ESLint..."
+echo "[2/17] ESLint..."
 
 pnpm exec eslint . \
   --max-warnings=0
 
 
 echo
-echo "[3/16] TypeScript..."
+echo "[3/17] TypeScript..."
 
 pnpm typecheck
 
 
 echo
-echo "[4/16] Vitest..."
+echo "[4/17] Vitest..."
 
 pnpm test
 
 
 echo
-echo "[5/16] Prisma migration chain..."
+echo "[5/17] Prisma migration chain..."
 
 pnpm db:migrations:selftest
 
 
 echo
-echo "[6/16] Database backup/restore operations..."
+echo "[6/17] Database backup/restore operations..."
 
 pnpm db:ops:selftest
 
 
 echo
-echo "[7/16] Deployment and rollback control plane..."
+echo "[7/17] Deployment and rollback control plane..."
 
 pnpm deploy:selftest
 
 
 echo
-echo "[8/16] Observability contract..."
+echo "[8/17] Observability contract..."
 
 pnpm test:observability
 
 
 echo
-echo "[9/16] Account security and session lifecycle..."
+echo "[9/17] Account security and session lifecycle..."
 
 pnpm test:account-security
 
 
 echo
-echo "[10/16] Collaboration authorization..."
+echo "[10/17] Collaboration authorization..."
 
 pnpm test:collaboration
 
 
 echo
 echo
-echo "[11/16] Model versioning and immutable restore..."
+echo "[11/17] Model versioning and immutable restore..."
 
 pnpm test:versioning
 
 
 echo
-echo "[12/16] Advanced financial analytics..."
+echo "[12/17] Advanced financial analytics..."
 
 pnpm test:analytics
 
 
 echo
-echo "[13/16] Actuals and forecast variance..."
+echo "[13/17] Actuals and forecast variance..."
 
 pnpm test:actuals
 
 
-echo "[14/16] Browser + security + accessibility + operations E2E..."
+echo
+echo "[14/17] Forecast accuracy and bias intelligence..."
+
+pnpm test:forecast-accuracy
+
+
+echo "[15/17] Browser + security + accessibility + operations E2E..."
 
 pnpm test:e2e
 
 
 echo
-echo "[15/16] Production Compose..."
+echo "[16/17] Production Compose..."
 
 AUTH_SECRET='venturescope-release-gate-secret-000000000000' \
 POSTGRES_PASSWORD='venturescope-release-gate-password' \
@@ -135,7 +141,7 @@ echo "[PASS] Release image override valid"
 
 
 echo
-echo "[16/16] Production Docker..."
+echo "[17/17] Production Docker..."
 
 rm -f \
   "${DOCKER_LOG}"
@@ -184,6 +190,9 @@ echo "COLLABORATION=PASS"
 echo "MODEL_VERSIONING=PASS"
 echo "ADVANCED_ANALYTICS=PASS"
 echo "ACTUALS_VARIANCE=PASS"
+echo "FORECAST_ACCURACY=PASS"
+echo "FORECAST_BIAS=PASS"
+echo "ROLLING_ACCURACY=PASS"
 echo "ACTUALS_IMPORT=PASS"
 echo "DCF_SENSITIVITY=PASS"
 echo "UNIT_ECONOMICS=PASS"

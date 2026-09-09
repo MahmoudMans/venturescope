@@ -35,7 +35,8 @@
     "test:collaboration": "vitest run tests/collaboration",
     "test:versioning": "vitest run tests/versioning",
     "test:analytics": "vitest run tests/analytics",
-    "test:actuals": "vitest run tests/actuals"
+    "test:actuals": "vitest run tests/actuals",
+    "test:forecast-accuracy": "vitest run tests/forecast-accuracy"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

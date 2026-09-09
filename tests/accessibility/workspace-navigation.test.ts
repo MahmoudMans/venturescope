@@ -57,6 +57,7 @@ describe(
           "Financial Close",
           "Activity Center",
           "Board Pack",
+          "Planning Templates",
           "P&L",
           "Cash Flow",
           "Customers",

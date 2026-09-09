@@ -280,6 +280,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/board-pack`,
         },
+        {
+          label:
+            "Planning Templates",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/templates`,
+        },
 
         {
           label:

@@ -1,0 +1,99 @@
+import type {
+  Metadata,
+} from "next";
+
+import {
+  notFound,
+} from "next/navigation";
+
+import {
+  PlanningTemplatesWorkspace,
+} from "@/components/planning-templates/planning-templates-workspace";
+
+import {
+  requireCurrentUserIdentity,
+} from "@/lib/auth/current-user";
+
+import {
+  getOwnedProject,
+} from "@/lib/projects/project-access";
+
+
+export const metadata: Metadata = {
+  title:
+    "Planning Templates",
+
+  robots: {
+    index:
+      false,
+
+    follow:
+      false,
+  },
+};
+
+
+export default async function PlanningTemplatesPage({
+  params,
+}: {
+  params:
+    Promise<{
+      projectId:
+        string;
+    }>;
+}) {
+  const user =
+    await requireCurrentUserIdentity();
+
+
+  const {
+    projectId,
+  } =
+    await params;
+
+
+  const project =
+    await getOwnedProject(
+      user.id,
+      projectId,
+    );
+
+
+  if (
+    !project
+  ) {
+    notFound();
+  }
+
+
+  return (
+    <main className="mx-auto w-full max-w-7xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
+      <header>
+        <p className="text-sm font-medium text-muted-foreground">
+          Planning intelligence
+        </p>
+
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">
+          Project Templates &amp; Industry Models
+        </h1>
+
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          Explore deterministic planning references for common business models, compare operating assumptions, identify management KPIs and risks, and use the closest industry model as a structured starting point for planning discussions.
+        </p>
+      </header>
+
+      <PlanningTemplatesWorkspace
+        projectName={
+          project.name
+        }
+        projectIndustry={
+          project.industry ??
+          ""
+        }
+        currency={
+          project.currency
+        }
+      />
+    </main>
+  );
+}

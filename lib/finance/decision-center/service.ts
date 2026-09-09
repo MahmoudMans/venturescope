@@ -51,40 +51,97 @@ export async function createDecisionAction({
     null;
 }) {
   const action =
-    await prisma.decisionAction.create({
-      data: {
-        projectId,
+    await prisma.$transaction(
+      async (
+        transaction,
+      ) => {
+        const created =
+          await transaction.decisionAction.create({
+            data: {
+              projectId,
 
-        title,
+              title,
 
-        details,
+              details,
 
-        sourceCode,
+              sourceCode,
 
-        priority,
+              priority,
 
-        ownerName,
+              ownerName,
 
-        dueDate,
+              dueDate,
 
-        createdByUserId:
-          actorUserId,
+              createdByUserId:
+                actorUserId,
+            },
+
+            select: {
+              id:
+                true,
+
+              title:
+                true,
+
+              priority:
+                true,
+
+              status:
+                true,
+            },
+          });
+
+
+        await transaction.projectAuditEvent.create({
+          data: {
+            projectId,
+
+            category:
+              "DECISION_CENTER",
+
+            action:
+              "DECISION_ACTION_CREATED",
+
+            severity:
+              priority ===
+                "CRITICAL"
+                ?
+                  "CRITICAL"
+                :
+              priority ===
+                "HIGH"
+                ?
+                  "WARNING"
+                :
+                  "INFO",
+
+            actorUserId,
+
+            entityType:
+              "DecisionAction",
+
+            entityId:
+              created.id,
+
+            summary:
+              `Management action created: ${created.title}`,
+
+            metadata: {
+              priority:
+                created.priority,
+
+              status:
+                created.status,
+
+              sourceCode,
+            },
+          },
+        });
+
+
+        return created;
       },
-
-      select: {
-        id:
-          true,
-
-        title:
-          true,
-
-        priority:
-          true,
-
-        status:
-          true,
-      },
-    });
+    );
 
 
   logStructured(
@@ -130,28 +187,104 @@ export async function updateDecisionActionStatus({
     DecisionActionStatus;
 }) {
   const result =
-    await prisma.decisionAction.updateMany({
-      where: {
-        id:
-          actionId,
+    await prisma.$transaction(
+      async (
+        transaction,
+      ) => {
+        const existing =
+          await transaction.decisionAction.findFirst({
+            where: {
+              id:
+                actionId,
 
-        projectId,
+              projectId,
+            },
+
+            select: {
+              id:
+                true,
+
+              title:
+                true,
+
+              status:
+                true,
+            },
+          });
+
+
+        if (
+          !existing
+        ) {
+          throw new Error(
+            "Management action was not found in this project.",
+          );
+        }
+
+
+        const updated =
+          await transaction.decisionAction.update({
+            where: {
+              id:
+                existing.id,
+            },
+
+            data: {
+              status,
+            },
+
+            select: {
+              id:
+                true,
+
+              status:
+                true,
+            },
+          });
+
+
+        await transaction.projectAuditEvent.create({
+          data: {
+            projectId,
+
+            category:
+              "DECISION_CENTER",
+
+            action:
+              "DECISION_ACTION_STATUS_CHANGED",
+
+            severity:
+              status ===
+                "BLOCKED"
+                ?
+                  "WARNING"
+                :
+                  "INFO",
+
+            actorUserId,
+
+            entityType:
+              "DecisionAction",
+
+            entityId:
+              existing.id,
+
+            summary:
+              `Management action status changed: ${existing.title}`,
+
+            metadata: {
+              previousStatus:
+                existing.status,
+
+              status,
+            },
+          },
+        });
+
+
+        return updated;
       },
-
-      data: {
-        status,
-      },
-    });
-
-
-  if (
-    result.count !==
-    1
-  ) {
-    throw new Error(
-      "Management action was not found in this project.",
     );
-  }
 
 
   logStructured(
@@ -170,10 +303,5 @@ export async function updateDecisionActionStatus({
   );
 
 
-  return {
-    id:
-      actionId,
-
-    status,
-  };
+  return result;
 }

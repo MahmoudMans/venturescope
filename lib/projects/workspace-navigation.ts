@@ -260,6 +260,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/period-close`,
         },
+        {
+          label:
+            "Activity Center",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/activity`,
+        },
 
         {
           label:

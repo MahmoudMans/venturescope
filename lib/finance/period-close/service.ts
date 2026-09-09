@@ -143,20 +143,57 @@ export async function closeFinancialPeriod({
           });
 
 
-        await transaction.financialPeriodEvent.create({
+        const event =
+          await transaction.financialPeriodEvent.create({
+            data: {
+              projectId,
+
+              period,
+
+              action:
+                "CLOSED",
+
+              actorUserId,
+
+              reason,
+
+              sequence,
+            },
+          });
+
+
+        await transaction.projectAuditEvent.create({
           data: {
             projectId,
 
-            period,
+            category:
+              "FINANCIAL_CLOSE",
 
             action:
-              "CLOSED",
+              "FINANCIAL_PERIOD_CLOSED",
+
+            severity:
+              "INFO",
 
             actorUserId,
 
-            reason,
+            entityType:
+              "FinancialPeriodEvent",
 
-            sequence,
+            entityId:
+              event.id,
+
+            summary:
+              `Financial period closed: ${periodKey}`,
+
+            metadata: {
+              periodKey,
+
+              closeSequence:
+                sequence,
+
+              reason,
+            },
           },
         });
 
@@ -263,21 +300,58 @@ export async function reopenFinancialPeriod({
           });
 
 
-        await transaction.financialPeriodEvent.create({
+        const event =
+          await transaction.financialPeriodEvent.create({
+            data: {
+              projectId,
+
+              period,
+
+              action:
+                "REOPENED",
+
+              actorUserId,
+
+              reason,
+
+              sequence:
+                existing.closeSequence,
+            },
+          });
+
+
+        await transaction.projectAuditEvent.create({
           data: {
             projectId,
 
-            period,
+            category:
+              "FINANCIAL_CLOSE",
 
             action:
-              "REOPENED",
+              "FINANCIAL_PERIOD_REOPENED",
+
+            severity:
+              "WARNING",
 
             actorUserId,
 
-            reason,
+            entityType:
+              "FinancialPeriodEvent",
 
-            sequence:
-              existing.closeSequence,
+            entityId:
+              event.id,
+
+            summary:
+              `Financial period reopened: ${periodKey}`,
+
+            metadata: {
+              periodKey,
+
+              closeSequence:
+                existing.closeSequence,
+
+              reason,
+            },
           },
         });
 

@@ -55,6 +55,7 @@ describe(
           "Scorecard",
           "Variance Review",
           "Financial Close",
+          "Activity Center",
           "P&L",
           "Cash Flow",
           "Customers",

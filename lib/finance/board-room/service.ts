@@ -69,39 +69,88 @@ export async function createExecutiveReview({
         }
 
 
-        return transaction.executiveReview.create({
+        const created =
+          await transaction.executiveReview.create({
+            data: {
+              projectId,
+
+              periodKey,
+
+              title,
+
+              commentary,
+
+              modelVersion,
+
+              snapshot:
+                snapshot as never,
+
+              createdByUserId:
+                actorUserId,
+            },
+
+            select: {
+              id:
+                true,
+
+              periodKey:
+                true,
+
+              title:
+                true,
+
+              createdAt:
+                true,
+            },
+          });
+
+
+        await transaction.projectAuditEvent.create({
           data: {
             projectId,
 
-            periodKey,
+            category:
+              "BOARD_ROOM",
 
-            title,
+            action:
+              "EXECUTIVE_REVIEW_FROZEN",
 
-            commentary,
+            severity:
+              "INFO",
 
-            modelVersion,
+            actorUserId,
 
-            snapshot:
-              snapshot as never,
+            entityType:
+              "ExecutiveReview",
 
-            createdByUserId:
-              actorUserId,
-          },
+            entityId:
+              created.id,
 
-          select: {
-            id:
-              true,
+            summary:
+              `Executive review frozen: ${created.title}`,
 
-            periodKey:
-              true,
+            metadata: {
+              periodKey,
 
-            title:
-              true,
+              modelVersion,
 
-            createdAt:
-              true,
+              criticalSignals:
+                snapshot.signals.filter(
+                  (
+                    signal,
+                  ) =>
+                    signal.severity ===
+                    "CRITICAL",
+                ).length,
+
+              openActions:
+                snapshot.actions.open,
+            },
           },
         });
+
+
+        return created;
       },
     );
 

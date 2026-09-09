@@ -61,7 +61,7 @@ describe(
         expect(
           service,
         ).toContain(
-          "varianceCommentary.deleteMany",
+          "varianceCommentary.findFirst",
         );
 
 

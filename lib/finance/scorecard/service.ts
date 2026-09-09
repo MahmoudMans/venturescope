@@ -67,6 +67,9 @@ export async function saveProjectKpiTarget({
             select: {
               id:
                 true,
+
+              targetValue:
+                true,
             },
           });
 
@@ -93,56 +96,107 @@ export async function saveProjectKpiTarget({
         }
 
 
-        return transaction.projectKpiTarget.upsert({
-          where: {
-            projectId_periodKey_metricCode: {
+        const saved =
+          await transaction.projectKpiTarget.upsert({
+            where: {
+              projectId_periodKey_metricCode: {
+                projectId,
+
+                periodKey,
+
+                metricCode,
+              },
+            },
+
+            create: {
               projectId,
 
               periodKey,
 
               metricCode,
-            },
-          },
 
-          create: {
+              targetValue,
+
+              ownerName,
+
+              note,
+
+              createdByUserId:
+                actorUserId,
+            },
+
+            update: {
+              targetValue,
+
+              ownerName,
+
+              note,
+            },
+
+            select: {
+              id:
+                true,
+
+              periodKey:
+                true,
+
+              metricCode:
+                true,
+
+              targetValue:
+                true,
+            },
+          });
+
+
+        await transaction.projectAuditEvent.create({
+          data: {
             projectId,
 
-            periodKey,
+            category:
+              "SCORECARD",
 
-            metricCode,
+            action:
+              existing
+                ?
+                  "KPI_TARGET_UPDATED"
+                :
+                  "KPI_TARGET_CREATED",
 
-            targetValue,
+            severity:
+              "INFO",
 
-            ownerName,
+            actorUserId,
 
-            note,
+            entityType:
+              "ProjectKpiTarget",
 
-            createdByUserId:
-              actorUserId,
-          },
+            entityId:
+              saved.id,
 
-          update: {
-            targetValue,
+            summary:
+              `${existing ? "KPI target updated" : "KPI target created"}: ${metricCode} ${periodKey}`,
 
-            ownerName,
+            metadata: {
+              periodKey,
 
-            note,
-          },
+              metricCode,
 
-          select: {
-            id:
-              true,
+              targetValue:
+                saved.targetValue.toString(),
 
-            periodKey:
-              true,
-
-            metricCode:
-              true,
-
-            targetValue:
-              true,
+              previousTargetValue:
+                existing
+                  ?
+                    existing.targetValue.toString()
+                  :
+                    null,
+            },
           },
         });
+
+
+        return saved;
       },
     );
 
@@ -186,24 +240,93 @@ export async function deleteProjectKpiTarget({
     string;
 }) {
   const result =
-    await prisma.projectKpiTarget.deleteMany({
-      where: {
-        id:
-          targetId,
+    await prisma.$transaction(
+      async (
+        transaction,
+      ) => {
+        const target =
+          await transaction.projectKpiTarget.findFirst({
+            where: {
+              id:
+                targetId,
 
-        projectId,
+              projectId,
+            },
+
+            select: {
+              id:
+                true,
+
+              periodKey:
+                true,
+
+              metricCode:
+                true,
+
+              targetValue:
+                true,
+            },
+          });
+
+
+        if (
+          !target
+        ) {
+          throw new Error(
+            "KPI target was not found in this project.",
+          );
+        }
+
+
+        await transaction.projectKpiTarget.delete({
+          where: {
+            id:
+              target.id,
+          },
+        });
+
+
+        await transaction.projectAuditEvent.create({
+          data: {
+            projectId,
+
+            category:
+              "SCORECARD",
+
+            action:
+              "KPI_TARGET_DELETED",
+
+            severity:
+              "WARNING",
+
+            actorUserId,
+
+            entityType:
+              "ProjectKpiTarget",
+
+            entityId:
+              target.id,
+
+            summary:
+              `KPI target deleted: ${target.metricCode} ${target.periodKey}`,
+
+            metadata: {
+              periodKey:
+                target.periodKey,
+
+              metricCode:
+                target.metricCode,
+
+              targetValue:
+                target.targetValue.toString(),
+            },
+          },
+        });
+
+
+        return target;
       },
-    });
-
-
-  if (
-    result.count !==
-    1
-  ) {
-    throw new Error(
-      "KPI target was not found in this project.",
     );
-  }
 
 
   logStructured(
@@ -222,6 +345,6 @@ export async function deleteProjectKpiTarget({
 
   return {
     id:
-      targetId,
+      result.id,
   };
 }

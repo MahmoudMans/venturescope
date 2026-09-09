@@ -87,6 +87,12 @@ export async function saveVarianceCommentary({
             select: {
               id:
                 true,
+
+              status:
+                true,
+
+              causeCode:
+                true,
             },
           });
 
@@ -113,72 +119,134 @@ export async function saveVarianceCommentary({
         }
 
 
-        return transaction.varianceCommentary.upsert({
-          where: {
-            projectId_periodKey_metricCode: {
+        const saved =
+          await transaction.varianceCommentary.upsert({
+            where: {
+              projectId_periodKey_metricCode: {
+                projectId,
+
+                periodKey,
+
+                metricCode,
+              },
+            },
+
+            create: {
               projectId,
 
               periodKey,
 
               metricCode,
-            },
-          },
 
-          create: {
+              causeCode,
+
+              varianceNature,
+
+              explanation,
+
+              correctiveAction,
+
+              ownerName,
+
+              recoveryPeriodKey,
+
+              status,
+
+              createdByUserId:
+                actorUserId,
+            },
+
+            update: {
+              causeCode,
+
+              varianceNature,
+
+              explanation,
+
+              correctiveAction,
+
+              ownerName,
+
+              recoveryPeriodKey,
+
+              status,
+            },
+
+            select: {
+              id:
+                true,
+
+              periodKey:
+                true,
+
+              metricCode:
+                true,
+
+              status:
+                true,
+            },
+          });
+
+
+        await transaction.projectAuditEvent.create({
+          data: {
             projectId,
 
-            periodKey,
+            category:
+              "VARIANCE_REVIEW",
 
-            metricCode,
+            action:
+              existing
+                ?
+                  "VARIANCE_COMMENTARY_UPDATED"
+                :
+                  "VARIANCE_COMMENTARY_CREATED",
 
-            causeCode,
+            severity:
+              status ===
+                "OPEN"
+                ?
+                  "WARNING"
+                :
+                  "INFO",
 
-            varianceNature,
+            actorUserId,
 
-            explanation,
+            entityType:
+              "VarianceCommentary",
 
-            correctiveAction,
+            entityId:
+              saved.id,
 
-            ownerName,
+            summary:
+              `${existing ? "Variance commentary updated" : "Variance commentary created"}: ${metricCode} ${periodKey}`,
 
-            recoveryPeriodKey,
+            metadata: {
+              periodKey,
 
-            status,
+              metricCode,
 
-            createdByUserId:
-              actorUserId,
-          },
+              causeCode,
 
-          update: {
-            causeCode,
+              varianceNature,
 
-            varianceNature,
+              status,
 
-            explanation,
+              previousStatus:
+                existing?.status ??
+                null,
 
-            correctiveAction,
+              previousCauseCode:
+                existing?.causeCode ??
+                null,
 
-            ownerName,
-
-            recoveryPeriodKey,
-
-            status,
-          },
-
-          select: {
-            id:
-              true,
-
-            periodKey:
-              true,
-
-            metricCode:
-              true,
-
-            status:
-              true,
+              recoveryPeriodKey,
+            },
           },
         });
+
+
+        return saved;
       },
     );
 
@@ -224,25 +292,100 @@ export async function deleteVarianceCommentary({
   commentaryId:
     string;
 }) {
-  const result =
-    await prisma.varianceCommentary.deleteMany({
-      where: {
-        id:
-          commentaryId,
+  const commentary =
+    await prisma.$transaction(
+      async (
+        transaction,
+      ) => {
+        const existing =
+          await transaction.varianceCommentary.findFirst({
+            where: {
+              id:
+                commentaryId,
 
-        projectId,
+              projectId,
+            },
+
+            select: {
+              id:
+                true,
+
+              periodKey:
+                true,
+
+              metricCode:
+                true,
+
+              status:
+                true,
+
+              causeCode:
+                true,
+            },
+          });
+
+
+        if (
+          !existing
+        ) {
+          throw new Error(
+            "Variance commentary was not found in this project.",
+          );
+        }
+
+
+        await transaction.varianceCommentary.delete({
+          where: {
+            id:
+              existing.id,
+          },
+        });
+
+
+        await transaction.projectAuditEvent.create({
+          data: {
+            projectId,
+
+            category:
+              "VARIANCE_REVIEW",
+
+            action:
+              "VARIANCE_COMMENTARY_DELETED",
+
+            severity:
+              "WARNING",
+
+            actorUserId,
+
+            entityType:
+              "VarianceCommentary",
+
+            entityId:
+              existing.id,
+
+            summary:
+              `Variance commentary deleted: ${existing.metricCode} ${existing.periodKey}`,
+
+            metadata: {
+              periodKey:
+                existing.periodKey,
+
+              metricCode:
+                existing.metricCode,
+
+              status:
+                existing.status,
+
+              causeCode:
+                existing.causeCode,
+            },
+          },
+        });
+
+
+        return existing;
       },
-    });
-
-
-  if (
-    result.count !==
-    1
-  ) {
-    throw new Error(
-      "Variance commentary was not found in this project.",
     );
-  }
 
 
   logStructured(
@@ -261,6 +404,6 @@ export async function deleteVarianceCommentary({
 
   return {
     id:
-      commentaryId,
+      commentary.id,
   };
 }

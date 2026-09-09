@@ -426,3 +426,23 @@ model FinancialPeriodEvent {
   @@index([projectId, period, createdAt])
   @@index([projectId, action])
 }
+
+model ProjectAuditEvent {
+  id          String   @id @default(cuid())
+  projectId   String
+  category    String
+  action      String
+  severity    String   @default("INFO")
+  actorUserId String?
+  entityType  String?
+  entityId    String?
+  summary     String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([projectId, createdAt])
+  @@index([projectId, category, createdAt])
+  @@index([projectId, action, createdAt])
+  @@index([projectId, severity, createdAt])
+  @@index([actorUserId, createdAt])
+}

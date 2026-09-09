@@ -68,7 +68,7 @@ describe(
         expect(
           service,
         ).toContain(
-          "projectKpiTarget.deleteMany",
+          "projectKpiTarget.findFirst",
         );
 
 

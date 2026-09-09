@@ -13,7 +13,7 @@ echo "============================================================"
 echo
 
 
-echo "[1/28] Prisma..."
+echo "[1/29] Prisma..."
 
 pnpm exec prisma format
 pnpm exec prisma validate
@@ -21,158 +21,164 @@ pnpm exec prisma generate
 
 
 echo
-echo "[2/28] ESLint..."
+echo "[2/29] ESLint..."
 
 pnpm exec eslint . \
   --max-warnings=0
 
 
 echo
-echo "[3/28] TypeScript..."
+echo "[3/29] TypeScript..."
 
 pnpm typecheck
 
 
 echo
-echo "[4/28] Vitest..."
+echo "[4/29] Vitest..."
 
 pnpm test
 
 
 echo
-echo "[5/28] Prisma migration chain..."
+echo "[5/29] Prisma migration chain..."
 
 pnpm db:migrations:selftest
 
 
 echo
-echo "[6/28] Database backup/restore operations..."
+echo "[6/29] Database backup/restore operations..."
 
 pnpm db:ops:selftest
 
 
 echo
-echo "[7/28] Deployment and rollback control plane..."
+echo "[7/29] Deployment and rollback control plane..."
 
 pnpm deploy:selftest
 
 
 echo
-echo "[8/28] Observability contract..."
+echo "[8/29] Observability contract..."
 
 pnpm test:observability
 
 
 echo
-echo "[9/28] Account security and session lifecycle..."
+echo "[9/29] Account security and session lifecycle..."
 
 pnpm test:account-security
 
 
 echo
-echo "[10/28] Collaboration authorization..."
+echo "[10/29] Collaboration authorization..."
 
 pnpm test:collaboration
 
 
 echo
 echo
-echo "[11/28] Model versioning and immutable restore..."
+echo "[11/29] Model versioning and immutable restore..."
 
 pnpm test:versioning
 
 
 echo
-echo "[12/28] Advanced financial analytics..."
+echo "[12/29] Advanced financial analytics..."
 
 pnpm test:analytics
 
 
 echo
-echo "[13/28] Actuals and forecast variance..."
+echo "[13/29] Actuals and forecast variance..."
 
 pnpm test:actuals
 
 
 echo
-echo "[14/28] Forecast accuracy and bias intelligence..."
+echo "[14/29] Forecast accuracy and bias intelligence..."
 
 pnpm test:forecast-accuracy
 
 
 echo
-echo "[15/28] Rolling reforecast and planning baselines..."
+echo "[15/29] Rolling reforecast and planning baselines..."
 
 pnpm test:planning-cycle
 
 
 echo
-echo "[16/28] Liquidity risk and financial guardrails..."
+echo "[16/29] Liquidity risk and financial guardrails..."
 
 pnpm test:risk-center
 
 
 echo
-echo "[17/28] Funding strategy and capital planning..."
+echo "[17/29] Funding strategy and capital planning..."
 
 pnpm test:capital-planning
 
 
 echo
-echo "[18/28] Executive decision center and action register..."
+echo "[18/29] Executive decision center and action register..."
 
 pnpm test:decision-center
 
 
 echo
-echo "[19/28] Board room and executive review snapshots..."
+echo "[19/29] Board room and executive review snapshots..."
 
 pnpm test:board-room
 
 
 echo
-echo "[20/28] Model version diff and change intelligence..."
+echo "[20/29] Model version diff and change intelligence..."
 
 pnpm test:version-diff
 
 
 echo
-echo "[21/28] Scenario comparison center and decision matrix..."
+echo "[21/29] Scenario comparison center and decision matrix..."
 
 pnpm test:scenario-comparison
 
 
 echo
-echo "[22/28] Financial sensitivity lab and stress surface..."
+echo "[22/29] Financial sensitivity lab and stress surface..."
 
 pnpm test:sensitivity-lab
 
 
 echo
-echo "[23/28] KPI targets and management scorecards..."
+echo "[23/29] KPI targets and management scorecards..."
 
 pnpm test:scorecard
 
 
 echo
-echo "[24/28] Variance commentary and management explanations..."
+echo "[24/29] Variance commentary and management explanations..."
 
 pnpm test:variance-review
 
 
 echo
-echo "[25/28] Financial close and period locking..."
+echo "[25/29] Financial close and period locking..."
 
 pnpm test:period-close
 
 
-echo "[26/28] Browser + security + accessibility + operations E2E..."
+echo
+echo "[26/29] Project audit trail and activity center..."
+
+pnpm test:activity-center
+
+
+echo "[27/29] Browser + security + accessibility + operations E2E..."
 
 pnpm test:e2e
 
 
 echo
-echo "[27/28] Production Compose..."
+echo "[28/29] Production Compose..."
 
 AUTH_SECRET='venturescope-release-gate-secret-000000000000' \
 POSTGRES_PASSWORD='venturescope-release-gate-password' \
@@ -207,7 +213,7 @@ echo "[PASS] Release image override valid"
 
 
 echo
-echo "[28/28] Production Docker..."
+echo "[29/29] Production Docker..."
 
 rm -f \
   "${DOCKER_LOG}"
@@ -268,6 +274,10 @@ echo "SENSITIVITY_LAB=PASS"
 echo "KPI_TARGETS=PASS"
 echo "VARIANCE_REVIEW=PASS"
 echo "FINANCIAL_CLOSE=PASS"
+echo "PROJECT_AUDIT_TRAIL=PASS"
+echo "ACTIVITY_CENTER=PASS"
+echo "AUDIT_LEDGER_IMMUTABLE=PASS"
+echo "AUDIT_HISTORY_BACKFILL=PASS"
 echo "PERIOD_LOCKING=PASS"
 echo "OWNER_REOPEN_GOVERNANCE=PASS"
 echo "ACTUAL_PERIOD_DB_GUARD=PASS"

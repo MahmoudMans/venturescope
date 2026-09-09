@@ -61,7 +61,7 @@ describe(
         expect(
           service,
         ).toContain(
-          "decisionAction.updateMany",
+          "decisionAction.findFirst",
         );
 
 

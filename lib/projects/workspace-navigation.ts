@@ -290,6 +290,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/templates`,
         },
+        {
+          label:
+            "Portfolio Dashboard",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/portfolio`,
+        },
 
         {
           label:

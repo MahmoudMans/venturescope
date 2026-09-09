@@ -50,7 +50,8 @@
     "test:period-close": "vitest run tests/period-close",
     "test:activity-center": "vitest run tests/activity",
     "test:board-pack": "vitest run tests/board-pack",
-    "test:planning-templates": "vitest run tests/planning-templates"
+    "test:planning-templates": "vitest run tests/planning-templates",
+    "test:portfolio-dashboard": "vitest run tests/portfolio-dashboard"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

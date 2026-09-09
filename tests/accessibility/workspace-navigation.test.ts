@@ -58,6 +58,7 @@ describe(
           "Activity Center",
           "Board Pack",
           "Planning Templates",
+          "Portfolio Dashboard",
           "P&L",
           "Cash Flow",
           "Customers",

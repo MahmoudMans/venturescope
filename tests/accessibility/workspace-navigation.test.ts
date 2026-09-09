@@ -54,6 +54,7 @@ describe(
           "Sensitivity Lab",
           "Scorecard",
           "Variance Review",
+          "Financial Close",
           "P&L",
           "Cash Flow",
           "Customers",

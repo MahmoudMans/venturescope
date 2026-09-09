@@ -250,6 +250,16 @@ export function buildProjectWorkspaceNavigation(
           href:
             `/projects/${projectId}/variance-review`,
         },
+        {
+          label:
+            "Financial Close",
+
+          icon:
+            BarChart3,
+
+          href:
+            `/projects/${projectId}/period-close`,
+        },
 
         {
           label:

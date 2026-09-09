@@ -46,7 +46,8 @@
     "test:scenario-comparison": "vitest run tests/scenario-comparison",
     "test:sensitivity-lab": "vitest run tests/sensitivity-lab",
     "test:scorecard": "vitest run tests/scorecard",
-    "test:variance-review": "vitest run tests/variance-review"
+    "test:variance-review": "vitest run tests/variance-review",
+    "test:period-close": "vitest run tests/period-close"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

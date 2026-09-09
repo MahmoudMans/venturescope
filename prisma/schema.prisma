@@ -108,6 +108,9 @@ model Project {
 
   varianceCommentaries VarianceCommentary[]
 
+  financialPeriodStates FinancialPeriodState[]
+  financialPeriodEvents FinancialPeriodEvent[]
+
   @@index([userId])
   @@index([userId, updatedAt])
   @@index([workspaceId])
@@ -386,4 +389,40 @@ model VarianceCommentary {
   @@index([projectId, periodKey])
   @@index([projectId, status])
   @@index([createdByUserId])
+}
+
+model FinancialPeriodState {
+  id               String    @id @default(cuid())
+  projectId        String
+  period           DateTime  @db.Date
+  status           String    @default("OPEN")
+  closeSequence    Int       @default(0)
+  closedAt         DateTime?
+  closedByUserId   String?
+  reopenedAt       DateTime?
+  reopenedByUserId String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, period])
+  @@index([projectId, status])
+  @@index([projectId, period])
+}
+
+model FinancialPeriodEvent {
+  id          String   @id @default(cuid())
+  projectId   String
+  period      DateTime @db.Date
+  action      String
+  actorUserId String
+  reason      String?
+  sequence    Int
+  createdAt   DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, period, createdAt])
+  @@index([projectId, action])
 }

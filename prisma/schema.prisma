@@ -26,6 +26,12 @@ enum FinancingType {
   OTHER
 }
 
+enum WorkspaceRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
 model User {
   authVersion       Int       @default(0)
   passwordChangedAt DateTime?
@@ -38,6 +44,10 @@ model User {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   projects Project[]
+
+  ownedWorkspaces             Workspace[]           @relation("WorkspaceOwner")
+  workspaceMemberships        WorkspaceMember[]
+  workspaceInvitationsCreated WorkspaceInvitation[] @relation("WorkspaceInvitationCreator")
 
   @@index([createdAt])
 }
@@ -66,8 +76,12 @@ model Project {
   financingEvents  FinancingEvent[]
   monthlyOverrides MonthlyOverride[]
 
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+
   @@index([userId])
   @@index([userId, updatedAt])
+  @@index([workspaceId])
 }
 
 model Scenario {
@@ -133,4 +147,53 @@ model MonthlyOverride {
   @@index([projectId])
   @@index([scenarioId])
   @@index([projectId, month])
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner       User                  @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     WorkspaceMember[]
+  invitations WorkspaceInvitation[]
+  projects    Project[]
+
+  @@index([ownerId])
+}
+
+model WorkspaceMember {
+  id          String        @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        WorkspaceRole
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId])
+  @@index([workspaceId, role])
+}
+
+model WorkspaceInvitation {
+  id              String        @id @default(cuid())
+  workspaceId     String
+  emailNormalized String
+  role            WorkspaceRole
+  tokenHash       String        @unique
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  createdByUserId String
+  createdAt       DateTime      @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy User      @relation("WorkspaceInvitationCreator", fields: [createdByUserId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, emailNormalized])
+  @@index([expiresAt])
 }

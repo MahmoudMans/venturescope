@@ -33,6 +33,10 @@ export default function robots(): MetadataRoute.Robots {
         "/dashboard/",
         "/projects",
         "/projects/",
+        "/workspaces",
+        "/workspaces/",
+        "/invite",
+        "/invite/",
       ],
     },
 

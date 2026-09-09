@@ -13,7 +13,7 @@ echo "============================================================"
 echo
 
 
-echo "[1/12] Prisma..."
+echo "[1/13] Prisma..."
 
 pnpm exec prisma format
 pnpm exec prisma validate
@@ -21,62 +21,68 @@ pnpm exec prisma generate
 
 
 echo
-echo "[2/12] ESLint..."
+echo "[2/13] ESLint..."
 
 pnpm exec eslint . \
   --max-warnings=0
 
 
 echo
-echo "[3/12] TypeScript..."
+echo "[3/13] TypeScript..."
 
 pnpm typecheck
 
 
 echo
-echo "[4/12] Vitest..."
+echo "[4/13] Vitest..."
 
 pnpm test
 
 
 echo
-echo "[5/12] Prisma migration chain..."
+echo "[5/13] Prisma migration chain..."
 
 pnpm db:migrations:selftest
 
 
 echo
-echo "[6/12] Database backup/restore operations..."
+echo "[6/13] Database backup/restore operations..."
 
 pnpm db:ops:selftest
 
 
 echo
-echo "[7/12] Deployment and rollback control plane..."
+echo "[7/13] Deployment and rollback control plane..."
 
 pnpm deploy:selftest
 
 
 echo
-echo "[8/12] Observability contract..."
+echo "[8/13] Observability contract..."
 
 pnpm test:observability
 
 
 echo
-echo "[9/12] Account security and session lifecycle..."
+echo "[9/13] Account security and session lifecycle..."
 
 pnpm test:account-security
 
 
 echo
-echo "[10/12] Browser + security + accessibility + operations E2E..."
+echo "[10/13] Collaboration authorization..."
+
+pnpm test:collaboration
+
+
+echo
+echo "[11/13] Browser + security + accessibility + operations E2E..."
 
 pnpm test:e2e
 
 
 echo
-echo "[11/12] Production Compose..."
+echo "[12/13] Production Compose..."
 
 AUTH_SECRET='venturescope-release-gate-secret-000000000000' \
 POSTGRES_PASSWORD='venturescope-release-gate-password' \
@@ -111,7 +117,7 @@ echo "[PASS] Release image override valid"
 
 
 echo
-echo "[12/12] Production Docker..."
+echo "[13/13] Production Docker..."
 
 rm -f \
   "${DOCKER_LOG}"
@@ -156,6 +162,8 @@ echo "ROLLBACK_CONTROL=PASS"
 echo "OBSERVABILITY=PASS"
 echo "ACCOUNT_SECURITY=PASS"
 echo "SESSION_REVOCATION=PASS"
+echo "COLLABORATION=PASS"
+echo "WORKSPACE_RBAC=PASS"
 echo "PLAYWRIGHT=PASS"
 echo "SECURITY=PASS"
 echo "ACCESSIBILITY=PASS"

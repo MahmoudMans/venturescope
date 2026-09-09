@@ -31,7 +31,8 @@
     "test:observability": "vitest run tests/observability",
     "ops:diagnostics": "bash scripts/diagnostics-smoke.sh",
     "test:account-security": "vitest run tests/account-security",
-    "db:migrations:selftest": "bash scripts/migration-selftest.sh"
+    "db:migrations:selftest": "bash scripts/migration-selftest.sh",
+    "test:collaboration": "vitest run tests/collaboration"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

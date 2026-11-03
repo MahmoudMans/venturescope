@@ -7,6 +7,10 @@ import {
 } from "next/navigation";
 
 import {
+  StatusNotice,
+} from "@/components/app/status-notice";
+
+import {
   ConsolidationWorkspace,
 } from "@/components/consolidation/consolidation-workspace";
 
@@ -29,6 +33,10 @@ import {
 import {
   isProjectWorkspaceOwner,
 } from "@/lib/finance/period-close/access";
+
+import {
+  getConsolidationNotice,
+} from "@/lib/finance/consolidation/notices";
 
 import {
   parseVentureScopeCurrency,
@@ -75,11 +83,19 @@ function decimalNumber(
 
 export default async function ConsolidationCenterPage({
   params,
+  searchParams,
 }: {
   params:
     Promise<{
       projectId:
         string;
+    }>;
+
+  searchParams:
+    Promise<{
+      status?:
+        string |
+        string[];
     }>;
 }) {
   const user =
@@ -90,6 +106,18 @@ export default async function ConsolidationCenterPage({
     projectId,
   } =
     await params;
+
+
+  const {
+    status,
+  } =
+    await searchParams;
+
+
+  const notice =
+    getConsolidationNotice(
+      status,
+    );
 
 
   const currentProject =
@@ -582,7 +610,7 @@ export default async function ConsolidationCenterPage({
 
 
   return (
-    <main className="mx-auto w-full max-w-[1600px] space-y-8 px-5 py-8 lg:px-8 lg:py-10">
+    <div className="mx-auto w-full max-w-[1600px] space-y-8 px-5 py-8 lg:px-8 lg:py-10">
       <header>
         <p className="text-sm font-medium text-muted-foreground">
           Consolidated financial reporting
@@ -596,6 +624,22 @@ export default async function ConsolidationCenterPage({
           Convert and consolidate workspace project metrics into one reporting currency using manually governed, dated FX rates while preserving original currencies, rate provenance, and explicit missing-rate controls.
         </p>
       </header>
+
+      {
+        notice
+          ?
+            (
+              <StatusNotice
+                tone="success"
+              >
+                {
+                  notice.message
+                }
+              </StatusNotice>
+            )
+          :
+            null
+      }
 
       <ConsolidationWorkspace
         projectId={
@@ -618,6 +662,6 @@ export default async function ConsolidationCenterPage({
           sources
         }
       />
-    </main>
+    </div>
   );
 }

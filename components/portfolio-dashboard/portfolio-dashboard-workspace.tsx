@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
@@ -132,13 +133,13 @@ function attentionTone(
       return "text-destructive";
 
     case "REVIEW":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "MONITOR":
-      return "text-blue-700 dark:text-blue-400";
+      return "text-info";
 
     case "STABLE":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
   }
 }
 
@@ -151,10 +152,10 @@ function closeTone(
     status
   ) {
     case "CLOSED":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "OPEN":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     default:
       return "text-muted-foreground";
@@ -794,7 +795,7 @@ export function PortfolioDashboardWorkspace({
               .offTrackTargets >
             0
               ?
-                "text-amber-700 dark:text-amber-400"
+                "text-warning"
               :
                 ""
           }`}>
@@ -891,7 +892,7 @@ export function PortfolioDashboardWorkspace({
                 Moderate
               </p>
 
-              <p className="mt-1 text-xl font-semibold text-amber-700 dark:text-amber-400">
+              <p className="mt-1 text-xl font-semibold text-warning">
                 {
                   dashboard.summary
                     .riskDistribution
@@ -905,7 +906,7 @@ export function PortfolioDashboardWorkspace({
                 Low
               </p>
 
-              <p className="mt-1 text-xl font-semibold text-emerald-700 dark:text-emerald-400">
+              <p className="mt-1 text-xl font-semibold text-success">
                 {
                   dashboard.summary
                     .riskDistribution
@@ -966,7 +967,7 @@ export function PortfolioDashboardWorkspace({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Currency-separated portfolio exposure">
           <table className="w-full min-w-[780px] text-sm">
             <thead>
               <tr className="border-b bg-muted/30">
@@ -1055,7 +1056,7 @@ export function PortfolioDashboardWorkspace({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="rounded-xl border bg-background p-5">
@@ -1192,7 +1193,7 @@ export function PortfolioDashboardWorkspace({
               )
             :
               (
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Project attention register">
                   <table className="w-full min-w-[1650px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -1404,7 +1405,7 @@ export function PortfolioDashboardWorkspace({
                                 row.offTrackTargets >
                                 0
                                   ?
-                                    "text-amber-700 dark:text-amber-400"
+                                    "text-warning"
                                   :
                                     ""
                               }`}>
@@ -1429,28 +1430,28 @@ export function PortfolioDashboardWorkspace({
                                 <div className="flex flex-wrap gap-2">
                                   <Link
                                     href={`/projects/${row.id}/dashboard`}
-                                    className="rounded border px-2 py-1 text-xs"
+                                    className="touch-link rounded border px-2 py-1 text-xs"
                                   >
                                     Dashboard
                                   </Link>
 
                                   <Link
                                     href={`/projects/${row.id}/risk-center`}
-                                    className="rounded border px-2 py-1 text-xs"
+                                    className="touch-link rounded border px-2 py-1 text-xs"
                                   >
                                     Risk
                                   </Link>
 
                                   <Link
                                     href={`/projects/${row.id}/capital-planning`}
-                                    className="rounded border px-2 py-1 text-xs"
+                                    className="touch-link rounded border px-2 py-1 text-xs"
                                   >
                                     Capital
                                   </Link>
 
                                   <Link
                                     href={`/projects/${row.id}/board-pack`}
-                                    className="rounded border px-2 py-1 text-xs"
+                                    className="touch-link rounded border px-2 py-1 text-xs"
                                   >
                                     Board Pack
                                   </Link>
@@ -1462,7 +1463,7 @@ export function PortfolioDashboardWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               )
         }
       </section>
@@ -1489,7 +1490,7 @@ export function PortfolioDashboardWorkspace({
               )
             :
               (
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Cross-project management actions">
                   <table className="w-full min-w-[1050px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -1542,7 +1543,7 @@ export function PortfolioDashboardWorkspace({
                                 action.priority ===
                                   "HIGH"
                                   ?
-                                    "text-amber-700 dark:text-amber-400"
+                                    "text-warning"
                                   :
                                     ""
                               }`}>
@@ -1591,7 +1592,7 @@ export function PortfolioDashboardWorkspace({
                               <td className="px-4 py-3">
                                 <Link
                                   href={`/projects/${action.projectId}/decision-center`}
-                                  className="rounded border px-2 py-1 text-xs"
+                                  className="touch-link rounded border px-2 py-1 text-xs"
                                 >
                                   Decision Center
                                 </Link>
@@ -1602,7 +1603,7 @@ export function PortfolioDashboardWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               )
         }
       </section>

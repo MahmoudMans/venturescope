@@ -11,6 +11,7 @@ const eslintConfig = defineConfig([
     "test-results/**",
     "blob-report/**",
     "coverage/**",
+    ".update-backup/**",
     "generated/prisma/**",
 // Default ignores of eslint-config-next:
     ".next/**",

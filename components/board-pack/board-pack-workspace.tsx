@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
@@ -241,7 +242,7 @@ function insightTone(
       return "text-destructive";
 
     case "WARNING":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "INFO":
       return "text-muted-foreground";
@@ -904,21 +905,21 @@ export function BoardPackWorkspace({
                 onClick={
                   printDocument
                 }
-                className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
+                className="touch-target rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
               >
                 Print / Save as PDF
               </button>
 
               <Link
                 href={`/projects/${projectId}/board-room`}
-                className="rounded-lg border px-4 py-2 text-sm font-medium"
+                className="touch-link rounded-lg border px-4 py-2 text-sm font-medium"
               >
                 Board Room
               </Link>
 
               <Link
                 href={`/projects/${projectId}/activity`}
-                className="rounded-lg border px-4 py-2 text-sm font-medium"
+                className="touch-link rounded-lg border px-4 py-2 text-sm font-medium"
               >
                 Activity Center
               </Link>
@@ -991,9 +992,9 @@ export function BoardPackWorkspace({
                 reportClose?.status ===
                   "CLOSED"
                   ?
-                    "text-emerald-700 dark:text-emerald-400"
+                    "text-success"
                   :
-                    "text-amber-700 dark:text-amber-400"
+                    "text-warning"
               }`}>
                 {
                   reportClose?.status ??
@@ -1119,7 +1120,7 @@ export function BoardPackWorkspace({
                   } critical
                 </span>
                 {" · "}
-                <span className="font-semibold text-amber-700 dark:text-amber-400">
+                <span className="font-semibold text-warning">
                   {
                     executiveSummary
                       .warnings
@@ -1259,7 +1260,7 @@ export function BoardPackWorkspace({
                 )
               :
                 (
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Management scorecard">
                     <table className="board-pack-table w-full min-w-[760px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -1318,12 +1319,12 @@ export function BoardPackWorkspace({
                                   row.status ===
                                     "AT_RISK"
                                     ?
-                                      "text-amber-700 dark:text-amber-400"
+                                      "text-warning"
                                     :
                                   row.status ===
                                     "ON_TRACK"
                                     ?
-                                      "text-emerald-700 dark:text-emerald-400"
+                                      "text-success"
                                     :
                                       "text-muted-foreground"
                                 }`}>
@@ -1387,7 +1388,7 @@ export function BoardPackWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 )
           }
         </section>
@@ -1416,7 +1417,7 @@ export function BoardPackWorkspace({
                 )
               :
                 (
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Material variance review">
                     <table className="board-pack-table w-full min-w-[960px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -1526,7 +1527,7 @@ export function BoardPackWorkspace({
                                     ?
                                       "text-destructive"
                                     :
-                                      "text-amber-700 dark:text-amber-400"
+                                      "text-warning"
                                 }`}>
                                   {
                                     row.materiality
@@ -1570,7 +1571,7 @@ export function BoardPackWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 )
           }
         </section>
@@ -1597,7 +1598,7 @@ export function BoardPackWorkspace({
                 )
               :
                 (
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Management action register">
                     <table className="board-pack-table w-full min-w-[860px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -1644,7 +1645,7 @@ export function BoardPackWorkspace({
                                   action.priority ===
                                     "HIGH"
                                     ?
-                                      "text-amber-700 dark:text-amber-400"
+                                      "text-warning"
                                     :
                                       ""
                                 }`}>
@@ -1689,7 +1690,7 @@ export function BoardPackWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 )
           }
         </section>
@@ -1726,9 +1727,9 @@ export function BoardPackWorkspace({
                           reportClose.status ===
                             "CLOSED"
                             ?
-                              "text-emerald-700 dark:text-emerald-400"
+                              "text-success"
                             :
-                              "text-amber-700 dark:text-amber-400"
+                              "text-warning"
                         }`}>
                           {
                             reportClose.status
@@ -1781,7 +1782,7 @@ export function BoardPackWorkspace({
                   Warning
                 </p>
 
-                <p className="mt-1 text-xl font-semibold text-amber-700 dark:text-amber-400">
+                <p className="mt-1 text-xl font-semibold text-warning">
                   {
                     auditSummary.warning
                   }
@@ -1829,7 +1830,7 @@ export function BoardPackWorkspace({
                     </p>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Movement since latest frozen executive review">
                     <table className="board-pack-table w-full min-w-[760px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -2000,7 +2001,7 @@ export function BoardPackWorkspace({
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 </section>
               )
             :

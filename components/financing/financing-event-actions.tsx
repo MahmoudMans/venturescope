@@ -23,6 +23,10 @@ import {
   FinancingSubmitButton,
 } from "@/components/financing/financing-submit-button";
 import {
+  SubmitButton,
+} from "@/components/forms/submit-button";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
+import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
@@ -91,6 +95,12 @@ export function FinancingEventActions({
     updateFinancingEventAction,
     initialFinancingActionState,
   );
+
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
 return (
     <>
       <div className="flex items-center gap-1">
@@ -141,6 +151,7 @@ return (
       >
         <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-3xl">
           <form
+            ref={formRef}
             action={
               action
             }
@@ -289,9 +300,9 @@ return (
                 }
               />
 
-              <Button
-                type="submit"
+              <SubmitButton
                 variant="destructive"
+                pendingLabel="Deleting..."
               >
                 <Trash2
                   className="size-4"
@@ -299,7 +310,7 @@ return (
                 />
 
                 Delete financing
-              </Button>
+              </SubmitButton>
             </form>
           </AlertDialogFooter>
         </AlertDialogContent>

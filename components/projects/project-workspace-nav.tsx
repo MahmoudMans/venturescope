@@ -71,10 +71,10 @@ export function ProjectWorkspaceNav({
                           : undefined
                       }
                       className={cn(
-                        "flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
+                        "touch-target flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
                         active
-                          ? "bg-foreground text-background"
-                          : "hover:bg-muted",
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-foreground/80 hover:bg-muted hover:text-foreground",
                       )}
                     >
                       <Icon

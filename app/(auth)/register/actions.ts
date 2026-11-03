@@ -4,6 +4,7 @@ import { hash } from "bcryptjs";
 import { redirect } from "next/navigation";
 
 import type { RegisterFormState } from "@/lib/auth/form-state";
+import { authPageHref } from "@/lib/auth/return-path";
 import { prisma } from "@/lib/db/prisma";
 import { registerSchema } from "@/lib/validation/auth";
 
@@ -72,5 +73,12 @@ export async function registerAction(
     };
   }
 
-  redirect("/login");
+  // The page the person wanted (an invitation, for example) stays in the address, so the sign-in
+  // that follows brings them back to it.
+  redirect(
+    authPageHref("/login", {
+      security: "account-created",
+      next: formData.get("next"),
+    }),
+  );
 }

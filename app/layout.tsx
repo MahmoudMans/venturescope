@@ -3,6 +3,7 @@ import {
 } from "@/components/accessibility/skip-to-content";
 import type {
   Metadata,
+  Viewport,
 } from "next";
 import {
   Geist,
@@ -11,6 +12,8 @@ import {
 
 import "./globals.css";
 
+import { OfflineNotice } from "@/components/app/offline-notice";
+import { NumberPasteFix } from "@/components/forms/number-paste-fix";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
 const geistSans = Geist({
@@ -35,6 +38,19 @@ export const metadata: Metadata = {
   applicationName: "VentureScope",
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    {
+      media: "(prefers-color-scheme: light)",
+      color: "#fafafc",
+    },
+    {
+      media: "(prefers-color-scheme: dark)",
+      color: "#14151f",
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,10 +59,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-svh bg-background text-foreground antialiased`}
+        className="min-h-svh bg-background text-foreground antialiased"
       >
         <SkipToContent />
 
@@ -64,6 +81,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+
+          <OfflineNotice />
+
+          <NumberPasteFix />
         </ThemeProvider>
       </body>
     </html>

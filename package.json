@@ -56,7 +56,15 @@
     "test:approvals": "vitest run tests/approvals",
     "test:data-import": "vitest run tests/data-import",
     "test:consolidation": "vitest run tests/consolidation",
-    "test:product-readiness": "vitest run tests/product-readiness"
+    "test:product-readiness": "vitest run tests/product-readiness",
+    "test:seed": "vitest run tests/seed",
+    "db:seed": "VS_SEED_NODE_ENV=$NODE_ENV vitest run --config scripts/seed/vitest.config.mts scripts/seed/seed.run.ts",
+    "db:seed:verify": "vitest run --config scripts/seed/vitest.config.mts scripts/seed/verify.run.ts",
+    "demo": "bash scripts/demo.sh",
+    "portfolio": "node scripts/portfolio/run.mjs",
+    "portfolio:shots": "node scripts/portfolio/capture.mjs",
+    "portfolio:texts": "node scripts/portfolio/write-texts.mjs",
+    "test:portfolio-kit": "vitest run tests/portfolio"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.0",

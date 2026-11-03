@@ -14,6 +14,10 @@ import {
 } from "@/app/(app)/projects/[projectId]/alerts/actions";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
 
@@ -127,10 +131,10 @@ function severityTone(
       return "text-destructive";
 
     case "WARNING":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "INFO":
-      return "text-blue-700 dark:text-blue-400";
+      return "text-info";
   }
 }
 
@@ -146,10 +150,10 @@ function severitySurface(
       return "bg-destructive/5";
 
     case "WARNING":
-      return "bg-amber-500/5";
+      return "bg-warning/5";
 
     case "INFO":
-      return "bg-blue-500/5";
+      return "bg-info/5";
   }
 }
 
@@ -242,14 +246,13 @@ function ReceiptForm({
         }
       />
 
-      <button
-        type="submit"
+      <PendingButton
         className="rounded-lg border px-2.5 py-1.5 text-xs font-medium"
       >
         {
           label
         }
-      </button>
+      </PendingButton>
     </form>
   );
 }
@@ -754,7 +757,7 @@ export function AlertInboxWorkspace({
             Warning
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-amber-700 dark:text-amber-400">
+          <p className="mt-2 text-3xl font-semibold text-warning">
             {
               inbox.summary
                 .warning
@@ -923,12 +926,11 @@ export function AlertInboxWorkspace({
                         }
                       />
 
-                      <button
-                        type="submit"
+                      <PendingButton
                         className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background"
                       >
                         Mark all read
-                      </button>
+                      </PendingButton>
                     </form>
                   )
                 :
@@ -1060,7 +1062,7 @@ export function AlertInboxWorkspace({
                                 href={
                                   item.alert.sourceHref
                                 }
-                                className="rounded-lg border px-2.5 py-1.5 text-xs font-medium"
+                                className="touch-link rounded-lg border px-2.5 py-1.5 text-xs font-medium"
                               >
                                 {
                                   item.alert.sourceLabel
@@ -1211,7 +1213,7 @@ export function AlertInboxWorkspace({
                   !value,
               );
             }}
-            className="rounded-lg border px-3 py-2 text-sm font-medium"
+            className="touch-target rounded-lg border px-3 py-2 text-sm font-medium"
           >
             {
               showDismissed

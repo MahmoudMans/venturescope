@@ -63,7 +63,7 @@ export function ScenarioSwitcher({
   }
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border bg-background px-2 py-1.5">
+    <div className="flex items-center gap-2 rounded-lg border bg-background px-2 py-1.5 [@media(pointer:coarse)]:py-0">
       {pending ? (
         <LoaderCircle
           className="size-4 animate-spin text-muted-foreground"

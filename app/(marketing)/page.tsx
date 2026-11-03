@@ -17,6 +17,9 @@ import {
   VentureScopeLogo,
 } from "@/components/brand/venturescope-logo";
 import {
+  PublicFooterLinks,
+} from "@/components/site/public-page-shell";
+import {
   ThemeToggle,
 } from "@/components/theme/theme-toggle";
 import {
@@ -50,26 +53,26 @@ export default function MarketingPage() {
     <div className="min-h-svh bg-background">
       <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-          <VentureScopeLogo />
+          <VentureScopeLogo shortOnPhone />
 
           <nav className="hidden items-center gap-7 md:flex">
             <Link
               href="/demo"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="touch-reach text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               Live demo
             </Link>
 
             <a
               href="#platform"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="touch-reach text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               Platform
             </a>
 
             <a
               href="#workflow"
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="touch-reach text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               Workflow
             </a>
@@ -98,8 +101,16 @@ export default function MarketingPage() {
       </header>
 
       <main>
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,var(--muted),transparent_45%)]" />
+        <section className="relative isolate overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="surface-glow absolute inset-0 -z-10"
+          />
+
+          <div
+            aria-hidden="true"
+            className="surface-grid absolute inset-0 -z-10 opacity-60 [mask-image:radial-gradient(ellipse_at_top_right,black,transparent_65%)]"
+          />
 
           <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-28">
             <div>
@@ -112,12 +123,14 @@ export default function MarketingPage() {
                   aria-hidden="true"
                 />
 
-                FINANCIAL PLANNING & SCENARIO SIMULATION
+                <span className="whitespace-normal text-center">
+                  FINANCIAL PLANNING & SCENARIO SIMULATION
+                </span>
               </Badge>
 
               <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.04em] sm:text-6xl lg:text-7xl">
                 Model your startup.
-                <span className="block text-muted-foreground">
+                <span className="block text-brand-gradient">
                   Stress-test the future.
                 </span>
               </h1>
@@ -518,10 +531,10 @@ export default function MarketingPage() {
           </div>
         </section>
 
-        <section className="border-t bg-foreground text-background">
+        <section className="bg-brand-panel border-t text-white">
           <div className="mx-auto grid max-w-7xl items-center gap-8 px-5 py-16 lg:grid-cols-[1fr_auto] lg:px-8">
             <div>
-              <div className="flex items-center gap-2 text-sm text-background/60">
+              <div className="flex items-center gap-2 text-sm text-white/70">
                 <LockKeyhole
                   className="size-4"
                   aria-hidden="true"
@@ -534,7 +547,7 @@ export default function MarketingPage() {
                 Ready to model your own company?
               </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-background/70">
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/80">
                 Start from your own assumptions or explore Orbit Analytics first.
               </p>
             </div>
@@ -544,6 +557,7 @@ export default function MarketingPage() {
                 asChild
                 size="lg"
                 variant="secondary"
+                className="bg-white text-slate-900 hover:bg-white/90"
               >
                 <Link href="/register">
                   Create account
@@ -554,7 +568,7 @@ export default function MarketingPage() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background"
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
               >
                 <Link href="/demo">
                   Open demo
@@ -564,6 +578,18 @@ export default function MarketingPage() {
           </div>
         </section>
       </main>
+
+      <footer className="border-t bg-background">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between lg:px-8">
+          <VentureScopeLogo href="" />
+
+          <PublicFooterLinks />
+
+          <p>
+            Deterministic financial planning. Free stack, no paid APIs required.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -610,7 +636,7 @@ function CapabilityCard({
   return (
     <Card className="border-border/70">
       <CardContent className="p-6">
-        <div className="flex size-10 items-center justify-center rounded-xl bg-foreground text-background">
+        <div className="flex size-10 items-center justify-center rounded-xl bg-brand-gradient text-white shadow-sm">
           <Icon
             className="size-4"
             aria-hidden="true"

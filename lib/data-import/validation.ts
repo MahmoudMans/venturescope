@@ -1,11 +1,33 @@
 import {
-  csvRecords,
-} from "@/lib/data-import/csv";
+  describeUntitled,
+  readCsvTable,
+  titleRules,
+} from "@/lib/data-import/table";
 
 import {
   DATA_IMPORT_MAX_BYTES,
   DATA_IMPORT_MAX_ROWS,
 } from "@/lib/data-import/catalog";
+
+import {
+  describeMissingTitles,
+  describeNoNumbers,
+  readColumnTitles,
+} from "@/lib/data-import/headers";
+
+import {
+  describeInvalidValue,
+  readRecordValues,
+  type ReadValue,
+} from "@/lib/data-import/values";
+
+import {
+  readRecordNumbers,
+} from "@/lib/data-import/number";
+
+import {
+  readMonthColumn,
+} from "@/lib/finance/actuals/month-column";
 
 import type {
   DataImportIssue,
@@ -173,7 +195,9 @@ function pushIssue(
     message:
       cause instanceof Error
         ?
-          cause.message
+          describeInvalidValue(
+            cause.message,
+          )
         :
           "Invalid value.",
   });
@@ -846,12 +870,54 @@ export function validateDataImportCsv({
   }
 
 
-  const {
-    headers,
-    records,
-  } =
-    csvRecords(
+  const file =
+    readCsvTable(
       csv,
+      titleRules(
+        importType,
+        REQUIRED_HEADERS[
+          importType
+        ],
+      ),
+    );
+
+
+  const delimiter =
+    file.delimiter;
+
+
+  const titles =
+    readColumnTitles(
+      importType,
+      file.headers,
+    );
+
+
+  const headers =
+    titles.fields;
+
+
+  const records =
+    file.records.map(
+      (
+        record,
+      ) =>
+        Object.fromEntries(
+          file.headers.map(
+            (
+              title,
+              index,
+            ) => [
+              headers[
+                index
+              ],
+              record[
+                title
+              ] ??
+              "",
+            ],
+          ),
+        ),
     );
 
 
@@ -873,9 +939,27 @@ export function validateDataImportCsv({
     0
   ) {
     throw new Error(
-      `Missing required CSV headers: ${missing.join(
-        ", ",
-      )}.`,
+      describeMissingTitles(
+        importType,
+        missing,
+      ),
+    );
+  }
+
+
+  const noNumbers =
+    describeNoNumbers(
+      importType,
+      headers,
+    );
+
+
+  if (
+    noNumbers !==
+    null
+  ) {
+    throw new Error(
+      noNumbers,
     );
   }
 
@@ -904,14 +988,163 @@ export function validateDataImportCsv({
       [];
 
 
+  const readValues =
+    new Map<
+      string,
+      ReadValue
+    >();
+
+
+  let emptyNumbers =
+    0;
+
+
+  const monthField =
+    importType ===
+      "ACTUALS"
+      ?
+        "period"
+      :
+        "periodKey";
+
+
+  const months =
+    readMonthColumn(
+      records.map(
+        (
+          fileRecord,
+        ) =>
+          fileRecord[
+            monthField
+          ] ??
+          "",
+      ),
+      {
+        unique:
+          importType ===
+            "ACTUALS",
+
+        dayFirstDefault:
+          delimiter ===
+            ";",
+      },
+    );
+
+
+  if (
+    months.problem
+  ) {
+    issues.push({
+      row:
+        file.rowNumbers[
+          months.problem.index
+        ],
+
+      field:
+        monthField,
+
+      message:
+        months.problem.message,
+    });
+  }
+
+
   records.forEach(
     (
-      record,
+      fileRecord,
       index,
     ) => {
       const rowNumber =
-        index +
-        2;
+        file.rowNumbers[
+          index
+        ];
+
+
+      const {
+        record: numbered,
+        problems,
+        emptied,
+      } =
+        readRecordNumbers(
+          importType,
+          {
+            ...fileRecord,
+
+            [monthField]:
+              months.cells[
+                index
+              ],
+          },
+          delimiter ===
+            ";",
+        );
+
+
+      emptyNumbers +=
+        emptied;
+
+
+      const {
+        record,
+        read,
+      } =
+        readRecordValues(
+          importType,
+          numbered,
+        );
+
+
+      for (
+        const item
+        of read
+      ) {
+        readValues.set(
+          `${item.field}|${item.text}`,
+          item,
+        );
+      }
+
+
+      for (
+        const problem
+        of problems
+      ) {
+        issues.push({
+          row:
+            rowNumber,
+
+          field:
+            problem.field,
+
+          message:
+            problem.message,
+        });
+      }
+
+
+      const untitled =
+        file.untitled[
+          index
+        ];
+
+
+      if (
+        untitled >
+        0
+      ) {
+        issues.push({
+          row:
+            rowNumber,
+
+          field:
+            "no title",
+
+          message:
+            describeUntitled(
+              untitled,
+            ),
+        });
+      }
 
 
       const row =
@@ -947,7 +1180,11 @@ export function validateDataImportCsv({
 
 
       if (
-        row
+        row &&
+        problems.length ===
+          0 &&
+        untitled ===
+          0
       ) {
         rows.push(
           row,
@@ -1014,6 +1251,29 @@ export function validateDataImportCsv({
     importType,
 
     headers,
+
+    delimiter,
+
+    renamedColumns:
+      titles.renamed,
+
+    ignoredColumns:
+      titles.ignored,
+
+    readValues:
+      Array.from(
+        readValues.values(),
+      ),
+
+    layout: {
+      titleRow:
+        file.titleRow,
+
+      emptyColumns:
+        file.emptyColumns,
+
+      emptyNumbers,
+    },
 
     rowCount:
       records.length,

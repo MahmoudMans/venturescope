@@ -28,7 +28,7 @@ export function FinancialPageHeader({
   return (
     <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
       <div>
-        <div className="text-sm font-medium text-muted-foreground">
+        <div className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
           {
             eyebrow
           }

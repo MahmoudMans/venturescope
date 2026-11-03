@@ -7,8 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -26,7 +27,14 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-destructive: var(--destructive);
+  --color-success-foreground: var(--success-foreground);
+  --color-success: var(--success);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning: var(--warning);
+  --color-info-foreground: var(--info-foreground);
+  --color-info: var(--info);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -48,85 +56,219 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+ * VentureScope brand theme.
+ * Ink-navy neutrals, an indigo primary and a teal secondary accent.
+ * Text/background pairs are chosen to keep WCAG AA contrast in both themes.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.984 0.003 265);
+  --foreground: oklch(0.21 0.03 265);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.21 0.03 265);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.21 0.03 265);
+  --primary: oklch(0.5 0.21 275);
+  --primary-foreground: oklch(0.99 0.003 265);
+  --secondary: oklch(0.958 0.01 265);
+  --secondary-foreground: oklch(0.25 0.04 265);
+  --muted: oklch(0.964 0.008 265);
+  --muted-foreground: oklch(0.5 0.025 265);
+  --accent: oklch(0.953 0.03 275);
+  --accent-foreground: oklch(0.32 0.13 275);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.99 0.003 27);
+  --success: oklch(0.5 0.13 160);
+  --success-foreground: oklch(0.99 0.003 160);
+  --warning: oklch(0.52 0.13 65);
+  --warning-foreground: oklch(0.99 0.003 65);
+  --info: oklch(0.49 0.15 240);
+  --info-foreground: oklch(0.99 0.003 240);
+  --border: oklch(0.91 0.012 265);
+  --input: oklch(0.6 0.02 265);
+  --ring: oklch(0.58 0.19 275);
+  --chart-1: oklch(0.55 0.21 275);
+  --chart-2: oklch(0.66 0.12 190);
+  --chart-3: oklch(0.78 0.15 75);
+  --chart-4: oklch(0.63 0.2 12);
+  --chart-5: oklch(0.7 0.13 235);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.992 0.003 265);
+  --sidebar-foreground: oklch(0.21 0.03 265);
+  --sidebar-primary: oklch(0.5 0.21 275);
+  --sidebar-primary-foreground: oklch(0.99 0.003 265);
+  --sidebar-accent: oklch(0.953 0.03 275);
+  --sidebar-accent-foreground: oklch(0.32 0.13 275);
+  --sidebar-border: oklch(0.91 0.012 265);
+  --sidebar-ring: oklch(0.58 0.19 275);
+
+  --brand-from: oklch(0.52 0.22 275);
+  --brand-to: oklch(0.6 0.14 215);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  --background: oklch(0.165 0.02 268);
+  --foreground: oklch(0.97 0.005 265);
+  --card: oklch(0.205 0.025 268);
+  --card-foreground: oklch(0.97 0.005 265);
+  --popover: oklch(0.225 0.027 268);
+  --popover-foreground: oklch(0.97 0.005 265);
+  --primary: oklch(0.7 0.16 275);
+  --primary-foreground: oklch(0.16 0.03 270);
+  --secondary: oklch(0.265 0.025 268);
+  --secondary-foreground: oklch(0.97 0.005 265);
+  --muted: oklch(0.255 0.025 268);
+  --muted-foreground: oklch(0.73 0.02 265);
+  --accent: oklch(0.3 0.06 275);
+  --accent-foreground: oklch(0.95 0.02 275);
+  --destructive: oklch(0.7 0.19 22);
+  --destructive-foreground: oklch(0.16 0.03 22);
+  --success: oklch(0.76 0.15 160);
+  --success-foreground: oklch(0.16 0.03 160);
+  --warning: oklch(0.8 0.15 80);
+  --warning-foreground: oklch(0.2 0.04 70);
+  --info: oklch(0.76 0.12 235);
+  --info-foreground: oklch(0.16 0.03 240);
   --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --input: oklch(1 0 0 / 44%);
+  --ring: oklch(0.62 0.17 275);
+  --chart-1: oklch(0.7 0.17 275);
+  --chart-2: oklch(0.76 0.12 190);
+  --chart-3: oklch(0.84 0.14 80);
+  --chart-4: oklch(0.72 0.18 12);
+  --chart-5: oklch(0.78 0.11 235);
+  --sidebar: oklch(0.19 0.024 268);
+  --sidebar-foreground: oklch(0.97 0.005 265);
+  --sidebar-primary: oklch(0.7 0.16 275);
+  --sidebar-primary-foreground: oklch(0.16 0.03 270);
+  --sidebar-accent: oklch(0.3 0.06 275);
+  --sidebar-accent-foreground: oklch(0.95 0.02 275);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.62 0.17 275);
+
+  --brand-from: oklch(0.62 0.2 275);
+  --brand-to: oklch(0.7 0.13 205);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  /*
+   * The edge of a form field must be easy to see (WCAG 1.4.11, contrast 3 to 1).
+   * Fields that only use the plain border class get the field color here.
+   * A color class on the field, such as border-destructive, is stronger and still wins.
+   */
+  input,
+  select,
+  textarea {
+    border-color: var(--input);
+  }
   body {
     @apply bg-background text-foreground;
   }
+  /*
+   * The bar at the top of a page stays on the screen when the page scrolls, and it is 4rem high.
+   * The keyboard focus, a jump link and a scroll to an element must stop below the bar, not under
+   * it (WCAG 2.4.11). The offset is the bar and a little room. A card that a link jumps to does
+   * not need its own scroll-mt class for the bar.
+   */
   html {
     @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
   }
+  /*
+   * While the notice "You are offline" is on the screen, it sits at the bottom, over the page. The
+   * keyboard focus, a jump link and a scroll to an element must stop above it, not under it
+   * (WCAG 2.4.11). The notice is never higher than 7.5rem (also at 400% zoom), so the offset is
+   * 8rem. The body gets the same space at its end, so the last field or the last button of a page
+   * can be scrolled above the notice too. When the notice is gone, the page keeps no space.
+   */
+  html:has([data-slot="offline-notice"] > [data-state]) {
+    scroll-padding-bottom: 8rem;
+  }
+  html:has([data-slot="offline-notice"] > [data-state]) body {
+    padding-bottom: 8rem;
+  }
+  /*
+   * On a phone, a swipe down at the top of a page can reload the page (pull to refresh, for example
+   * in Chrome on Android). When a form has changes that are not saved, that would lose them. While
+   * the page element has this attribute (see lib/forms/leave-guard.ts), the swipe does not reload.
+   * Without the attribute, the page works as before. The rule is on html and on body, because
+   * browsers differ in which of the two decides how the whole page scrolls at its edge.
+   */
+  html[data-unsaved-changes],
+  html[data-unsaved-changes] body {
+    overscroll-behavior-y: contain;
+  }
+  /*
+   * A grid with no column classes gets one column that grows to fit the widest thing inside it. A
+   * table with min-w-[1500px] then makes the whole page 1500px wide on a phone, and the right side
+   * of the page is cut off. This gives such a grid one column that can shrink, so the table scrolls
+   * in its own box. A grid-cols class on the grid is stronger and still wins.
+   */
+  :where(.grid) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 28%, transparent);
+  }
+}
+
+/* VentureScope brand utilities */
+
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+}
+
+@utility text-brand-gradient {
+  background-image: linear-gradient(135deg, var(--brand-from), var(--brand-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-brand-panel {
+  background-color: oklch(0.2 0.07 272);
+  background-image:
+    radial-gradient(60rem 40rem at 0% 0%, oklch(0.42 0.2 275 / 0.55), transparent 60%),
+    radial-gradient(50rem 36rem at 100% 100%, oklch(0.55 0.13 205 / 0.4), transparent 55%);
+}
+
+@utility surface-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklch, var(--foreground) 6%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--foreground) 6%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 32px 32px;
+}
+
+@utility surface-glow {
+  background-image: radial-gradient(
+    40rem 20rem at 50% -10%,
+    color-mix(in oklch, var(--primary) 14%, transparent),
+    transparent 70%
+  );
+}
+
+/* Calmer, thinner scrollbars for dense financial tables and long navs */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--foreground) 25%, transparent) transparent;
 }
 
 /* VentureScope accessibility and motion preferences */
@@ -135,18 +277,266 @@
   outline-offset: 3px;
 }
 
+/* The skip link moves focus to <main>; a page container needs no focus ring. */
+main:focus {
+  outline: none;
+}
+
+/*
+ * More contrast. A person who turns on "Increase contrast" in the system gets stronger edges,
+ * darker secondary text and a stronger focus ring. This block comes after the dark theme, so the
+ * .dark rule must set every color that the :root rule sets. A test checks this.
+ */
+@media (prefers-contrast: more) {
+  :root {
+    --muted-foreground: oklch(0.38 0.03 265);
+    --border: oklch(0.55 0.02 265);
+    --input: oklch(0.45 0.02 265);
+    --ring: oklch(0.44 0.2 275);
+    --sidebar-border: oklch(0.55 0.02 265);
+    --sidebar-ring: oklch(0.44 0.2 275);
+  }
+
+  .dark {
+    --muted-foreground: oklch(0.9 0.02 265);
+    --border: oklch(1 0 0 / 45%);
+    --input: oklch(1 0 0 / 60%);
+    --ring: oklch(0.78 0.15 275);
+    --sidebar-border: oklch(1 0 0 / 45%);
+    --sidebar-ring: oklch(0.78 0.15 275);
+  }
+}
+
+/*
+ * Windows high contrast mode (forced colors) removes shadows. The focus ring and the edge of a
+ * card are shadows in this app, so they are drawn again here with real outlines and borders.
+ */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid Highlight ! important;
+  }
+
+  main:focus-visible {
+    outline: none ! important;
+  }
+
+  [data-slot="card"],
+  [data-slot="dialog-content"],
+  [data-slot="alert-dialog-content"],
+  [data-slot="dropdown-menu-content"],
+  [data-slot="dropdown-menu-sub-content"] {
+    border: 1px solid CanvasText;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto !important;
+    scroll-behavior: auto ! important;
   }
 
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-delay: 0ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms ! important;
+    animation-iteration-count: 1 ! important;
+    scroll-behavior: auto ! important;
+    transition-delay: 0ms ! important;
+    transition-duration: 0.01ms ! important;
+  }
+}
+
+/*
+ * Fields on a touch screen. Safari on an iPhone zooms the page when a person taps a field whose
+ * text is smaller than 16px, and the page stays zoomed after that. Most selects, number boxes,
+ * date boxes and text areas of the app use text-sm or text-xs (12px and 14px). This rule is
+ * outside every @layer on purpose: a rule outside a layer is stronger than a utility class like
+ * text-sm, so one rule covers all fields, also the new ones. A mouse screen is not changed, because
+ * only a touch screen has (pointer: coarse). Boxes that are not typed in (check boxes, radio
+ * buttons, sliders, files and buttons) keep their size.
+ */
+@media (pointer: coarse) {
+  input:not(
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"],
+    [type="file"],
+    [type="hidden"],
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [type="image"],
+    [type="color"]
+  ),
+  select,
+  textarea {
+    font-size: max(16px, 1rem);
+  }
+}
+
+/*
+ * Buttons and menu items on a touch screen. A finger is bigger than a mouse pointer, and the
+ * buttons of the app are 24px to 40px high. WCAG 2.5.5 and the guides of Apple and Google ask for
+ * about 44px. Every Button of the app has data-touch="grow", so one rule covers all buttons, also
+ * the new ones. The attribute is used and not data-slot, because a Radix trigger that wraps a
+ * Button (asChild) replaces data-slot with its own name. The rule is outside every @layer on
+ * purpose, like the rule for fields above: a rule outside a layer is stronger than a utility class
+ * like h-9. A mouse screen is not changed, because only a touch screen has (pointer: coarse). A
+ * button that looks like a link inside a sentence keeps its size. A button that sits inside a field
+ * sets data-touch="inside" and makes its own touch area bigger with a ::after box.
+ */
+@media (pointer: coarse) {
+  [data-touch="grow"]:not([data-variant="link"]),
+  [data-slot="dropdown-menu-item"],
+  [data-slot="dropdown-menu-checkbox-item"],
+  [data-slot="dropdown-menu-radio-item"],
+  .touch-target {
+    min-height: 2.75rem;
+  }
+
+  [data-touch="grow"]:not([data-variant="link"]),
+  .touch-target {
+    min-width: 2.75rem;
+  }
+
+  label:has(> input[type="checkbox"], > input[type="radio"]) {
+    min-height: 2.75rem;
+  }
+}
+
+/*
+ * Links on a touch screen. The rule above covers every Button, but the app also has links that look
+ * like a button (a border and some padding), text links on their own (a title, a back link, a
+ * header link) and the logo. Most of them were 15px to 40px high. Two classes, both only for a
+ * touch screen (pointer: coarse), so a mouse screen is not changed. They are outside every @layer,
+ * like the rules above, so they are stronger than utility classes.
+ * touch-link is for a link that looks like a button: it becomes at least 44px high and 44px wide,
+ * and the text is in the middle. Do not use it on a link that is hidden on some screens.
+ * touch-reach is for a text link that must keep its look and its place: the link does not move,
+ * but a ::after box makes its touch area 44px high by going 1rem above and below the text, and
+ * 0.25rem to each side, so the small logo is 44px wide too. Use it only where nothing else that can
+ * be tapped is within 1rem above or below the link, or within 0.25rem beside it. A link that
+ * can wrap onto two lines must be a block or an inline-block, because the box of an inline link
+ * that wraps is not the whole link.
+ */
+@media (pointer: coarse) {
+  .touch-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  .touch-reach {
+    position: relative;
+  }
+
+  .touch-reach::after {
+    content: "";
+    position: absolute;
+    inset-block: -1rem;
+    inset-inline: -0.25rem;
+  }
+}
+
+/*
+ * Fields on a touch screen: height. Buttons are 44px high on a touch screen (rule above), so a
+ * field next to a button must be 44px too. Most fields were 32px to 40px high (h-8, h-9, h-10). The
+ * same list of boxes as in the font rule is used: check boxes, radio buttons, sliders, files and
+ * buttons keep their size. This rule is also outside every @layer and has no effect with a mouse.
+ */
+@media (pointer: coarse) {
+  input:not(
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"],
+    [type="file"],
+    [type="hidden"],
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [type="image"],
+    [type="color"]
+  ),
+  select,
+  textarea {
+    min-height: 2.75rem;
+  }
+}
+
+/*
+ * Printing. A page is printed on white paper in the light colors, also when the screen is dark.
+ * The menus and buttons of the app are hidden with the print:hidden class in the page markup.
+ * Keep the colors in the .dark block below equal to the colors in :root. A test checks this.
+ */
+
+@page {
+  margin: 12mm;
+}
+
+@media print {
+  html {
+    color-scheme: light ! important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .dark {
+    --background: oklch(0.984 0.003 265);
+    --foreground: oklch(0.21 0.03 265);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.21 0.03 265);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.21 0.03 265);
+    --primary: oklch(0.5 0.21 275);
+    --primary-foreground: oklch(0.99 0.003 265);
+    --secondary: oklch(0.958 0.01 265);
+    --secondary-foreground: oklch(0.25 0.04 265);
+    --muted: oklch(0.964 0.008 265);
+    --muted-foreground: oklch(0.5 0.025 265);
+    --accent: oklch(0.953 0.03 275);
+    --accent-foreground: oklch(0.32 0.13 275);
+    --destructive: oklch(0.55 0.22 27);
+    --destructive-foreground: oklch(0.99 0.003 27);
+    --success: oklch(0.5 0.13 160);
+    --success-foreground: oklch(0.99 0.003 160);
+    --warning: oklch(0.52 0.13 65);
+    --warning-foreground: oklch(0.99 0.003 65);
+    --info: oklch(0.49 0.15 240);
+    --info-foreground: oklch(0.99 0.003 240);
+    --border: oklch(0.91 0.012 265);
+    --input: oklch(0.6 0.02 265);
+    --ring: oklch(0.58 0.19 275);
+    --chart-1: oklch(0.55 0.21 275);
+    --chart-2: oklch(0.66 0.12 190);
+    --chart-3: oklch(0.78 0.15 75);
+    --chart-4: oklch(0.63 0.2 12);
+    --chart-5: oklch(0.7 0.13 235);
+    --sidebar: oklch(0.992 0.003 265);
+    --sidebar-foreground: oklch(0.21 0.03 265);
+    --sidebar-primary: oklch(0.5 0.21 275);
+    --sidebar-primary-foreground: oklch(0.99 0.003 265);
+    --sidebar-accent: oklch(0.953 0.03 275);
+    --sidebar-accent-foreground: oklch(0.32 0.13 275);
+    --sidebar-border: oklch(0.91 0.012 265);
+    --sidebar-ring: oklch(0.58 0.19 275);
+    --brand-from: oklch(0.52 0.22 275);
+    --brand-to: oklch(0.6 0.14 215);
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  [data-slot="card"],
+  figure,
+  tr {
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
   }
 }

@@ -1,0 +1,181 @@
+{
+  "format": "venturescope-model-backup",
+  "version": 1,
+  "exportedAt": "2026-10-24T11:30:52.442Z",
+  "model": {
+    "name": "Orbit Analytics 2026 plan",
+    "industry": "B2B SaaS",
+    "currency": "EUR",
+    "startMonth": "2026-01",
+    "horizonMonths": 36,
+    "revenueMode": "CUSTOMER_DRIVEN",
+    "assumptions": {
+      "version": 1,
+      "completion": {
+        "general": true,
+        "revenue": true,
+        "expenses": true
+      },
+      "general": {
+        "startingCash": "350000",
+        "corporateTaxRate": "25"
+      },
+      "directRevenue": {
+        "startingMonthlyRevenue": "0",
+        "monthlyGrowthRate": "0",
+        "recurringRevenuePercentage": "100",
+        "monthlyOneTimeRevenue": "0"
+      },
+      "customerRevenue": {
+        "startingCustomers": "420",
+        "arpu": "149",
+        "monthlyChurnRate": "2.2",
+        "cac": "220",
+        "organicNewCustomers": "24",
+        "customerAcquisitionGrowthRate": "1.2",
+        "arpuGrowthRate": "0.35",
+        "monthlyOneTimeRevenue": "5000"
+      },
+      "expenses": {
+        "salaries": {
+          "monthlyAmount": "72000",
+          "annualGrowthRate": "8"
+        },
+        "rent": {
+          "monthlyAmount": "7500",
+          "annualGrowthRate": "3"
+        },
+        "marketing": {
+          "monthlyAmount": "28000",
+          "growthRate": "1",
+          "growthPeriod": "MONTHLY"
+        },
+        "cogs": {
+          "method": "PERCENTAGE",
+          "percentage": "16",
+          "fixedMonthlyAmount": "0"
+        },
+        "operatingExpenses": {
+          "software": "8000",
+          "professionalServices": "6500",
+          "insurance": "3500",
+          "utilities": "2200",
+          "travel": "4000",
+          "other": "2500",
+          "custom": [
+            {
+              "id": "orbit-data-provider",
+              "name": "Data providers",
+              "monthlyAmount": "1800"
+            }
+          ]
+        }
+      }
+    },
+    "scenarios": [
+      {
+        "name": "Base Case",
+        "type": "BASE",
+        "modifiers": {}
+      },
+      {
+        "name": "Bull Case",
+        "type": "BULL",
+        "modifiers": {
+          "revenueGrowthMultiplier": 1.2,
+          "customerAcquisitionGrowthMultiplier": 1.2,
+          "arpuMultiplier": 1.05,
+          "cacMultiplier": 0.9,
+          "churnPercentagePointDelta": -0.01,
+          "cogsPercentagePointDelta": -0.02
+        }
+      },
+      {
+        "name": "Bear Case",
+        "type": "BEAR",
+        "modifiers": {
+          "revenueGrowthMultiplier": 0.8,
+          "customerAcquisitionGrowthMultiplier": 0.8,
+          "arpuMultiplier": 0.95,
+          "cacMultiplier": 1.15,
+          "churnPercentagePointDelta": 0.02,
+          "cogsPercentagePointDelta": 0.03
+        }
+      }
+    ],
+    "financingEvents": [
+      {
+        "name": "Seed Extension",
+        "type": "EQUITY",
+        "month": "2026-06",
+        "amount": "700000",
+        "apr": null,
+        "termMonths": null,
+        "repaymentStartMonth": null
+      },
+      {
+        "name": "European Innovation Grant",
+        "type": "GRANT",
+        "month": "2026-10",
+        "amount": "120000",
+        "apr": null,
+        "termMonths": null,
+        "repaymentStartMonth": null
+      },
+      {
+        "name": "Growth Venture Debt",
+        "type": "DEBT",
+        "month": "2027-04",
+        "amount": "450000",
+        "apr": "7.5",
+        "termMonths": 36,
+        "repaymentStartMonth": "2027-10"
+      }
+    ],
+    "overrides": [
+      {
+        "scenario": null,
+        "month": "2026-09",
+        "values": {
+          "marketing": "65000"
+        },
+        "note": "European product launch and paid acquisition campaign."
+      },
+      {
+        "scenario": "Bear Case",
+        "month": "2026-11",
+        "values": {
+          "marketing": "22000",
+          "cac": "340",
+          "churnRate": "4.5"
+        },
+        "note": "Bear Case acquisition efficiency deterioration."
+      },
+      {
+        "scenario": null,
+        "month": "2027-01",
+        "values": {
+          "salaries": "92000"
+        },
+        "note": "Engineering and sales hiring expansion."
+      },
+      {
+        "scenario": "Bull Case",
+        "month": "2027-03",
+        "values": {
+          "churnRate": "1.8",
+          "arpu": "175"
+        },
+        "note": "Bull Case enterprise pricing and retention initiative."
+      },
+      {
+        "scenario": null,
+        "month": "2027-06",
+        "values": {
+          "marketing": "80000"
+        },
+        "note": "Annual industry conference and enterprise campaign."
+      }
+    ]
+  }
+}

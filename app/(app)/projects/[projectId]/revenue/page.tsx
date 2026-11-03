@@ -6,6 +6,9 @@ import {
   RevenueAssumptionsForm,
 } from "@/components/assumptions/revenue-assumptions-form";
 import {
+  SetupNextStep,
+} from "@/components/projects/setup-guide";
+import {
   Badge,
 } from "@/components/ui/badge";
 import {
@@ -20,6 +23,9 @@ import {
 import {
   formatRevenueMode,
 } from "@/lib/projects/project-formatting";
+import {
+  buildSetupProgress,
+} from "@/lib/projects/setup-steps";
 
 export const metadata: Metadata = {
   title: "Revenue assumptions",
@@ -50,6 +56,13 @@ export default async function RevenuePage({
       project.baseAssumptions,
     );
 
+  const progress =
+    buildSetupProgress(
+      project.id,
+      assumptions.completion,
+      project.revenueMode,
+    );
+
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -63,9 +76,9 @@ export default async function RevenuePage({
           </h2>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Configure the revenue inputs for this model.
-            These values are persisted now and calculated
-            only when the financial engine is introduced.
+            Tell VentureScope how this business earns money.
+            The forecast uses these numbers to calculate
+            revenue every month.
           </p>
         </div>
 
@@ -97,6 +110,16 @@ export default async function RevenuePage({
             .marketing
             .monthlyAmount
         }
+      />
+
+      <SetupNextStep
+        projectId={
+          project.id
+        }
+        progress={
+          progress
+        }
+        current="revenue"
       />
     </div>
   );

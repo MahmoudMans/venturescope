@@ -19,6 +19,7 @@ import {
 import {
   FinancingSubmitButton,
 } from "@/components/financing/financing-submit-button";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
 import {
   Card,
   CardContent,
@@ -55,8 +56,14 @@ export function CreateFinancingEventForm({
     initialFinancingActionState,
   );
 
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
   return (
     <form
+      ref={formRef}
       action={
         action
       }

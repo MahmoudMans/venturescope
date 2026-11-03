@@ -18,6 +18,9 @@ import {
   resetScenarioLibraryAction,
 } from "@/app/(app)/projects/settings-actions";
 import {
+  SubmitButton,
+} from "@/components/forms/submit-button";
+import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
@@ -165,8 +168,12 @@ const definitions: GovernanceDefinition[] =
 
 export function ModelGovernance({
   projectId,
+  canChange = true,
 }: {
   projectId: string;
+
+  /** False for a collaborator: only the owner of a model can reset or clear its data. */
+  canChange?: boolean;
 }) {
   const [
     selected,
@@ -196,6 +203,10 @@ export function ModelGovernance({
             "OVERRIDES"
           ? clearMonthlyOverridesAction
           : resetScenarioLibraryAction;
+
+  if (canChange === false) {
+    return null;
+  }
 
   return (
     <>
@@ -336,9 +347,9 @@ export function ModelGovernance({
                   }
                 />
 
-                <Button
-                  type="submit"
+                <SubmitButton
                   variant="destructive"
+                  pendingLabel="Working..."
                 >
                   <Trash2
                     className="size-4"
@@ -346,7 +357,7 @@ export function ModelGovernance({
                   />
 
                   Confirm
-                </Button>
+                </SubmitButton>
               </form>
             ) : null}
           </AlertDialogFooter>

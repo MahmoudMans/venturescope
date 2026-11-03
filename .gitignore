@@ -50,3 +50,8 @@ next-env.d.ts
 !.env.production.example
 /backups/
 /.venturescope/
+
+# Backups made by the VentureScope update scripts
+.update-backup/
+
+.check-logs/

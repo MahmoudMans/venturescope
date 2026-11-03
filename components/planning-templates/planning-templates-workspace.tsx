@@ -5,6 +5,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   PLANNING_TEMPLATES,
   planningTemplateSegments,
@@ -46,10 +47,10 @@ function fitTone(
     fit
   ) {
     case "RECOMMENDED":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "POSSIBLE":
-      return "text-blue-700 dark:text-blue-400";
+      return "text-info";
 
     case "EXPLORATORY":
       return "text-muted-foreground";
@@ -68,7 +69,7 @@ function riskTone(
       return "text-destructive";
 
     case "MEDIUM":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     default:
       return "text-muted-foreground";
@@ -636,7 +637,7 @@ export function PlanningTemplatesWorkspace({
                           template.id,
                         );
                       }}
-                      className="mt-5 rounded-lg border px-3 py-2 text-sm font-medium"
+                      className="touch-target mt-5 rounded-lg border px-3 py-2 text-sm font-medium"
                     >
                       {
                         active
@@ -753,7 +754,7 @@ export function PlanningTemplatesWorkspace({
                     </p>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Suggested model assumptions">
                     <table className="w-full min-w-[900px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -820,7 +821,7 @@ export function PlanningTemplatesWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 </section>
 
                 <section className="grid gap-4 lg:grid-cols-2">
@@ -1038,7 +1039,7 @@ export function PlanningTemplatesWorkspace({
                         )
                       :
                         (
-                          <div className="overflow-x-auto">
+                          <ScrollRegion label="Template comparison">
                             <table className="w-full min-w-[900px] text-sm">
                               <thead>
                                 <tr className="border-b bg-muted/30">
@@ -1116,7 +1117,7 @@ export function PlanningTemplatesWorkspace({
                                 }
                               </tbody>
                             </table>
-                          </div>
+                          </ScrollRegion>
                         )
                   }
                 </section>

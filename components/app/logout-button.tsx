@@ -26,7 +26,7 @@ export function LogoutButton() {
           aria-hidden="true"
         />
 
-        <span className="hidden sm:inline">
+        <span className="sr-only sm:not-sr-only">
           Sign out
         </span>
       </Button>

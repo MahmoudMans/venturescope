@@ -1,22 +1,9 @@
-import {
-  ArrowRight,
-  CircleAlert,
-} from "lucide-react";
-import Link from "next/link";
+import { ClipboardList } from "lucide-react";
 
-import {
-  Button,
-} from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import type {
-  MissingAssumptionSection,
-} from "@/lib/finance/analysis-context";
+import { SetupGuide } from "@/components/projects/setup-guide";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { MissingAssumptionSection } from "@/lib/finance/analysis-context";
+import { buildSetupProgress, completionFromMissing } from "@/lib/projects/setup-steps";
 
 type AnalysisSetupRequiredProps = {
   projectId: string;
@@ -24,122 +11,26 @@ type AnalysisSetupRequiredProps = {
   missingSections: MissingAssumptionSection[];
 };
 
-const SECTION_LABELS: Record<
-  MissingAssumptionSection,
-  string
-> = {
-  general:
-    "General assumptions",
-
-  revenue:
-    "Revenue assumptions",
-
-  expenses:
-    "Expense assumptions",
-};
-
-const SECTION_PATHS: Record<
-  MissingAssumptionSection,
-  string
-> = {
-  general:
-    "assumptions",
-
-  revenue:
-    "revenue",
-
-  expenses:
-    "expenses",
-};
-
-export function AnalysisSetupRequired({
-  projectId,
-  missingSections,
-}: AnalysisSetupRequiredProps) {
-  const firstMissing =
-    missingSections[0] ??
-    "general";
+export function AnalysisSetupRequired({ projectId, missingSections }: AnalysisSetupRequiredProps) {
+  const progress = buildSetupProgress(projectId, completionFromMissing(missingSections));
 
   return (
     <Card className="overflow-hidden border-dashed">
       <CardHeader>
         <div className="flex size-11 items-center justify-center rounded-xl bg-muted">
-          <CircleAlert
-            className="size-5"
-            aria-hidden="true"
-          />
+          <ClipboardList className="size-5" aria-hidden="true" />
         </div>
 
-        <CardTitle className="mt-4">
-          Complete the model assumptions first
-        </CardTitle>
+        <CardTitle className="mt-4">Finish setting up this model</CardTitle>
 
         <CardDescription className="max-w-2xl leading-6">
-          VentureScope does not generate analysis from incomplete inputs.
-          Complete the remaining assumption sections before opening the financial forecast.
+          VentureScope needs three sections before it can calculate a forecast. Fill them in one by
+          one. Your numbers appear here as soon as the last section is saved.
         </CardDescription>
       </CardHeader>
 
       <CardContent>
-        <div className="mb-6 grid gap-3 md:grid-cols-3">
-          {(
-            [
-              "general",
-              "revenue",
-              "expenses",
-            ] as MissingAssumptionSection[]
-          ).map(
-            (
-              section,
-            ) => {
-              const missing =
-                missingSections.includes(
-                  section,
-                );
-
-              return (
-                <div
-                  key={
-                    section
-                  }
-                  className="rounded-xl border p-4"
-                >
-                  <div className="text-sm font-medium">
-                    {
-                      SECTION_LABELS[
-                        section
-                      ]
-                    }
-                  </div>
-
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    {missing
-                      ? "Configuration required"
-                      : "Configured"}
-                  </div>
-                </div>
-              );
-            },
-          )}
-        </div>
-
-        <Button asChild>
-          <Link
-            href={`/projects/${projectId}/${SECTION_PATHS[firstMissing]}`}
-          >
-            Configure{" "}
-            {
-              SECTION_LABELS[
-                firstMissing
-              ]
-            }
-
-            <ArrowRight
-              className="size-4"
-              aria-hidden="true"
-            />
-          </Link>
-        </Button>
+        <SetupGuide progress={progress} />
       </CardContent>
     </Card>
   );

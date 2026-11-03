@@ -14,6 +14,10 @@ import {
   updateMonthlyOverrideAction,
 } from "@/app/(app)/projects/override-actions";
 import {
+  SubmitButton,
+} from "@/components/forms/submit-button";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
+import {
   MonthlyOverrideFields,
 } from "@/components/overrides/monthly-override-fields";
 import {
@@ -108,6 +112,12 @@ export function MonthlyOverrideActions({
     updateMonthlyOverrideAction,
     initialMonthlyOverrideActionState,
   );
+
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
 return (
     <>
       <div className="flex items-center gap-1">
@@ -158,6 +168,7 @@ return (
       >
         <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-4xl">
           <form
+            ref={formRef}
             action={
               action
             }
@@ -356,9 +367,9 @@ return (
                 }
               />
 
-              <Button
-                type="submit"
+              <SubmitButton
                 variant="destructive"
+                pendingLabel="Deleting..."
               >
                 <Trash2
                   className="size-4"
@@ -366,7 +377,7 @@ return (
                 />
 
                 Delete override
-              </Button>
+              </SubmitButton>
             </form>
           </AlertDialogFooter>
         </AlertDialogContent>

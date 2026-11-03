@@ -18,6 +18,11 @@ import {
   resetScenarioAction,
   updateScenarioAction,
 } from "@/app/(app)/projects/scenario-actions";
+import { FieldError } from "@/components/forms/field-error";
+import {
+  SubmitButton,
+} from "@/components/forms/submit-button";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
 import {
   ScenarioActionMessage,
 } from "@/components/scenarios/scenario-action-message";
@@ -64,6 +69,7 @@ import {
 import type {
   RevenueMode,
 } from "@/lib/finance/types";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 import {
   initialScenarioActionState,
 } from "@/lib/scenarios/action-state";
@@ -129,6 +135,16 @@ export function ScenarioManager({
     initialScenarioActionState,
   );
 
+  const createFormRef =
+    useFormErrorRecovery(
+      createState.errors,
+    );
+
+  const editFormRef =
+    useFormErrorRecovery(
+      editState.errors,
+    );
+
   const neutral =
     neutralScenarioModifierFormValues();
 
@@ -187,7 +203,7 @@ export function ScenarioManager({
                   </div>
 
                   <div className="min-w-0">
-                    <div className="truncate font-semibold">
+                    <div className="break-words font-semibold">
                       {
                         scenario.name
                       }
@@ -316,10 +332,10 @@ export function ScenarioManager({
                       }
                     />
 
-                    <Button
-                      type="submit"
+                    <SubmitButton
                       size="sm"
                       variant="ghost"
+                      pendingLabel="Resetting..."
                     >
                       <RotateCcw
                         className="size-4"
@@ -327,7 +343,7 @@ export function ScenarioManager({
                       />
 
                       Reset defaults
-                    </Button>
+                    </SubmitButton>
                   </form>
                 ) : null}
 
@@ -369,6 +385,7 @@ export function ScenarioManager({
       >
         <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-3xl">
           <form
+            ref={createFormRef}
             action={
               createAction
             }
@@ -406,20 +423,12 @@ export function ScenarioManager({
                 <Input
                   id="new-scenario-name"
                   name="name"
+                  {...fieldErrorProps("new-scenario-name", createState.errors?.name?.[0])}
                   placeholder="Marketing Expansion"
                   required
                 />
 
-                {createState
-                  .errors
-                  ?.name?.[0] ? (
-                  <p className="text-sm text-destructive">
-                    {
-                      createState.errors
-                        .name[0]
-                    }
-                  </p>
-                ) : null}
+                <FieldError fieldId="new-scenario-name" message={createState.errors?.name?.[0]} />
               </div>
 
               <ScenarioModifierFields
@@ -474,6 +483,7 @@ export function ScenarioManager({
         <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-3xl">
           {editing ? (
             <form
+              ref={editFormRef}
               action={
                 editAction
               }
@@ -521,6 +531,7 @@ export function ScenarioManager({
                     <Input
                       id="edit-scenario-name"
                       name="name"
+                      {...fieldErrorProps("edit-scenario-name", editState.errors?.name?.[0])}
                       defaultValue={
                         editing.name
                       }
@@ -546,16 +557,7 @@ export function ScenarioManager({
                     </>
                   )}
 
-                  {editState
-                    .errors
-                    ?.name?.[0] ? (
-                    <p className="text-sm text-destructive">
-                      {
-                        editState.errors
-                          .name[0]
-                      }
-                    </p>
-                  ) : null}
+                  <FieldError fieldId="edit-scenario-name" message={editState.errors?.name?.[0]} />
                 </div>
 
                 <ScenarioModifierFields
@@ -646,9 +648,9 @@ export function ScenarioManager({
                   }
                 />
 
-                <Button
-                  type="submit"
+                <SubmitButton
                   variant="destructive"
+                  pendingLabel="Deleting..."
                 >
                   <Trash2
                     className="size-4"
@@ -656,7 +658,7 @@ export function ScenarioManager({
                   />
 
                   Delete scenario
-                </Button>
+                </SubmitButton>
               </form>
             ) : null}
           </AlertDialogFooter>

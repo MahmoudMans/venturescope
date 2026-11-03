@@ -1,5 +1,6 @@
 "use client";
 
+import { FieldError } from "@/components/forms/field-error";
 import {
   Input,
 } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import {
 import type {
   RevenueMode,
 } from "@/lib/finance/types";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 import type {
   ScenarioModifierFormValues,
 } from "@/lib/scenarios/types";
@@ -200,6 +202,7 @@ function ModifierField({
         <Input
           id={id}
           name={name}
+          {...fieldErrorProps(id, error)}
           type="number"
           step="0.01"
           min={min}
@@ -224,13 +227,7 @@ function ModifierField({
         }
       </p>
 
-      {error ? (
-        <p className="text-sm text-destructive">
-          {
-            error
-          }
-        </p>
-      ) : null}
+      <FieldError fieldId={id} message={error} />
     </div>
   );
 }

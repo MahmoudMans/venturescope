@@ -17,15 +17,27 @@ import {
 } from "@/lib/auth/current-user";
 
 import {
-  createInvitationToken,
   hashInvitationToken,
-  invitationExpiry,
   normalizeInvitationEmail,
 } from "@/lib/workspaces/invitations";
 
 import {
+  createInvitationLink,
+} from "@/lib/workspaces/invitation-links";
+
+import {
+  getWorkspacePermission,
   requireWorkspacePermission,
 } from "@/lib/workspaces/access";
+
+import {
+  sharingReturnPath,
+} from "@/lib/workspaces/model-sharing";
+
+import {
+  memberRemovedStatus,
+  projectRemovedStatus,
+} from "@/lib/workspaces/people";
 
 
 function formValue(
@@ -107,7 +119,7 @@ export async function createWorkspaceAction(
 
 
   redirect(
-    `/workspaces/${workspace.id}`,
+    `/workspaces/${workspace.id}?status=workspace-created`,
   );
 }
 
@@ -166,6 +178,32 @@ export async function inviteWorkspaceMemberAction(
   }
 
 
+  const alreadyMember =
+    await prisma.workspaceMember.findFirst({
+      where: {
+        workspaceId,
+
+        user: {
+          email,
+        },
+      },
+
+      select: {
+        id:
+          true,
+      },
+    });
+
+
+  if (
+    alreadyMember
+  ) {
+    redirect(
+      `/workspaces/${workspaceId}?status=already-member`,
+    );
+  }
+
+
   const role =
     safeRole(
       formValue(
@@ -176,30 +214,16 @@ export async function inviteWorkspaceMemberAction(
 
 
   const token =
-    createInvitationToken();
-
-
-  await prisma.workspaceInvitation.create({
-    data: {
+    await createInvitationLink({
       workspaceId,
 
-      emailNormalized:
-        email,
+      email,
 
       role,
 
-      tokenHash:
-        hashInvitationToken(
-          token,
-        ),
-
-      expiresAt:
-        invitationExpiry(),
-
       createdByUserId:
         user.id,
-    },
-  });
+    });
 
 
   revalidatePath(
@@ -257,6 +281,23 @@ export async function acceptWorkspaceInvitationAction(
   }
 
 
+  // A person who is already inside keeps their role. An older link must not change it.
+  const permission =
+    await getWorkspacePermission(
+      invitation.workspaceId,
+      user.id,
+    );
+
+
+  if (
+    permission !== null
+  ) {
+    redirect(
+      `/workspaces/${invitation.workspaceId}?status=already-joined`,
+    );
+  }
+
+
   await prisma.$transaction([
     prisma.workspaceMember.upsert({
       where: {
@@ -297,11 +338,29 @@ export async function acceptWorkspaceInvitationAction(
           new Date(),
       },
     }),
+
+    prisma.workspaceInvitation.deleteMany({
+      where: {
+        workspaceId:
+          invitation.workspaceId,
+
+        emailNormalized:
+          invitation.emailNormalized,
+
+        acceptedAt:
+          null,
+
+        id: {
+          not:
+            invitation.id,
+        },
+      },
+    }),
   ]);
 
 
   redirect(
-    `/workspaces/${invitation.workspaceId}`,
+    `/workspaces/${invitation.workspaceId}?status=joined`,
   );
 }
 
@@ -361,6 +420,11 @@ export async function updateWorkspaceMemberRoleAction(
   revalidatePath(
     `/workspaces/${workspaceId}`,
   );
+
+
+  redirect(
+    `/workspaces/${workspaceId}?status=role-updated`,
+  );
 }
 
 
@@ -393,19 +457,56 @@ export async function removeWorkspaceMemberAction(
   );
 
 
-  await prisma.workspaceMember.deleteMany({
+  const member = await prisma.workspaceMember.findFirst({
     where: {
-      id:
-        memberId,
+      id: memberId,
 
       workspaceId,
+
+      userId: {
+        not: user.id,
+      },
+    },
+
+    select: {
+      id: true,
+
+      userId: true,
     },
   });
 
+  if (member === null) {
+    redirect(`/workspaces/${workspaceId}?status=member-removed`);
+  }
 
-  revalidatePath(
-    `/workspaces/${workspaceId}`,
-  );
+  // The models this person shared become private again, then the membership ends.
+  const [released] = await prisma.$transaction([
+    prisma.project.updateMany({
+      where: {
+        workspaceId,
+
+        userId: member.userId,
+      },
+
+      data: {
+        workspaceId: null,
+      },
+    }),
+
+    prisma.workspaceMember.deleteMany({
+      where: {
+        id: member.id,
+
+        workspaceId,
+      },
+    }),
+  ]);
+
+  revalidatePath("/workspaces");
+
+  revalidatePath(`/workspaces/${workspaceId}`);
+
+  redirect(`/workspaces/${workspaceId}?status=${memberRemovedStatus(released.count)}`);
 }
 
 
@@ -453,6 +554,11 @@ export async function revokeWorkspaceInvitationAction(
 
   revalidatePath(
     `/workspaces/${workspaceId}`,
+  );
+
+
+  redirect(
+    `/workspaces/${workspaceId}?status=invitation-revoked`,
   );
 }
 
@@ -531,6 +637,28 @@ export async function assignProjectToWorkspaceAction(
 
   revalidatePath(
     `/projects/${projectId}`,
+    "layout",
+  );
+
+
+  redirect(
+    sharingReturnPath({
+      from:
+        formValue(
+          formData,
+          "from",
+        ),
+
+      isModelOwner:
+        true,
+
+      projectId,
+
+      workspaceId,
+
+      status:
+        "project-shared",
+    }),
   );
 }
 
@@ -556,12 +684,29 @@ export async function removeProjectFromWorkspaceAction(
         id:
           projectId,
 
-        userId:
-          user.id,
+        // The person who owns the model, or the owner of the workspace it is in.
+        OR: [
+          {
+            userId:
+              user.id,
+          },
+
+          {
+            workspace: {
+              is: {
+                ownerId:
+                  user.id,
+              },
+            },
+          },
+        ],
       },
 
       select: {
         workspaceId:
+          true,
+
+        userId:
           true,
       },
     });
@@ -596,6 +741,20 @@ export async function removeProjectFromWorkspaceAction(
 
   revalidatePath(
     `/projects/${projectId}`,
+    "layout",
+  );
+
+
+  const status = projectRemovedStatus(user.id, project.userId);
+
+  redirect(
+    sharingReturnPath({
+      from: formValue(formData, "from"),
+      isModelOwner: project.userId === user.id,
+      projectId,
+      workspaceId: project.workspaceId,
+      status,
+    }),
   );
 }
 
@@ -644,6 +803,6 @@ export async function deleteWorkspaceAction(
 
 
   redirect(
-    "/workspaces",
+    "/workspaces?status=workspace-deleted",
   );
 }

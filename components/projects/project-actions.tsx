@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  CircleAlert,
   Copy,
+  Download,
   LoaderCircle,
   MoreHorizontal,
   Pencil,
@@ -21,6 +23,8 @@ import {
   duplicateProjectAction,
   renameProjectAction,
 } from "@/app/(app)/projects/actions";
+import { FieldError } from "@/components/forms/field-error";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,6 +59,7 @@ import {
 import {
   Label,
 } from "@/components/ui/label";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 import {
   initialRenameProjectState,
 } from "@/lib/projects/action-state";
@@ -63,12 +68,16 @@ type ProjectActionsProps = {
   projectId: string;
   projectName: string;
   returnTo: string;
+
+  /** Shown in the delete dialog when other people can open the model. */
+  deleteWarning?: string | null;
 };
 
 export function ProjectActions({
   projectId,
   projectName,
   returnTo,
+  deleteWarning = null,
 }: ProjectActionsProps) {
   const [
     renameOpen,
@@ -92,6 +101,11 @@ export function ProjectActions({
     renameProjectAction,
     initialRenameProjectState,
   );
+
+  const renameFormRef =
+    useFormErrorRecovery(
+      renameState.errors,
+    );
 
   function duplicateProject() {
     startDuplicateTransition(
@@ -172,6 +186,14 @@ export function ProjectActions({
             Duplicate
           </DropdownMenuItem>
 
+          <DropdownMenuItem asChild>
+            <a href={`/api/projects/${projectId}/export/json`} download>
+              <Download className="size-4" aria-hidden="true" />
+
+              Download backup
+            </a>
+          </DropdownMenuItem>
+
           <DropdownMenuSeparator />
 
           <DropdownMenuItem
@@ -206,6 +228,7 @@ export function ProjectActions({
       >
         <DialogContent>
           <form
+            ref={renameFormRef}
             action={
               renameFormAction
             }
@@ -256,23 +279,17 @@ export function ProjectActions({
                 <Input
                   id={`rename-${projectId}`}
                   name="name"
+                  {...fieldErrorProps(`rename-${projectId}`, renameState.errors?.name?.[0])}
                   defaultValue={
                     projectName
                   }
                   autoFocus
                 />
 
-                {renameState
-                  .errors
-                  ?.name?.[0] ? (
-                  <p className="text-sm text-destructive">
-                    {
-                      renameState
-                        .errors
-                        .name[0]
-                    }
-                  </p>
-                ) : null}
+                <FieldError
+                  fieldId={`rename-${projectId}`}
+                  message={renameState.errors?.name?.[0]}
+                />
               </div>
             </div>
 
@@ -323,8 +340,24 @@ export function ProjectActions({
               </AlertDialogTitle>
 
               <AlertDialogDescription>
-                This permanently deletes the financial model and all scenarios, financing events and monthly overrides belonging to it.
+                This permanently deletes the model and everything inside it: scenarios, financing events, monthly overrides, actuals, versions, reviews, approvals and imports. It cannot be undone. Download a backup first if you might need it again.
               </AlertDialogDescription>
+
+              {deleteWarning ? (
+                <div
+                  role="note"
+                  className="flex items-start gap-2 rounded-lg border border-warning/30 bg-warning/5 px-3 py-2 text-sm text-warning"
+                >
+                  <CircleAlert
+                    className="mt-0.5 size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+
+                  <span>
+                    {deleteWarning}
+                  </span>
+                </div>
+              ) : null}
             </AlertDialogHeader>
 
             <AlertDialogFooter className="mt-6">

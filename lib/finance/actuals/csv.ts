@@ -1,4 +1,22 @@
 import {
+  COLUMN_TITLES,
+  normalizeTitle,
+} from "@/lib/data-import/headers";
+
+import {
+  isNoNumber,
+  readImportNumber,
+} from "@/lib/data-import/number";
+
+import {
+  countUntitled,
+  describeUntitled,
+  dropSepLine,
+  findTable,
+  titleRules,
+} from "@/lib/data-import/table";
+
+import {
   parseCsvTable,
 } from "@/lib/finance/analytics/csv";
 
@@ -11,6 +29,10 @@ import {
   parseMonthStartUtc,
 } from "@/lib/finance/actuals/month";
 
+import {
+  readMonthColumn,
+} from "@/lib/finance/actuals/month-column";
+
 
 const MAX_IMPORT_BYTES =
   512 *
@@ -21,73 +43,25 @@ const MAX_IMPORT_ROWS =
   120;
 
 
-const HEADER_ALIASES = {
-  period: [
-    "month",
-    "period",
-    "date",
-  ],
-
-  revenue: [
-    "revenue",
-    "sales",
-  ],
-
-  cogs: [
-    "cogs",
-    "costofgoodssold",
-    "costofsales",
-  ],
-
-  operatingExpenses: [
-    "operatingexpenses",
-    "opex",
-    "expenses",
-  ],
-
-  ebitda: [
-    "ebitda",
-  ],
-
-  netIncome: [
-    "netincome",
-    "netprofit",
-  ],
-
-  cashFlow: [
-    "cashflow",
-    "netcashflow",
-  ],
-
-  cashBalance: [
-    "cashbalance",
-    "endingcash",
-  ],
-
-  mrr: [
-    "mrr",
-    "monthlyrecurringrevenue",
-  ],
-
-  customers: [
-    "customers",
-    "activecustomers",
-  ],
-} as const;
+/**
+ * The titles that are read for each column. The list is shared with the Data Import Center
+ * (lib/data-import/headers.ts), so both read "Mois", "Chiffre d'affaires" or "Net income" the same way.
+ */
+const HEADER_ALIASES =
+  COLUMN_TITLES.ACTUALS;
 
 
-function normalizeHeader(
-  value:
-    string,
-): string {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(
-      /[^a-z0-9]/g,
-      "",
-    );
-}
+/**
+ * The row of titles is the first row with a month column and one column of numbers. Lines above
+ * it, such as a report name or a "sep=;" line, are not used.
+ */
+const TITLE_RULES =
+  titleRules(
+    "ACTUALS",
+    [
+      "period",
+    ],
+  );
 
 
 function findColumn(
@@ -139,10 +113,9 @@ function parseFinancialNumber(
 
   if (
     !trimmed ||
-    trimmed ===
-      "-" ||
-    trimmed.toLowerCase() ===
-      "n/a"
+    isNoNumber(
+      trimmed,
+    )
   ) {
     return null;
   }
@@ -202,6 +175,85 @@ function parseFinancialNumber(
 }
 
 
+/**
+ * Reads the number cells of one row with the rules for spreadsheet numbers (see
+ * lib/data-import/number.ts), so the cells hold plain number texts afterwards. In a file with
+ * semicolons a comma is a decimal mark: a number that is not clear is refused, and a comma is never
+ * removed. The row that was read from the file does not change. A column that is not in the file
+ * has the number -1 and so no cell: it is skipped.
+ */
+function readNumberCells(
+  row:
+    string[],
+  columns:
+    number[],
+  decimalComma:
+    boolean,
+): string[] {
+  const cells =
+    [
+      ...row,
+    ];
+
+
+  for (
+    const column
+    of columns
+  ) {
+    const cell =
+      cells[
+        column
+      ];
+
+
+    if (
+      cell ===
+        undefined
+    ) {
+      continue;
+    }
+
+
+    const read =
+      readImportNumber(
+        cell.trim(),
+        decimalComma,
+      );
+
+
+    if (
+      read.ok ===
+        false
+    ) {
+      throw new Error(
+        read.message,
+      );
+    }
+
+
+    if (
+      decimalComma &&
+      read.text.includes(
+        ",",
+      )
+    ) {
+      throw new Error(
+        `Invalid financial number: ${cell}`,
+      );
+    }
+
+
+    cells[
+      column
+    ] =
+      read.text;
+  }
+
+
+  return cells;
+}
+
+
 export function parseActualMonth(
   raw:
     string,
@@ -252,10 +304,34 @@ export function parseActualsCsv(
   }
 
 
-  const table =
-    parseCsvTable(
+  const found =
+    findTable(
       csv,
+      (
+        candidate,
+      ) =>
+        dropSepLine(
+          csv,
+          parseCsvTable(
+            csv,
+            candidate,
+          ),
+        ),
+      TITLE_RULES,
     );
+
+
+  const delimiter =
+    found.delimiter;
+
+
+  const decimalComma =
+    delimiter ===
+      ";";
+
+
+  const table =
+    found.rows;
 
 
   if (
@@ -269,42 +345,11 @@ export function parseActualsCsv(
 
 
   const headerIndex =
-    table.findIndex(
-      (
-        row,
-      ) => {
-        const headers =
-          row.map(
-            normalizeHeader,
-          );
-
-
-        return (
-          findColumn(
-            headers,
-            HEADER_ALIASES.period,
-          ) >=
-            0 &&
-          Object.entries(
-            HEADER_ALIASES,
-          ).some(
-            (
-              [
-                name,
-                aliases,
-              ],
-            ) =>
-              name !==
-                "period" &&
-              findColumn(
-                headers,
-                aliases,
-              ) >=
-                0,
-          )
-        );
-      },
-    );
+    found.complete
+      ?
+        found.index
+      :
+        -1;
 
 
   if (
@@ -321,7 +366,7 @@ export function parseActualsCsv(
     table[
       headerIndex
     ].map(
-      normalizeHeader,
+      normalizeTitle,
     );
 
 
@@ -389,6 +434,49 @@ export function parseActualsCsv(
   };
 
 
+  const dataRows =
+    table.slice(
+      headerIndex +
+        1,
+    );
+
+
+  const months =
+    readMonthColumn(
+      dataRows.map(
+        (
+          row,
+        ) =>
+          row[
+            periodColumn
+          ] ??
+          "",
+      ),
+      {
+        unique:
+          true,
+
+        dayFirstDefault:
+          decimalComma,
+      },
+    );
+
+
+  if (
+    months.problem
+  ) {
+    throw new Error(
+      months.problem.message,
+    );
+  }
+
+
+  const numberColumns =
+    Object.values(
+      columns,
+    );
+
+
   const output:
     ActualImportRow[] =
       [];
@@ -401,29 +489,95 @@ export function parseActualsCsv(
 
 
   for (
-    const row
-    of table.slice(
-      headerIndex +
-        1,
-    )
+    let rowIndex =
+      0;
+    rowIndex <
+      dataRows.length;
+    rowIndex +=
+      1
   ) {
+    const sheetRow =
+      headerIndex +
+      rowIndex +
+      2;
+
+
     const rawPeriod =
-      row[
-        periodColumn
+      months.cells[
+        rowIndex
       ]?.trim();
 
 
     if (
       !rawPeriod
     ) {
+      if (
+        dataRows[
+          rowIndex
+        ].some(
+          (
+            cell,
+          ) =>
+            cell.trim() !==
+            "",
+        )
+      ) {
+        throw new Error(
+          `Row ${sheetRow}: This row has values but no month. Add the month, or delete the row.`,
+        );
+      }
+
+
       continue;
     }
 
 
-    const period =
-      parseActualMonth(
-        rawPeriod,
+    let period:
+      Date;
+
+
+    try {
+      period =
+        parseActualMonth(
+          rawPeriod,
+        );
+    }
+    catch (
+      error
+    ) {
+      throw new Error(
+        `${
+          error instanceof Error
+            ?
+              error.message
+            :
+              "Invalid actuals month"
+        } (row ${sheetRow}). If it is a total row, remove it.`,
       );
+    }
+
+
+    const untitled =
+      countUntitled(
+        table[
+          headerIndex
+        ],
+        dataRows[
+          rowIndex
+        ],
+      );
+
+
+    if (
+      untitled >
+      0
+    ) {
+      throw new Error(
+        `Row ${sheetRow}: ${describeUntitled(
+          untitled,
+        )}`,
+      );
+    }
 
 
     const key =
@@ -446,6 +600,16 @@ export function parseActualsCsv(
     seen.add(
       key,
     );
+
+
+    const row =
+      readNumberCells(
+        dataRows[
+          rowIndex
+        ],
+        numberColumns,
+        decimalComma,
+      );
 
 
     const financial = {

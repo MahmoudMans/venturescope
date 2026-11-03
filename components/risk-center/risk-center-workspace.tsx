@@ -7,6 +7,11 @@ import {
 } from "react";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
 
@@ -131,10 +136,10 @@ function guardrailTone(
     state
   ) {
     case "PASS":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "WARNING":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "BREACH":
       return "text-destructive";
@@ -153,10 +158,10 @@ function riskTone(
     level
   ) {
     case "LOW":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "MODERATE":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "HIGH":
     case "CRITICAL":
@@ -467,12 +472,11 @@ export function RiskCenterWorkspace({
                   </label>
 
                   <div className="sm:col-span-2 xl:col-span-3">
-                    <button
-                      type="submit"
+                    <PendingButton
                       className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background"
                     >
                       Save financial guardrails
-                    </button>
+                    </PendingButton>
                   </div>
                 </form>
               </section>
@@ -606,7 +610,7 @@ export function RiskCenterWorkspace({
                     </p>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Guardrail monitor">
                     <table className="w-full min-w-[820px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -732,7 +736,7 @@ export function RiskCenterWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 </section>
 
                 <section className="rounded-xl border bg-background p-5 sm:p-6">
@@ -820,7 +824,7 @@ export function RiskCenterWorkspace({
                     </h2>
                   </div>
 
-                  <div className="max-h-[520px] overflow-auto">
+                  <ScrollRegion label="Downside cash path" className="max-h-[520px] overflow-y-auto">
                     <table className="w-full min-w-[650px] text-sm">
                       <thead className="sticky top-0 bg-background">
                         <tr className="border-b">
@@ -892,7 +896,7 @@ export function RiskCenterWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 </section>
               </>
             )

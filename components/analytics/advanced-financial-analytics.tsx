@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   calculateAdvancedAnalytics,
   normalizeForecastCsv,
@@ -643,7 +644,7 @@ export function AdvancedFinancialAnalytics({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <ScrollRegion label="DCF sensitivity matrix">
           <table className="w-full min-w-[680px] text-sm">
             <thead>
               <tr className="border-b bg-muted/30">
@@ -736,7 +737,7 @@ export function AdvancedFinancialAnalytics({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
@@ -890,7 +891,7 @@ export function AdvancedFinancialAnalytics({
                   </p>
                 </div>
 
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Annual valuation cash flows">
                   <table className="w-full min-w-[560px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -962,7 +963,7 @@ export function AdvancedFinancialAnalytics({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               </section>
             )
           :

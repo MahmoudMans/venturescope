@@ -1,3 +1,4 @@
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   PROJECT_AUDIT_CATEGORIES,
   PROJECT_AUDIT_SEVERITIES,
@@ -54,7 +55,7 @@ function severityTone(
       return "text-destructive";
 
     case "WARNING":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     default:
       return "text-muted-foreground";
@@ -73,7 +74,7 @@ function severitySurface(
       return "bg-destructive/5";
 
     case "WARNING":
-      return "bg-amber-500/5";
+      return "bg-warning/5";
 
     default:
       return "";
@@ -142,7 +143,7 @@ export function ActivityCenter({
             Warning
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-amber-700 dark:text-amber-400">
+          <p className="mt-2 text-3xl font-semibold text-warning">
             {
               summary.warning
             }
@@ -306,14 +307,14 @@ export function ActivityCenter({
           <div className="flex flex-wrap gap-2 sm:col-span-2 xl:col-span-5">
             <button
               type="submit"
-              className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
+              className="touch-target rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
             >
               Apply filters
             </button>
 
             <a
               href="?"
-              className="rounded-lg border px-4 py-2 text-sm font-medium"
+              className="touch-link rounded-lg border px-4 py-2 text-sm font-medium"
             >
               Clear
             </a>
@@ -343,7 +344,7 @@ export function ActivityCenter({
               )
             :
               (
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Project audit ledger">
                   <table className="w-full min-w-[1450px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -499,7 +500,7 @@ export function ActivityCenter({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               )
         }
       </section>

@@ -23,6 +23,10 @@ import {
 import {
   AssumptionSaveButton,
 } from "@/components/assumptions/assumption-save-button";
+import { FieldError } from "@/components/forms/field-error";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
+import { UnsavedChangesNotice } from "@/components/forms/unsaved-changes-notice";
+import { useUnsavedChangesWarning } from "@/components/forms/use-unsaved-changes-warning";
 import {
   Button,
 } from "@/components/ui/button";
@@ -49,6 +53,7 @@ import type {
   ExpenseAssumptions,
   GrowthPeriod,
 } from "@/lib/finance/assumptions/types";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 import {
   cn,
 } from "@/lib/utils";
@@ -71,6 +76,13 @@ export function ExpenseAssumptionsForm({
     saveExpenseAssumptionsAction,
     initialAssumptionActionState,
   );
+
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
+  const dirty = useUnsavedChangesWarning(formRef, state.status === "success" ? state : null);
 
   const [
     cogsMethod,
@@ -169,6 +181,7 @@ export function ExpenseAssumptionsForm({
 
   return (
     <form
+      ref={formRef}
       action={action}
       className="space-y-6"
     >
@@ -448,7 +461,7 @@ export function ExpenseAssumptionsForm({
               </div>
 
               <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                COGS will later vary with revenue.
+                COGS changes with revenue each month.
               </p>
             </button>
 
@@ -472,7 +485,7 @@ export function ExpenseAssumptionsForm({
               </div>
 
               <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                COGS will later use the same monthly amount.
+                COGS is the same amount every month.
               </p>
             </button>
           </div>
@@ -821,7 +834,7 @@ export function ExpenseAssumptionsForm({
 
             {state.errors
               ?.customExpenses?.[0] ? (
-              <p className="mt-3 text-sm text-destructive">
+              <p role="alert" className="mt-3 text-sm text-destructive">
                 {
                   state.errors
                     .customExpenses[0]
@@ -831,7 +844,9 @@ export function ExpenseAssumptionsForm({
           </div>
         </CardContent>
 
-        <CardFooter className="justify-end border-t py-5">
+        <CardFooter className="flex-wrap justify-end gap-3 border-t py-5">
+          <UnsavedChangesNotice dirty={dirty} />
+
           <AssumptionSaveButton
             label="Save expense assumptions"
           />
@@ -882,6 +897,7 @@ function ExpenseField({
         <Input
           id={id}
           name={name}
+          {...fieldErrorProps(id, error)}
           type="number"
           min={min}
           max={max}
@@ -910,11 +926,7 @@ function ExpenseField({
         ) : null}
       </div>
 
-      {error ? (
-        <p className="text-sm text-destructive">
-          {error}
-        </p>
-      ) : null}
+      <FieldError fieldId={id} message={error} />
     </div>
   );
 }

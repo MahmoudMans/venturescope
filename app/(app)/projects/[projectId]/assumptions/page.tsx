@@ -2,7 +2,6 @@ import type {
   Metadata,
 } from "next";
 import {
-  ArrowRight,
   CheckCircle2,
   Circle,
   CircleDollarSign,
@@ -15,17 +14,14 @@ import {
   GeneralAssumptionsForm,
 } from "@/components/assumptions/general-assumptions-form";
 import {
+  SetupNextStep,
+} from "@/components/projects/setup-guide";
+import {
   Badge,
 } from "@/components/ui/badge";
 import {
-  Button,
-} from "@/components/ui/button";
-import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   requireUser,
@@ -37,6 +33,9 @@ import {
 import {
   requireOwnedProject,
 } from "@/lib/projects/project-access";
+import {
+  buildSetupProgress,
+} from "@/lib/projects/setup-steps";
 
 export const metadata: Metadata = {
   title: "Assumptions",
@@ -72,6 +71,13 @@ export default async function AssumptionsPage({
       assumptions,
     );
 
+  const progress =
+    buildSetupProgress(
+      project.id,
+      assumptions.completion,
+      project.revenueMode,
+    );
+
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -85,8 +91,9 @@ export default async function AssumptionsPage({
           </h2>
 
           <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Configure the persistent inputs that will later
-            feed the VentureScope financial engine.
+            Set your starting cash and tax rate. Together with
+            revenue and expenses, they drive every forecast in
+            this model.
           </p>
         </div>
 
@@ -160,51 +167,15 @@ export default async function AssumptionsPage({
         }
       />
 
-      <Card className="border-dashed">
-        <CardHeader>
-          <CardTitle className="text-base">
-            Setup sequence
-          </CardTitle>
-
-          <CardDescription>
-            Complete all three sections before the financial engine is introduced.
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="flex flex-wrap gap-3">
-          <Button
-            asChild
-            variant="outline"
-          >
-            <Link
-              href={`/projects/${project.id}/revenue`}
-            >
-              Configure revenue
-
-              <ArrowRight
-                className="size-4"
-                aria-hidden="true"
-              />
-            </Link>
-          </Button>
-
-          <Button
-            asChild
-            variant="outline"
-          >
-            <Link
-              href={`/projects/${project.id}/expenses`}
-            >
-              Configure expenses
-
-              <ArrowRight
-                className="size-4"
-                aria-hidden="true"
-              />
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <SetupNextStep
+        projectId={
+          project.id
+        }
+        progress={
+          progress
+        }
+        current="general"
+      />
     </div>
   );
 }

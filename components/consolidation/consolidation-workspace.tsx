@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import { ConfirmAction } from "@/components/workspaces/confirm-action";
+
 import {
   useEffect,
   useMemo,
@@ -13,6 +16,10 @@ import {
   saveConsolidationSettingsAction,
   saveWorkspaceFxRateAction,
 } from "@/app/(app)/projects/[projectId]/consolidation/actions";
+
+import {
+  PendingButton,
+} from "@/components/forms/pending-button";
 
 import {
   normalizeForecastCsv,
@@ -509,6 +516,7 @@ export function ConsolidationWorkspace({
 
                     <select
                       name="reportingCurrency"
+                      aria-label="Reporting currency"
                       defaultValue={
                         reportingCurrency
                       }
@@ -536,12 +544,11 @@ export function ConsolidationWorkspace({
                       }
                     </select>
 
-                    <button
-                      type="submit"
+                    <PendingButton
                       className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
                     >
                       Save reporting currency
-                    </button>
+                    </PendingButton>
                   </form>
                 </article>
 
@@ -684,12 +691,11 @@ export function ConsolidationWorkspace({
                     </label>
 
                     <div className="sm:col-span-2">
-                      <button
-                        type="submit"
+                      <PendingButton
                         className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
                       >
                         Save FX rate
-                      </button>
+                      </PendingButton>
                     </div>
                   </form>
                 </article>
@@ -760,9 +766,9 @@ export function ConsolidationWorkspace({
           <p className={`mt-2 text-lg font-semibold ${
             report.complete
               ?
-                "text-emerald-700 dark:text-emerald-400"
+                "text-success"
               :
-                "text-amber-700 dark:text-amber-400"
+                "text-warning"
           }`}>
             {
               report.complete
@@ -794,7 +800,7 @@ export function ConsolidationWorkspace({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Consolidated project register">
           <table className="w-full min-w-[1500px] text-sm">
             <thead>
               <tr className="border-b bg-muted/30">
@@ -924,7 +930,7 @@ export function ConsolidationWorkspace({
                               )
                             :
                               (
-                                <span className="font-semibold text-amber-700 dark:text-amber-400">
+                                <span className="font-semibold text-warning">
                                   MISSING
                                 </span>
                               )
@@ -967,7 +973,7 @@ export function ConsolidationWorkspace({
                               )
                             :
                               (
-                                <span className="text-amber-700 dark:text-amber-400">
+                                <span className="text-warning">
                                   Missing FX
                                 </span>
                               )
@@ -990,7 +996,7 @@ export function ConsolidationWorkspace({
                               "—"
                             :
                               (
-                                <span className="text-amber-700 dark:text-amber-400">
+                                <span className="text-warning">
                                   Missing FX
                                 </span>
                               )
@@ -1001,14 +1007,14 @@ export function ConsolidationWorkspace({
                         <div className="flex flex-wrap gap-2">
                           <Link
                             href={`/projects/${row.projectId}/portfolio`}
-                            className="rounded border px-2 py-1 text-xs"
+                            className="touch-link rounded border px-2 py-1 text-xs"
                           >
                             Portfolio
                           </Link>
 
                           <Link
                             href={`/projects/${row.projectId}/board-pack`}
-                            className="rounded border px-2 py-1 text-xs"
+                            className="touch-link rounded border px-2 py-1 text-xs"
                           >
                             Board Pack
                           </Link>
@@ -1020,7 +1026,7 @@ export function ConsolidationWorkspace({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="overflow-hidden rounded-xl border bg-background">
@@ -1045,7 +1051,7 @@ export function ConsolidationWorkspace({
               )
             :
               (
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Manual FX rate register">
                   <table className="w-full min-w-[1000px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -1127,34 +1133,17 @@ export function ConsolidationWorkspace({
                                   editable
                                     ?
                                       (
-                                        <form
-                                          action={
-                                            deleteWorkspaceFxRateAction
-                                          }
+                                        <ConfirmAction
+                                          action={deleteWorkspaceFxRateAction}
+                                          fields={{ projectId, rateId: rate.id }}
+                                          title="Delete this exchange rate?"
+                                          description="Conversions that need this rate will be reported as missing until you add another one."
+                                          confirmLabel="Delete rate"
+                                          triggerVariant="outline"
+                                          triggerClassName="text-destructive hover:text-destructive"
                                         >
-                                          <input
-                                            type="hidden"
-                                            name="projectId"
-                                            value={
-                                              projectId
-                                            }
-                                          />
-
-                                          <input
-                                            type="hidden"
-                                            name="rateId"
-                                            value={
-                                              rate.id
-                                            }
-                                          />
-
-                                          <button
-                                            type="submit"
-                                            className="rounded border px-2 py-1 text-xs font-medium text-destructive"
-                                          >
-                                            Delete
-                                          </button>
-                                        </form>
+                                          Delete
+                                        </ConfirmAction>
                                       )
                                     :
                                       "Owner-managed"
@@ -1166,7 +1155,7 @@ export function ConsolidationWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               )
         }
       </section>

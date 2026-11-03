@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
@@ -132,10 +133,10 @@ function stateTone(
     state
   ) {
     case "RESILIENT":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "FLOOR_BREACH":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "CASH_EXHAUSTION":
       return "text-destructive";
@@ -151,10 +152,10 @@ function stateSurface(
     state
   ) {
     case "RESILIENT":
-      return "bg-emerald-500/10";
+      return "bg-success/10";
 
     case "FLOOR_BREACH":
-      return "bg-amber-500/10";
+      return "bg-warning/10";
 
     case "CASH_EXHAUSTION":
       return "bg-destructive/10";
@@ -760,7 +761,7 @@ export function SensitivityLabWorkspace({
             Resilient cases
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-emerald-700 dark:text-emerald-400">
+          <p className="mt-2 text-3xl font-semibold text-success">
             {
               surface.summary
                 .resilientCells
@@ -848,7 +849,7 @@ export function SensitivityLabWorkspace({
           </p>
         </div>
 
-        <div className="overflow-x-auto p-5">
+        <ScrollRegion label="Revenue shock and cost inflation" className="p-5">
           <table className="w-full min-w-[760px] border-collapse text-sm">
             <thead>
               <tr>
@@ -993,7 +994,7 @@ export function SensitivityLabWorkspace({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
@@ -1181,14 +1182,14 @@ export function SensitivityLabWorkspace({
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
               href={`/projects/${projectId}/risk-center`}
-              className="rounded-lg border px-3 py-2 text-sm font-medium"
+              className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
             >
               Open Risk Center
             </Link>
 
             <Link
               href={`/projects/${projectId}/capital-planning`}
-              className="rounded-lg border px-3 py-2 text-sm font-medium"
+              className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
             >
               Open Capital Planning
             </Link>
@@ -1207,7 +1208,7 @@ export function SensitivityLabWorkspace({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Funding-resilience boundary">
           <table className="w-full min-w-[650px] text-sm">
             <thead>
               <tr className="border-b bg-muted/30">
@@ -1274,7 +1275,7 @@ export function SensitivityLabWorkspace({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="rounded-xl border bg-muted/20 p-5">

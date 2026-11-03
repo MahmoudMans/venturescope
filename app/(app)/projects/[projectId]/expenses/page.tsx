@@ -6,6 +6,9 @@ import {
   ExpenseAssumptionsForm,
 } from "@/components/assumptions/expense-assumptions-form";
 import {
+  SetupNextStep,
+} from "@/components/projects/setup-guide";
+import {
   Badge,
 } from "@/components/ui/badge";
 import {
@@ -17,6 +20,9 @@ import {
 import {
   requireOwnedProject,
 } from "@/lib/projects/project-access";
+import {
+  buildSetupProgress,
+} from "@/lib/projects/setup-steps";
 
 export const metadata: Metadata = {
   title: "Expense assumptions",
@@ -45,6 +51,13 @@ export default async function ExpensesPage({
   const assumptions =
     parseStoredFinancialAssumptions(
       project.baseAssumptions,
+    );
+
+  const progress =
+    buildSetupProgress(
+      project.id,
+      assumptions.completion,
+      project.revenueMode,
     );
 
   const customCount =
@@ -89,6 +102,16 @@ export default async function ExpensesPage({
         assumptions={
           assumptions.expenses
         }
+      />
+
+      <SetupNextStep
+        projectId={
+          project.id
+        }
+        progress={
+          progress
+        }
+        current="expenses"
       />
     </div>
   );

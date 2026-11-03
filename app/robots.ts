@@ -5,6 +5,9 @@ import type {
 import {
   getPublicSiteUrl,
 } from "@/lib/seo/site";
+import {
+  PUBLIC_INFO_LINKS,
+} from "@/lib/site/public-pages";
 
 export default function robots(): MetadataRoute.Robots {
   const site =
@@ -25,6 +28,12 @@ export default function robots(): MetadataRoute.Robots {
         "/demo",
         "/login",
         "/register",
+        ...PUBLIC_INFO_LINKS.map(
+          (
+            link,
+          ) =>
+            link.href,
+        ),
       ],
 
       disallow: [

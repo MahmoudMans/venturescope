@@ -347,7 +347,7 @@ export default async function ScorecardPage({
 
 
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
+    <div className="mx-auto w-full max-w-7xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
       <header>
         <p className="text-sm font-medium text-muted-foreground">
           Management performance
@@ -430,6 +430,6 @@ export default async function ScorecardPage({
           targets
         }
       />
-    </main>
+    </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   Wallet,
 } from "lucide-react";
 import {
+  useId,
   useMemo,
   useState,
 } from "react";
@@ -25,11 +26,18 @@ import {
 } from "recharts";
 
 import {
+  AccessibleChart,
+} from "@/components/charts/accessible-chart";
+import {
   FinancialKpiCard,
 } from "@/components/financial/financial-kpi-card";
 import {
   Button,
 } from "@/components/ui/button";
+import {
+  buildRevenueTrajectoryText,
+  spokenUnit,
+} from "@/lib/charts/chart-text";
 import {
   generateFinancialForecast,
 } from "@/lib/finance/engine";
@@ -187,6 +195,12 @@ export function LiveScenarioSimulator({
             ),
         }),
       );
+
+  const chartText =
+    buildRevenueTrajectoryText(
+      chartData,
+      baseForecast.currency,
+    );
 
   const customerDriven =
     baseInput.revenueMode ===
@@ -353,7 +367,7 @@ export function LiveScenarioSimulator({
         ) : null}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 min-[1800px]:grid-cols-6">
         <FinancialKpiCard
           label="First-year revenue"
           value={formatCompactCurrencyValue(
@@ -468,7 +482,15 @@ export function LiveScenarioSimulator({
           </p>
         </div>
 
-        <div className="h-[320px]">
+        <AccessibleChart
+          label={
+            chartText.label
+          }
+          table={
+            chartText.table
+          }
+          className="h-[320px]"
+        >
           <ResponsiveContainer
             width="100%"
             height="100%"
@@ -579,7 +601,7 @@ export function LiveScenarioSimulator({
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </AccessibleChart>
       </div>
     </div>
   );
@@ -611,10 +633,18 @@ function SimulatorControl({
       value: number,
     ) => void;
 }) {
+  const fieldId =
+    useId();
+
   return (
     <div className="rounded-xl border bg-background p-4">
       <div className="flex items-center justify-between gap-4">
-        <label className="text-sm font-medium">
+        <label
+          htmlFor={
+            fieldId
+          }
+          className="text-sm font-medium"
+        >
           {
             label
           }
@@ -622,6 +652,9 @@ function SimulatorControl({
 
         <div className="flex items-center gap-1">
           <input
+            id={
+              fieldId
+            }
             type="number"
             min={min}
             max={max}
@@ -666,6 +699,8 @@ function SimulatorControl({
 
       <input
         type="range"
+        aria-label={`${label}, slider`}
+        aria-valuetext={`${value} ${spokenUnit(suffix)}`}
         min={min}
         max={max}
         step={step}

@@ -9,6 +9,10 @@ import {
 } from "next/navigation";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import {
   prisma,
 } from "@/lib/db/prisma";
 
@@ -166,13 +170,13 @@ export default async function ProjectVersionsPage({
 
 
   return (
-    <main className="mx-auto w-full max-w-5xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
+    <div className="mx-auto w-full max-w-5xl space-y-8 px-5 py-8 lg:px-8 lg:py-10">
       <header className="space-y-3">
         <Link
           href={
             `/projects/${project.id}/settings`
           }
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className="touch-reach text-sm text-muted-foreground hover:text-foreground"
         >
           ← Project settings
         </Link>
@@ -284,12 +288,11 @@ export default async function ProjectVersionsPage({
                     />
                   </label>
 
-                  <button
-                    type="submit"
+                  <PendingButton
                     className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background"
                   >
                     Create immutable checkpoint
-                  </button>
+                  </PendingButton>
                 </form>
               </section>
             )
@@ -425,15 +428,15 @@ export default async function ProjectVersionsPage({
                                           500
                                         }
                                         placeholder="Restore reason"
+                                        aria-label="Reason for restoring this revision"
                                         className="h-9 w-48 rounded-lg border bg-background px-3 text-xs"
                                       />
 
-                                      <button
-                                        type="submit"
+                                      <PendingButton
                                         className="block h-9 w-full rounded-lg border px-3 text-xs font-medium"
                                       >
                                         Restore as new revision
-                                      </button>
+                                      </PendingButton>
                                     </form>
                                   )
                                 :
@@ -448,6 +451,6 @@ export default async function ProjectVersionsPage({
               )
         }
       </section>
-    </main>
+    </div>
   );
 }

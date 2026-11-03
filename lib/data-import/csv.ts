@@ -1,7 +1,26 @@
-export function parseCsvMatrix(
+import {
+  type CsvDelimiter,
+  detectCsvDelimiter,
+} from "@/lib/data-import/delimiter";
+
+
+/** One row of a file: its cells, and its number in the file. A blank row has a number too. */
+export type CsvRow = {
+  row: number;
+
+  cells: string[];
+};
+
+
+export function parseCsvRows(
   input:
     string,
-): string[][] {
+  delimiter:
+    CsvDelimiter =
+      detectCsvDelimiter(
+        input,
+      ),
+): CsvRow[] {
   const normalized =
     input
       .replace(
@@ -19,8 +38,12 @@ export function parseCsvMatrix(
 
 
   const rows:
-    string[][] =
+    CsvRow[] =
       [];
+
+
+  let rowNumber =
+    1;
 
 
   let currentRow:
@@ -98,7 +121,7 @@ export function parseCsvMatrix(
 
     if (
       character ===
-      ","
+      delimiter
     ) {
       currentRow.push(
         current.trim(),
@@ -132,14 +155,21 @@ export function parseCsvMatrix(
             "",
         )
       ) {
-        rows.push(
-          currentRow,
-        );
+        rows.push({
+          row:
+            rowNumber,
+
+          cells:
+            currentRow,
+        });
       }
 
 
       currentRow =
         [];
+
+      rowNumber +=
+        1;
 
       continue;
     }
@@ -173,13 +203,38 @@ export function parseCsvMatrix(
         "",
     )
   ) {
-    rows.push(
-      currentRow,
-    );
+    rows.push({
+      row:
+        rowNumber,
+
+      cells:
+        currentRow,
+    });
   }
 
 
   return rows;
+}
+
+
+export function parseCsvMatrix(
+  input:
+    string,
+  delimiter:
+    CsvDelimiter =
+      detectCsvDelimiter(
+        input,
+      ),
+): string[][] {
+  return parseCsvRows(
+    input,
+    delimiter,
+  ).map(
+    (
+      item,
+    ) =>
+      item.cells,
+  );
 }
 
 
@@ -195,10 +250,20 @@ export function csvRecords(
       string,
       string
     >[];
+
+  delimiter:
+    CsvDelimiter;
 } {
+  const delimiter =
+    detectCsvDelimiter(
+      input,
+    );
+
+
   const matrix =
     parseCsvMatrix(
       input,
+      delimiter,
     );
 
 
@@ -279,5 +344,7 @@ export function csvRecords(
     headers,
 
     records,
+
+    delimiter,
   };
 }

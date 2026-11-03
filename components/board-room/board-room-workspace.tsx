@@ -9,6 +9,11 @@ import {
 } from "react";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
 
@@ -262,10 +267,10 @@ function riskTone(
       return "text-destructive";
 
     case "MODERATE":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     default:
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
   }
 }
 
@@ -706,7 +711,7 @@ export function BoardRoomWorkspace({
 
           <Link
             href={`/projects/${projectId}/decision-center`}
-            className="rounded-lg border px-3 py-2 text-sm font-medium"
+            className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
           >
             Open Decision Center
           </Link>
@@ -871,15 +876,14 @@ export function BoardRoomWorkspace({
                   </label>
 
                   <div className="sm:col-span-2">
-                    <button
-                      type="submit"
+                    <PendingButton
                       disabled={
                         !forecastCsv
                       }
                       className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Freeze executive review
-                    </button>
+                    </PendingButton>
                   </div>
                 </form>
               </section>
@@ -941,7 +945,7 @@ export function BoardRoomWorkspace({
                               .value,
                           );
                         }}
-                        className="h-10 min-w-72 rounded-lg border bg-background px-3 text-sm"
+                        className="h-10 w-full max-w-full rounded-lg border bg-background px-3 text-sm sm:w-auto sm:min-w-72"
                       >
                         {
                           reviews.map(
@@ -1033,7 +1037,7 @@ export function BoardRoomWorkspace({
                               </p>
                             </div>
 
-                            <div className="overflow-x-auto">
+                            <ScrollRegion label="Executive movement since review">
                               <table className="w-full min-w-[850px] text-sm">
                                 <thead>
                                   <tr className="border-b bg-muted/30">
@@ -1266,7 +1270,7 @@ export function BoardRoomWorkspace({
                                   </tr>
                                 </tbody>
                               </table>
-                            </div>
+                            </ScrollRegion>
                           </section>
 
                           <section className="grid gap-4 lg:grid-cols-2">
@@ -1364,7 +1368,7 @@ export function BoardRoomWorkspace({
                     </p>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Review history">
                     <table className="w-full min-w-[900px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -1468,7 +1472,7 @@ export function BoardRoomWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 </section>
               </>
             )

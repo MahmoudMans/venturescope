@@ -7,6 +7,11 @@ import {
 } from "react";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics";
 
@@ -126,7 +131,7 @@ function varianceTone(
     favorable ===
       true
   ) {
-    return "text-emerald-700 dark:text-emerald-400";
+    return "text-success";
   }
 
 
@@ -460,19 +465,26 @@ export function ActualsVarianceWorkspace({
                     <input
                       type="file"
                       name="actualsCsv"
-                      accept=".csv,text/csv"
+                      accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain"
+                      aria-describedby="actuals-file-hint"
                       required
                       className="block w-full rounded-lg border bg-background px-3 py-2 text-sm"
                     />
                   </label>
 
-                  <button
-                    type="submit"
+                  <PendingButton
                     className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background"
                   >
                     Import actuals
-                  </button>
+                  </PendingButton>
                 </form>
+
+                <p
+                  id="actuals-file-hint"
+                  className="mt-2 text-xs text-muted-foreground"
+                >
+                  A file saved by Excel is read too: with commas, semicolons or tabs, a decimal comma (1250,50), and months like Jan-27, janv.-27 or 01/01/2027. Column titles can be English or French, like Month or Mois, Revenue or CA. Lines above the column titles are skipped, and a dash or n/a means no number.
+                </p>
               </section>
             )
           :
@@ -627,7 +639,7 @@ export function ActualsVarianceWorkspace({
                       </p>
                     </div>
 
-                    <div className="overflow-x-auto">
+                    <ScrollRegion label="Monthly variance">
                       <table className="w-full min-w-[1050px] text-sm">
                         <thead>
                           <tr className="border-b bg-muted/30">
@@ -790,7 +802,7 @@ export function ActualsVarianceWorkspace({
                           }
                         </tbody>
                       </table>
-                    </div>
+                    </ScrollRegion>
                   </section>
                 )
       }
@@ -836,12 +848,11 @@ export function ActualsVarianceWorkspace({
                     />
                   </label>
 
-                  <button
-                    type="submit"
+                  <PendingButton
                     className="h-10 rounded-lg border border-destructive/40 px-4 text-sm font-medium text-destructive"
                   >
                     Clear actuals
-                  </button>
+                  </PendingButton>
                 </form>
               </section>
             )

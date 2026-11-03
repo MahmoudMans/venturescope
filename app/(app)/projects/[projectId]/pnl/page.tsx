@@ -787,7 +787,7 @@ export default async function ProfitAndLossPage({
         }
       />
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 min-[1800px]:grid-cols-6">
         <FinancialKpiCard
           label="Revenue"
           value={formatCompactCurrencyValue(

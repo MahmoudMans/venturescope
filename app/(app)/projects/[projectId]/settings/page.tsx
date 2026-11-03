@@ -4,6 +4,7 @@ import type {
 import {
   CalendarClock,
   Database,
+  Download,
   Layers3,
   SlidersHorizontal,
 } from "lucide-react";
@@ -11,6 +12,9 @@ import {
 import {
   FinancialKpiCard,
 } from "@/components/financial/financial-kpi-card";
+import {
+  StatusNotice,
+} from "@/components/app/status-notice";
 import {
   FinancialPageHeader,
 } from "@/components/financial/financial-page-header";
@@ -21,12 +25,18 @@ import {
   ProjectSettingsForm,
 } from "@/components/settings/project-settings-form";
 import {
+  Button,
+} from "@/components/ui/button";
+import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  ModelSharingCard,
+} from "@/components/workspaces/model-sharing-card";
 import {
   requireUser,
 } from "@/lib/auth/require-user";
@@ -39,8 +49,25 @@ import {
 } from "@/lib/projects/project-access";
 import {
   dateToMonthInput,
+  formatProjectStartMonth,
   formatProjectUpdatedAt,
 } from "@/lib/projects/project-dates";
+import {
+  formatRevenueMode,
+} from "@/lib/projects/project-formatting";
+import {
+  getWorkspaceNotice,
+} from "@/lib/workspaces/labels";
+import {
+  describeOwnership,
+  settingsOwnerMessage,
+} from "@/lib/workspaces/model-sharing";
+import {
+  loadModelSharing,
+} from "@/lib/workspaces/model-sharing-data";
+import {
+  getSharedProjectAccess,
+} from "@/lib/workspaces/shared-access";
 
 import Link from "next/link";
 
@@ -51,14 +78,23 @@ export const metadata: Metadata = {
 
 export default async function ProjectSettingsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{
     projectId: string;
+  }>;
+
+  searchParams: Promise<{
+    status?: string | string[];
   }>;
 }) {
   const {
     projectId,
   } = await params;
+
+  const {
+    status,
+  } = await searchParams;
 
   const user =
     await requireUser();
@@ -68,6 +104,52 @@ export default async function ProjectSettingsPage({
       user.id,
       projectId,
     );
+
+  // Only the person who owns the model changes its settings and decides who can open it.
+  const isOwner =
+    project.userId ===
+    user.id;
+
+  const notice =
+    getWorkspaceNotice(
+      status,
+    );
+
+  const sharing =
+    isOwner
+      ? await loadModelSharing(
+          user.id,
+          project.id,
+        )
+      : null;
+
+  const shared =
+    isOwner
+      ? null
+      : await getSharedProjectAccess(
+          user.id,
+          project.id,
+        );
+
+  const sharedIn =
+    sharing !== null &&
+    sharing.kind ===
+      "shared"
+      ? sharing.workspaceName
+      : null;
+
+  const ownership =
+    describeOwnership({
+      isOwner,
+
+      workspaceName:
+        isOwner
+          ? sharedIn
+          : (shared?.workspaceName ?? null),
+
+      ownerName:
+        shared?.ownerName,
+    });
 
   const assumptions =
     parseStoredFinancialAssumptions(
@@ -96,6 +178,12 @@ export default async function ProjectSettingsPage({
         description="Manage financial-model metadata, structural settings and explicit governance operations."
         scenarioName={`Model v${project.modelVersion}`}
       />
+
+      {notice ? (
+        <StatusNotice tone={notice.tone}>
+          {notice.message}
+        </StatusNotice>
+      ) : null}
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <FinancialKpiCard
@@ -145,30 +233,97 @@ export default async function ProjectSettingsPage({
         />
       </section>
 
-      <ProjectSettingsForm
-        project={{
-          id:
-            project.id,
+      {isOwner && sharing !== null ? (
+        <ModelSharingCard
+          projectId={project.id}
+          projectName={project.name}
+          sharing={sharing}
+        />
+      ) : null}
 
-          name:
-            project.name,
+      {isOwner ? (
+        <ProjectSettingsForm
+          project={{
+            id:
+              project.id,
 
-          industry:
-            project.industry,
+            name:
+              project.name,
 
-          currency:
-            project.currency,
+            industry:
+              project.industry,
 
-          horizonMonths:
-            project.horizonMonths,
+            currency:
+              project.currency,
 
-          revenueMode:
-            project.revenueMode,
-        }}
-        startMonth={dateToMonthInput(
-          project.startMonth,
-        )}
-      />
+            horizonMonths:
+              project.horizonMonths,
+
+            revenueMode:
+              project.revenueMode,
+          }}
+          startMonth={dateToMonthInput(
+            project.startMonth,
+          )}
+        />
+      ) : (
+        <Card className="border-border/70">
+          <CardHeader>
+            <CardTitle>
+              Model settings
+            </CardTitle>
+
+            <CardDescription>
+              {settingsOwnerMessage(
+                shared?.ownerName,
+              )}
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            <MetadataRow
+              label="Name"
+              value={
+                project.name
+              }
+            />
+
+            <MetadataRow
+              label="Industry"
+              value={
+                project.industry ??
+                "Not set"
+              }
+            />
+
+            <MetadataRow
+              label="Currency"
+              value={
+                project.currency
+              }
+            />
+
+            <MetadataRow
+              label="Start month"
+              value={formatProjectStartMonth(
+                project.startMonth,
+              )}
+            />
+
+            <MetadataRow
+              label="Horizon"
+              value={`${project.horizonMonths} months`}
+            />
+
+            <MetadataRow
+              label="Revenue mode"
+              value={formatRevenueMode(
+                project.revenueMode,
+              )}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="border-border/70">
         <CardHeader>
@@ -217,12 +372,15 @@ export default async function ProjectSettingsPage({
 
           <MetadataRow
             label="Project ownership"
-            value="Private to authenticated owner"
+            value={
+              ownership
+            }
           />
         </CardContent>
       </Card>
 
       <ModelGovernance
+        canChange={isOwner}
         projectId={
           project.id
         }
@@ -240,10 +398,29 @@ export default async function ProjectSettingsPage({
 
         <Link
           href={`/projects/${project.id}/versions`}
-          className="mt-4 inline-flex h-10 items-center justify-center rounded-lg border px-4 text-sm font-medium"
+          className="touch-link mt-4 inline-flex h-10 items-center justify-center rounded-lg border px-4 text-sm font-medium"
         >
           Open version history
         </Link>
+      </section>
+
+      <section className="rounded-xl border bg-background p-5 sm:p-6">
+        <h2 className="text-lg font-semibold">
+          Model backup
+        </h2>
+
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Download this model as a file with its settings, assumptions, scenarios, financing and
+          month overrides. Restore the file later from the new model page; it comes back as a new
+          model.
+        </p>
+
+        <Button asChild variant="outline" className="mt-4">
+          <a href={`/api/projects/${project.id}/export/json`} download>
+            <Download className="size-4" aria-hidden="true" />
+            Download backup
+          </a>
+        </Button>
       </section>
 </div>
   );

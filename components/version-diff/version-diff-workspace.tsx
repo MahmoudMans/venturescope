@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   compareRevisionSnapshots,
 } from "@/lib/projects/version-diff/diff";
@@ -69,7 +70,7 @@ function materialityTone(
       return "text-destructive";
 
     case "MEDIUM":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "LOW":
       return "text-muted-foreground";
@@ -85,7 +86,7 @@ function kindTone(
     kind
   ) {
     case "ADDED":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "REMOVED":
       return "text-destructive";
@@ -296,7 +297,7 @@ export function VersionDiffWorkspace({
 
         <Link
           href={`/projects/${projectId}/versions`}
-          className="mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Open model versions
         </Link>
@@ -363,7 +364,7 @@ export function VersionDiffWorkspace({
                 fromId,
               );
             }}
-            className="h-10 rounded-lg border px-4 text-sm font-medium"
+            className="touch-target h-10 rounded-lg border px-4 text-sm font-medium"
           >
             Swap
           </button>
@@ -781,7 +782,7 @@ export function VersionDiffWorkspace({
                             )
                           :
                             (
-                              <div className="overflow-x-auto">
+                              <ScrollRegion label="Model change register">
                                 <table className="w-full min-w-[1200px] text-sm">
                                   <thead>
                                     <tr className="border-b bg-muted/30">
@@ -871,7 +872,7 @@ export function VersionDiffWorkspace({
                                     }
                                   </tbody>
                                 </table>
-                              </div>
+                              </ScrollRegion>
                             )
                       }
                     </section>

@@ -40,7 +40,7 @@ export function AssumptionActionMessage({
       className={cn(
         "flex items-start gap-3 rounded-lg border px-4 py-3 text-sm",
         success
-          ? "border-emerald-500/30 bg-emerald-500/5"
+          ? "border-success/30 bg-success/5"
           : "border-destructive/30 bg-destructive/5 text-destructive",
       )}
     >

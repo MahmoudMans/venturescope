@@ -277,7 +277,7 @@ export async function renameProjectAction(
     requestedReturnTo ===
     projectReturnTo
       ? projectReturnTo
-      : "/dashboard";
+      : "/dashboard?status=model-renamed";
 
   redirect(
     safeReturnTo,
@@ -301,33 +301,56 @@ export async function deleteProjectAction(
     !parsed.success
   ) {
     redirect(
-      "/dashboard",
+      "/dashboard?status=model-missing",
     );
   }
 
-  try {
-    await prisma.project.deleteMany({
-      where: {
-        id:
-          parsed.data,
+  let outcome:
+    | "model-deleted"
+    | "model-missing"
+    | "delete-failed" =
+      "model-deleted";
 
-        userId:
-          user.id,
-      },
-    });
+  try {
+    const result =
+      await prisma.project.deleteMany({
+        where: {
+          id:
+            parsed.data,
+
+          userId:
+            user.id,
+        },
+      });
+
+    if (
+      result.count ===
+      0
+    ) {
+      outcome =
+        "model-missing";
+    }
   } catch (error) {
     console.error(
       "VentureScope project deletion failed:",
       error,
     );
+
+    outcome =
+      "delete-failed";
   }
 
   revalidatePath(
     "/dashboard",
   );
 
+  revalidatePath(
+    "/workspaces",
+    "layout",
+  );
+
   redirect(
-    "/dashboard",
+    `/dashboard?status=${outcome}`,
   );
 }
 
@@ -386,7 +409,7 @@ export async function duplicateProjectAction(
 
   if (!source) {
     redirect(
-      "/dashboard",
+      "/dashboard?status=model-missing",
     );
   }
 
@@ -576,7 +599,7 @@ export async function duplicateProjectAction(
     );
 
     redirect(
-      "/dashboard",
+      "/dashboard?status=copy-failed",
     );
   }
 

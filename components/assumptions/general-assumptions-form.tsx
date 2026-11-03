@@ -18,6 +18,10 @@ import {
 import {
   AssumptionSaveButton,
 } from "@/components/assumptions/assumption-save-button";
+import { FieldError } from "@/components/forms/field-error";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
+import { UnsavedChangesNotice } from "@/components/forms/unsaved-changes-notice";
+import { useUnsavedChangesWarning } from "@/components/forms/use-unsaved-changes-warning";
 import {
   Card,
   CardContent,
@@ -38,6 +42,7 @@ import {
 import type {
   GeneralAssumptions,
 } from "@/lib/finance/assumptions/types";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 
 type GeneralAssumptionsFormProps = {
   projectId: string;
@@ -58,8 +63,16 @@ export function GeneralAssumptionsForm({
     initialAssumptionActionState,
   );
 
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
+  const dirty = useUnsavedChangesWarning(formRef, state.status === "success" ? state : null);
+
   return (
     <form
+      ref={formRef}
       action={action}
     >
       <input
@@ -108,6 +121,7 @@ export function GeneralAssumptionsForm({
                 <Input
                   id="startingCash"
                   name="startingCash"
+                  {...fieldErrorProps("startingCash", state.errors?.startingCash?.[0])}
                   type="number"
                   min="0"
                   step="0.01"
@@ -123,15 +137,7 @@ export function GeneralAssumptionsForm({
                 Current cash available to the business in {currency}.
               </p>
 
-              {state.errors
-                ?.startingCash?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state.errors
-                      .startingCash[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId="startingCash" message={state.errors?.startingCash?.[0]} />
             </div>
 
             <div className="space-y-2">
@@ -148,6 +154,7 @@ export function GeneralAssumptionsForm({
                 <Input
                   id="corporateTaxRate"
                   name="corporateTaxRate"
+                  {...fieldErrorProps("corporateTaxRate", state.errors?.corporateTaxRate?.[0])}
                   type="number"
                   min="0"
                   max="100"
@@ -164,20 +171,14 @@ export function GeneralAssumptionsForm({
                 Use 0% if tax modelling is not required.
               </p>
 
-              {state.errors
-                ?.corporateTaxRate?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state.errors
-                      .corporateTaxRate[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId="corporateTaxRate" message={state.errors?.corporateTaxRate?.[0]} />
             </div>
           </div>
         </CardContent>
 
-        <CardFooter className="justify-end border-t py-5">
+        <CardFooter className="flex-wrap justify-end gap-3 border-t py-5">
+          <UnsavedChangesNotice dirty={dirty} />
+
           <AssumptionSaveButton
             label="Save general assumptions"
           />

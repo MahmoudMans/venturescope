@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import { FieldError } from "@/components/forms/field-error";
 import {
   Input,
 } from "@/components/ui/input";
@@ -26,6 +27,7 @@ import {
 import type {
   FinancingEventType,
 } from "@/lib/financing/types";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 
 export type FinancingFieldDefaults = {
   name: string;
@@ -170,6 +172,7 @@ export function FinancingEventFields({
           <Input
             id={`${idPrefix}-name`}
             name="name"
+            {...fieldErrorProps(`${idPrefix}-name`, errors?.name?.[0])}
             defaultValue={
               defaults.name
             }
@@ -177,15 +180,7 @@ export function FinancingEventFields({
             required
           />
 
-          {errors
-            ?.name?.[0] ? (
-            <p className="text-sm text-destructive">
-              {
-                errors
-                  .name[0]
-              }
-            </p>
-          ) : null}
+          <FieldError fieldId={`${idPrefix}-name`} message={errors?.name?.[0]} />
         </div>
 
         <div className="space-y-2">
@@ -198,6 +193,7 @@ export function FinancingEventFields({
           <select
             id={`${idPrefix}-type`}
             name="type"
+            {...fieldErrorProps(`${idPrefix}-type`, errors?.type?.[0])}
             value={
               type
             }
@@ -237,15 +233,7 @@ export function FinancingEventFields({
             }
           </p>
 
-          {errors
-            ?.type?.[0] ? (
-            <p className="text-sm text-destructive">
-              {
-                errors
-                  .type[0]
-              }
-            </p>
-          ) : null}
+          <FieldError fieldId={`${idPrefix}-type`} message={errors?.type?.[0]} />
         </div>
 
         <div className="space-y-2">
@@ -258,6 +246,7 @@ export function FinancingEventFields({
           <Input
             id={`${idPrefix}-month`}
             name="month"
+            {...fieldErrorProps(`${idPrefix}-month`, errors?.month?.[0])}
             type="month"
             min={
               projectStartMonth
@@ -284,15 +273,7 @@ export function FinancingEventFields({
             Must fall inside the project forecast horizon.
           </p>
 
-          {errors
-            ?.month?.[0] ? (
-            <p className="text-sm text-destructive">
-              {
-                errors
-                  .month[0]
-              }
-            </p>
-          ) : null}
+          <FieldError fieldId={`${idPrefix}-month`} message={errors?.month?.[0]} />
         </div>
 
         <div className="space-y-2 md:col-span-2">
@@ -312,6 +293,7 @@ export function FinancingEventFields({
             <Input
               id={`${idPrefix}-amount`}
               name="amount"
+              {...fieldErrorProps(`${idPrefix}-amount`, errors?.amount?.[0])}
               type="number"
               min="0.01"
               step="0.01"
@@ -323,15 +305,7 @@ export function FinancingEventFields({
             />
           </div>
 
-          {errors
-            ?.amount?.[0] ? (
-            <p className="text-sm text-destructive">
-              {
-                errors
-                  .amount[0]
-              }
-            </p>
-          ) : null}
+          <FieldError fieldId={`${idPrefix}-amount`} message={errors?.amount?.[0]} />
         </div>
       </div>
 
@@ -368,6 +342,7 @@ export function FinancingEventFields({
                 <Input
                   id={`${idPrefix}-apr`}
                   name="apr"
+                  {...fieldErrorProps(`${idPrefix}-apr`, errors?.apr?.[0])}
                   type="number"
                   min="0"
                   max="100"
@@ -385,15 +360,7 @@ export function FinancingEventFields({
                 </span>
               </div>
 
-              {errors
-                ?.apr?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    errors
-                      .apr[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId={`${idPrefix}-apr`} message={errors?.apr?.[0]} />
             </div>
 
             <div className="space-y-2">
@@ -407,6 +374,7 @@ export function FinancingEventFields({
                 <Input
                   id={`${idPrefix}-term`}
                   name="termMonths"
+                  {...fieldErrorProps(`${idPrefix}-term`, errors?.termMonths?.[0])}
                   type="number"
                   min="1"
                   max="600"
@@ -424,15 +392,7 @@ export function FinancingEventFields({
                 </span>
               </div>
 
-              {errors
-                ?.termMonths?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    errors
-                      .termMonths[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId={`${idPrefix}-term`} message={errors?.termMonths?.[0]} />
             </div>
 
             <div className="space-y-2">
@@ -445,6 +405,7 @@ export function FinancingEventFields({
               <Input
                 id={`${idPrefix}-repayment-start`}
                 name="repaymentStartMonth"
+                {...fieldErrorProps(`${idPrefix}-repayment-start`, errors?.repaymentStartMonth?.[0])}
                 type="month"
                 min={
                   earliestRepayment
@@ -463,15 +424,7 @@ export function FinancingEventFields({
                 }
               />
 
-              {errors
-                ?.repaymentStartMonth?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    errors
-                      .repaymentStartMonth[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId={`${idPrefix}-repayment-start`} message={errors?.repaymentStartMonth?.[0]} />
             </div>
           </div>
         </div>

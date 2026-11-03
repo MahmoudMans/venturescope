@@ -8,6 +8,11 @@ import {
 } from "@/lib/security/rate-limit";
 
 import {
+  RETURN_PATH_HEADER,
+  safeReturnPath,
+} from "@/lib/auth/return-path";
+
+import {
   createRequestId,
   normalizeRequestId,
 } from "@/lib/observability/request-id";
@@ -222,6 +227,30 @@ export function proxy(
   );
 
 
+  /*
+   * Tell the pages which page was asked for, so a person who has to
+   * sign in comes back to it. A value sent by the browser is always
+   * removed first, and only a page inside the app is kept.
+   */
+  forwardedRequestHeaders.delete(
+    RETURN_PATH_HEADER,
+  );
+
+  const askedPage =
+    safeReturnPath(
+      `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    );
+
+  if (
+    askedPage !== null
+  ) {
+    forwardedRequestHeaders.set(
+      RETURN_PATH_HEADER,
+      askedPage,
+    );
+  }
+
+
   const continueWithCorrelationId =
     () => {
       const response =
@@ -291,6 +320,36 @@ export function proxy(
     rateLimitIdentity(
       request,
     );
+
+  if (
+    request.method ===
+      "POST" &&
+    request.nextUrl.pathname ===
+      "/forgot-password"
+  ) {
+    const result =
+      checkRateLimit({
+        key:
+          `recovery:${identity}`,
+
+        limit:
+          15,
+
+        windowMs:
+          15 *
+          60 *
+          1000,
+      });
+
+    if (
+      result.allowed ===
+      false
+    ) {
+      return tooManyRequests(
+        result,
+      );
+    }
+  }
 
   if (
     request.method ===

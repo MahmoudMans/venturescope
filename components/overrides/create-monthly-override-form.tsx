@@ -10,6 +10,8 @@ import {
 import {
   createMonthlyOverrideAction,
 } from "@/app/(app)/projects/override-actions";
+import { FieldError } from "@/components/forms/field-error";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
 import {
   MonthlyOverrideFields,
 } from "@/components/overrides/monthly-override-fields";
@@ -33,6 +35,7 @@ import {
 import {
   Label,
 } from "@/components/ui/label";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 import {
   initialMonthlyOverrideActionState,
 } from "@/lib/overrides/action-state";
@@ -77,8 +80,14 @@ export function CreateMonthlyOverrideForm({
     initialMonthlyOverrideActionState,
   );
 
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
   return (
     <form
+      ref={formRef}
       action={
         action
       }
@@ -127,6 +136,7 @@ export function CreateMonthlyOverrideForm({
               <Input
                 id="override-month"
                 name="month"
+                {...fieldErrorProps("override-month", state.errors?.month?.[0])}
                 type="month"
                 min={
                   projectStartMonth
@@ -140,15 +150,7 @@ export function CreateMonthlyOverrideForm({
                 required
               />
 
-              {state.errors
-                ?.month?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state.errors
-                      .month[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId="override-month" message={state.errors?.month?.[0]} />
             </div>
 
             <div className="space-y-2">
@@ -159,6 +161,7 @@ export function CreateMonthlyOverrideForm({
               <select
                 id="override-scenario"
                 name="scenarioId"
+                {...fieldErrorProps("override-scenario", state.errors?.scenarioId?.[0])}
                 defaultValue={
                   defaultScenarioId
                 }
@@ -192,15 +195,7 @@ export function CreateMonthlyOverrideForm({
                 Scenario-specific values take precedence over an All Scenarios override.
               </p>
 
-              {state.errors
-                ?.scenarioId?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state.errors
-                      .scenarioId[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId="override-scenario" message={state.errors?.scenarioId?.[0]} />
             </div>
           </div>
 
@@ -225,19 +220,12 @@ export function CreateMonthlyOverrideForm({
             <Input
               id="override-note"
               name="note"
+              {...fieldErrorProps("override-note", state.errors?.note?.[0])}
               maxLength={240}
               placeholder="Product launch, annual conference, temporary hiring spike..."
             />
 
-            {state.errors
-              ?.note?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state.errors
-                      .note[0]
-                  }
-                </p>
-              ) : null}
+            <FieldError fieldId="override-note" message={state.errors?.note?.[0]} />
           </div>
         </CardContent>
 

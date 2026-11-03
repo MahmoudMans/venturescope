@@ -1,4 +1,12 @@
 import type {
+  CsvDelimiter,
+} from "@/lib/data-import/delimiter";
+
+import type {
+  TableLayout,
+} from "@/lib/data-import/table";
+
+import type {
   KpiMetricCode,
 } from "@/lib/finance/scorecard/types";
 
@@ -173,6 +181,36 @@ export type DataImportValidationResult = {
 
   headers:
     string[];
+
+  delimiter:
+    CsvDelimiter;
+
+  renamedColumns:
+    {
+      title:
+        string;
+
+      field:
+        string;
+    }[];
+
+  ignoredColumns:
+    string[];
+
+  readValues:
+    {
+      field:
+        string;
+
+      text:
+        string;
+
+      code:
+        string;
+    }[];
+
+  layout:
+    TableLayout;
 
   rowCount:
     number;

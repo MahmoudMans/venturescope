@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   FINAL_RELEASE_CHECKLIST,
   PORTFOLIO_STORYBOARD,
@@ -77,7 +78,7 @@ export function ReleaseReadinessWorkspace({
               Product status
             </p>
 
-            <p className="mt-1 text-lg font-semibold text-emerald-700 dark:text-emerald-400">
+            <p className="mt-1 text-lg font-semibold text-success">
               {
                 summary.status
               }
@@ -156,7 +157,7 @@ export function ReleaseReadinessWorkspace({
             Paid APIs required
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-emerald-700 dark:text-emerald-400">
+          <p className="mt-2 text-3xl font-semibold text-success">
             {
               summary.paidApiCount
             }
@@ -202,7 +203,7 @@ export function ReleaseReadinessWorkspace({
                       </h3>
                     </div>
 
-                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    <span className="text-xs font-semibold text-success">
                       {
                         capability.status
                       }
@@ -238,7 +239,7 @@ export function ReleaseReadinessWorkspace({
 
                   <Link
                     href={`/projects/${projectId}${capability.routeSuffix}`}
-                    className="mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
+                    className="touch-link mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
                   >
                     Open capability
                   </Link>
@@ -260,7 +261,7 @@ export function ReleaseReadinessWorkspace({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Governance and architecture controls">
           <table className="w-full min-w-[1100px] text-sm">
             <thead>
               <tr className="border-b bg-muted/30">
@@ -312,7 +313,7 @@ export function ReleaseReadinessWorkspace({
                         }
                       </td>
 
-                      <td className="px-4 py-3 font-semibold text-emerald-700 dark:text-emerald-400">
+                      <td className="px-4 py-3 font-semibold text-success">
                         {
                           control.status
                         }
@@ -323,7 +324,7 @@ export function ReleaseReadinessWorkspace({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="rounded-xl border bg-background">
@@ -406,7 +407,7 @@ export function ReleaseReadinessWorkspace({
 
                     <Link
                       href={`/projects/${projectId}${item.routeSuffix}`}
-                      className="rounded-lg border px-3 py-2 text-center text-sm font-medium"
+                      className="touch-link rounded-lg border px-3 py-2 text-center text-sm font-medium"
                     >
                       Open screen
                     </Link>
@@ -443,7 +444,7 @@ export function ReleaseReadinessWorkspace({
                       }
                     </h3>
 
-                    <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                    <span className="text-xs font-semibold text-success">
                       {
                         item.status
                       }

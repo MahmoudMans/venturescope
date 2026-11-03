@@ -1,3 +1,4 @@
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   formatCurrencyValue,
   formatExpenseCurrencyValue,
@@ -30,7 +31,7 @@ export function FinancingScheduleTable({
 
   return (
     <div className="overflow-hidden rounded-xl border bg-background">
-      <div className="overflow-x-auto">
+      <ScrollRegion label="Financing cash schedule">
         <table className="min-w-full text-sm">
           <thead>
             <tr className="border-b bg-muted/40">
@@ -138,7 +139,7 @@ export function FinancingScheduleTable({
             )}
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
@@ -178,7 +179,7 @@ function floorTone(
     ?
       "text-destructive"
     :
-      "text-emerald-700 dark:text-emerald-400";
+      "text-success";
 }
 
 
@@ -1136,7 +1137,7 @@ export function CapitalPlanningWorkspace({
                     </p>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  <ScrollRegion label="Capital structure comparison">
                     <table className="w-full min-w-[980px] text-sm">
                       <thead>
                         <tr className="border-b bg-muted/30">
@@ -1261,7 +1262,7 @@ export function CapitalPlanningWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 </section>
 
                 {
@@ -1341,7 +1342,7 @@ export function CapitalPlanningWorkspace({
                     </p>
                   </div>
 
-                  <div className="max-h-[540px] overflow-auto">
+                  <ScrollRegion label="Liquidity path after funding" className="max-h-[540px] overflow-y-auto">
                     <table className="w-full min-w-[820px] text-sm">
                       <thead className="sticky top-0 bg-background">
                         <tr className="border-b">
@@ -1436,7 +1437,7 @@ export function CapitalPlanningWorkspace({
                         }
                       </tbody>
                     </table>
-                  </div>
+                  </ScrollRegion>
                 </section>
               </>
             )

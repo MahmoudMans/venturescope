@@ -9,6 +9,11 @@ import {
 } from "react";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
 
@@ -171,7 +176,7 @@ function severityTone(
       return "text-destructive";
 
     case "WARNING":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "INFO":
       return "text-muted-foreground";
@@ -206,13 +211,13 @@ function statusTone(
     status
   ) {
     case "DONE":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "BLOCKED":
       return "text-destructive";
 
     case "IN_PROGRESS":
-      return "text-blue-700 dark:text-blue-400";
+      return "text-info";
 
     case "DISMISSED":
       return "text-muted-foreground";
@@ -672,7 +677,7 @@ export function DecisionCenterWorkspace({
               ?
                 "text-destructive"
               :
-                "text-emerald-700 dark:text-emerald-400"
+                "text-success"
           }`}>
             {
               criticalSignals.length
@@ -884,7 +889,7 @@ export function DecisionCenterWorkspace({
                             <div className="flex shrink-0 flex-wrap items-start gap-2">
                               <Link
                                 href={`/projects/${projectId}/${signal.hrefSuffix}`}
-                                className="rounded-lg border px-3 py-2 text-sm font-medium"
+                                className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
                               >
                                 View source
                               </Link>
@@ -900,7 +905,7 @@ export function DecisionCenterWorkspace({
                                             signal,
                                           );
                                         }}
-                                        className="rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background"
+                                        className="touch-target rounded-lg bg-foreground px-3 py-2 text-sm font-medium text-background"
                                       >
                                         Create action
                                       </button>
@@ -925,7 +930,7 @@ export function DecisionCenterWorkspace({
             (
               <section
                 id="decision-action-form"
-                className="scroll-mt-8 rounded-xl border bg-background p-5 sm:p-6"
+                className="rounded-xl border bg-background p-5 sm:p-6"
               >
                 <h2 className="text-lg font-semibold">
                   Create management action
@@ -1084,12 +1089,11 @@ export function DecisionCenterWorkspace({
                   </label>
 
                   <div className="flex items-end">
-                    <button
-                      type="submit"
+                    <PendingButton
                       className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background"
                     >
                       Add to action register
-                    </button>
+                    </PendingButton>
                   </div>
 
                   <p className="text-xs text-muted-foreground sm:col-span-2">
@@ -1130,7 +1134,7 @@ export function DecisionCenterWorkspace({
               )
             :
               (
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Management action register">
                   <table className="w-full min-w-[1100px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -1259,6 +1263,7 @@ export function DecisionCenterWorkspace({
 
                                           <select
                                             name="status"
+                                            aria-label={`Status of action: ${action.title}`}
                                             defaultValue={
                                               action.status
                                             }
@@ -1288,12 +1293,11 @@ export function DecisionCenterWorkspace({
                                             }
                                           </select>
 
-                                          <button
-                                            type="submit"
+                                          <PendingButton
                                             className="h-9 rounded-lg border px-3 text-xs font-medium"
                                           >
                                             Update
-                                          </button>
+                                          </PendingButton>
                                         </form>
                                       )
                                     :
@@ -1338,7 +1342,7 @@ export function DecisionCenterWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               )
         }
       </section>

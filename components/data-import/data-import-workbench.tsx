@@ -10,13 +10,51 @@ import {
 } from "@/app/(app)/projects/[projectId]/imports/actions";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import {
+  ImportHistoryList,
+} from "@/components/data-import/import-history-list";
+
+import {
+  ImportIssueList,
+} from "@/components/data-import/import-issue-list";
+
+import {
+  ImportPreview,
+} from "@/components/data-import/import-preview";
+
+import {
   DATA_IMPORT_MAX_BYTES,
   DATA_IMPORT_TEMPLATE,
 } from "@/lib/data-import/catalog";
 
 import {
+  decodeCsvBytes,
+} from "@/lib/data-import/decode";
+
+import {
+  type CsvDelimiter,
+  describeDelimiter,
+} from "@/lib/data-import/delimiter";
+
+import {
+  describeColumns,
+} from "@/lib/data-import/headers";
+
+import {
+  describeLayout,
+  type TableLayout,
+} from "@/lib/data-import/table";
+
+import {
   validateDataImportCsv,
 } from "@/lib/data-import/validation";
+
+import {
+  describeValues,
+} from "@/lib/data-import/values";
 
 import type {
   DataImportBatchView,
@@ -36,41 +74,155 @@ type Props = {
 };
 
 
-function typeLabel(
-  type:
-    DataImportType,
-): string {
-  switch (
-    type
+function ImportFormatNote({
+  delimiter,
+}: {
+  delimiter:
+    CsvDelimiter;
+}) {
+  const note =
+    describeDelimiter(
+      delimiter,
+    );
+
+
+  if (
+    note ===
+    null
   ) {
-    case "ACTUALS":
-      return "Actuals";
-
-    case "KPI_TARGETS":
-      return "KPI Targets";
-
-    case "VARIANCE_COMMENTARY":
-      return "Variance Commentary";
+    return null;
   }
+
+
+  return (
+    <p
+      data-slot="import-format-note"
+      className="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground"
+    >
+      {
+        note
+      }
+    </p>
+  );
 }
 
 
-function statusTone(
-  status:
-    string,
-): string {
-  switch (
-    status
+function ImportLayoutNote({
+  layout,
+}: {
+  layout:
+    TableLayout;
+}) {
+  const note =
+    describeLayout(
+      layout,
+    );
+
+
+  if (
+    note ===
+    null
   ) {
-    case "SUCCEEDED":
-      return "text-emerald-700 dark:text-emerald-400";
-
-    case "FAILED":
-      return "text-destructive";
-
-    default:
-      return "text-amber-700 dark:text-amber-400";
+    return null;
   }
+
+
+  return (
+    <p
+      data-slot="import-layout-note"
+      className="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground"
+    >
+      {
+        note
+      }
+    </p>
+  );
+}
+
+
+function ImportColumnsNote({
+  renamed,
+  ignored,
+}: {
+  renamed:
+    {
+      title:
+        string;
+
+      field:
+        string;
+    }[];
+
+  ignored:
+    string[];
+}) {
+  const note =
+    describeColumns(
+      renamed,
+      ignored,
+    );
+
+
+  if (
+    note ===
+    null
+  ) {
+    return null;
+  }
+
+
+  return (
+    <p
+      data-slot="import-columns-note"
+      className="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground"
+    >
+      {
+        note
+      }
+    </p>
+  );
+}
+
+
+function ImportValuesNote({
+  values,
+}: {
+  values:
+    {
+      field:
+        string;
+
+      text:
+        string;
+
+      code:
+        string;
+    }[];
+}) {
+  const note =
+    describeValues(
+      values,
+    );
+
+
+  if (
+    note ===
+    null
+  ) {
+    return null;
+  }
+
+
+  return (
+    <p
+      data-slot="import-values-note"
+      className="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground"
+    >
+      {
+        note
+      }
+    </p>
+  );
 }
 
 
@@ -301,7 +453,7 @@ export function DataImportWorkbench({
                         importType,
                       );
                     }}
-                    className="rounded-lg border px-3 py-2 text-sm font-medium"
+                    className="touch-target rounded-lg border px-3 py-2 text-sm font-medium"
                   >
                     Download sample CSV
                   </button>
@@ -352,7 +504,8 @@ export function DataImportWorkbench({
 
                     <input
                       type="file"
-                      accept=".csv,text/csv"
+                      accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain"
+                      aria-describedby="import-file-hint"
                       className="block w-full rounded-lg border p-2 text-sm"
                       onChange={async (
                         event,
@@ -391,7 +544,11 @@ export function DataImportWorkbench({
 
 
                         const text =
-                          await file.text();
+                          decodeCsvBytes(
+                            new Uint8Array(
+                              await file.arrayBuffer(),
+                            ),
+                          );
 
 
                         setCsv(
@@ -409,6 +566,13 @@ export function DataImportWorkbench({
                     />
                   </label>
                 </div>
+
+                <p
+                  id="import-file-hint"
+                  className="mt-2 text-xs text-muted-foreground"
+                >
+                  A file saved by Excel is read too: with commas, semicolons or tabs, a decimal comma (1250,50), and accents. Column titles can be English or French, like Month or Mois, Revenue or CA. Capital letters and spaces do not matter. In KPI and variance files the codes can be written as names too, like Revenue, Marge EBITDA, Volume or Suivi. Lines above the column titles and empty columns are fine too. In an Actuals file, a dash or n/a means no number.
+                </p>
 
                 {
                   fileError
@@ -476,7 +640,7 @@ export function DataImportWorkbench({
                                   ?
                                     "text-destructive"
                                   :
-                                    "text-emerald-700 dark:text-emerald-400"
+                                    "text-success"
                               }`}>
                                 {
                                   validation.result
@@ -494,7 +658,7 @@ export function DataImportWorkbench({
                               <p className={`mt-1 text-sm font-semibold ${
                                 valid
                                   ?
-                                    "text-emerald-700 dark:text-emerald-400"
+                                    "text-success"
                                   :
                                     "text-destructive"
                               }`}>
@@ -509,6 +673,38 @@ export function DataImportWorkbench({
                             </article>
                           </section>
 
+                          <ImportFormatNote
+                            delimiter={
+                              validation.result
+                                .delimiter
+                            }
+                          />
+
+                          <ImportLayoutNote
+                            layout={
+                              validation.result
+                                .layout
+                            }
+                          />
+
+                          <ImportColumnsNote
+                            renamed={
+                              validation.result
+                                .renamedColumns
+                            }
+                            ignored={
+                              validation.result
+                                .ignoredColumns
+                            }
+                          />
+
+                          <ImportValuesNote
+                            values={
+                              validation.result
+                                .readValues
+                            }
+                          />
+
                           {
                             validation.result
                               .issues
@@ -516,73 +712,12 @@ export function DataImportWorkbench({
                             0
                               ?
                                 (
-                                  <section className="rounded-lg border">
-                                    <div className="border-b p-4">
-                                      <h3 className="font-semibold">
-                                        Validation issues
-                                      </h3>
-                                    </div>
-
-                                    <div className="max-h-72 overflow-auto">
-                                      <table className="w-full min-w-[650px] text-sm">
-                                        <thead>
-                                          <tr className="border-b bg-muted/30">
-                                            <th className="px-3 py-2 text-left">
-                                              Row
-                                            </th>
-
-                                            <th className="px-3 py-2 text-left">
-                                              Field
-                                            </th>
-
-                                            <th className="px-3 py-2 text-left">
-                                              Issue
-                                            </th>
-                                          </tr>
-                                        </thead>
-
-                                        <tbody>
-                                          {
-                                            validation.result
-                                              .issues
-                                              .slice(
-                                                0,
-                                                50,
-                                              )
-                                              .map(
-                                                (
-                                                  issue,
-                                                  index,
-                                                ) => (
-                                                  <tr
-                                                    key={`${issue.row}:${issue.field}:${index}`}
-                                                    className="border-b last:border-0"
-                                                  >
-                                                    <td className="px-3 py-2">
-                                                      {
-                                                        issue.row
-                                                      }
-                                                    </td>
-
-                                                    <td className="px-3 py-2 font-mono text-xs">
-                                                      {
-                                                        issue.field
-                                                      }
-                                                    </td>
-
-                                                    <td className="px-3 py-2 text-destructive">
-                                                      {
-                                                        issue.message
-                                                      }
-                                                    </td>
-                                                  </tr>
-                                                ),
-                                              )
-                                          }
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </section>
+                                  <ImportIssueList
+                                    issues={
+                                      validation.result
+                                        .issues
+                                    }
+                                  />
                                 )
                               :
                                 null
@@ -599,78 +734,16 @@ export function DataImportWorkbench({
                               </p>
                             </div>
 
-                            <div className="overflow-x-auto">
-                              <table className="w-full min-w-[900px] text-xs">
-                                <thead>
-                                  <tr className="border-b bg-muted/30">
-                                    {
-                                      validation.result
-                                        .headers
-                                        .map(
-                                          (
-                                            header,
-                                          ) => (
-                                            <th
-                                              key={
-                                                header
-                                              }
-                                              className="px-3 py-2 text-left"
-                                            >
-                                              {
-                                                header
-                                              }
-                                            </th>
-                                          ),
-                                        )
-                                    }
-                                  </tr>
-                                </thead>
-
-                                <tbody>
-                                  {
-                                    validation.result
-                                      .preview
-                                      .map(
-                                        (
-                                          row,
-                                          index,
-                                        ) => (
-                                          <tr
-                                            key={
-                                              index
-                                            }
-                                            className="border-b last:border-0"
-                                          >
-                                            {
-                                              validation.result
-                                                .headers
-                                                .map(
-                                                  (
-                                                    header,
-                                                  ) => (
-                                                    <td
-                                                      key={
-                                                        header
-                                                      }
-                                                      className="max-w-xs truncate px-3 py-2"
-                                                    >
-                                                      {
-                                                        row[
-                                                          header
-                                                        ] ??
-                                                        ""
-                                                      }
-                                                    </td>
-                                                  ),
-                                                )
-                                            }
-                                          </tr>
-                                        ),
-                                      )
-                                  }
-                                </tbody>
-                              </table>
-                            </div>
+                            <ImportPreview
+                              headers={
+                                validation.result
+                                  .headers
+                              }
+                              rows={
+                                validation.result
+                                  .preview
+                              }
+                            />
                           </section>
 
                           <form
@@ -712,15 +785,14 @@ export function DataImportWorkbench({
                               }
                             />
 
-                            <button
-                              type="submit"
+                            <PendingButton
                               disabled={
                                 !valid
                               }
                               className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               Apply validated import
-                            </button>
+                            </PendingButton>
                           </form>
                         </div>
                       )
@@ -759,138 +831,11 @@ export function DataImportWorkbench({
               )
             :
               (
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[1200px] text-sm">
-                    <thead>
-                      <tr className="border-b bg-muted/30">
-                        <th className="px-4 py-3 text-left">
-                          Time
-                        </th>
-
-                        <th className="px-4 py-3 text-left">
-                          Type
-                        </th>
-
-                        <th className="px-4 py-3 text-left">
-                          File
-                        </th>
-
-                        <th className="px-4 py-3 text-left">
-                          Status
-                        </th>
-
-                        <th className="px-4 py-3 text-right">
-                          Rows
-                        </th>
-
-                        <th className="px-4 py-3 text-right">
-                          Inserted
-                        </th>
-
-                        <th className="px-4 py-3 text-right">
-                          Updated
-                        </th>
-
-                        <th className="px-4 py-3 text-right">
-                          Rejected
-                        </th>
-
-                        <th className="px-4 py-3 text-left">
-                          User
-                        </th>
-
-                        <th className="px-4 py-3 text-left">
-                          Error
-                        </th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {
-                        history.map(
-                          (
-                            batch,
-                          ) => (
-                            <tr
-                              key={
-                                batch.id
-                              }
-                              className="border-b align-top last:border-0"
-                            >
-                              <td className="whitespace-nowrap px-4 py-3 text-xs">
-                                {
-                                  new Date(
-                                    batch.createdAt,
-                                  ).toLocaleString()
-                                }
-                              </td>
-
-                              <td className="px-4 py-3 font-medium">
-                                {
-                                  typeLabel(
-                                    batch.importType,
-                                  )
-                                }
-                              </td>
-
-                              <td className="max-w-xs truncate px-4 py-3">
-                                {
-                                  batch.fileName
-                                }
-                              </td>
-
-                              <td className={`px-4 py-3 font-semibold ${statusTone(
-                                batch.status,
-                              )}`}>
-                                {
-                                  batch.status
-                                }
-                              </td>
-
-                              <td className="px-4 py-3 text-right">
-                                {
-                                  batch.rowCount
-                                }
-                              </td>
-
-                              <td className="px-4 py-3 text-right">
-                                {
-                                  batch.insertedCount
-                                }
-                              </td>
-
-                              <td className="px-4 py-3 text-right">
-                                {
-                                  batch.updatedCount
-                                }
-                              </td>
-
-                              <td className="px-4 py-3 text-right">
-                                {
-                                  batch.rejectedCount
-                                }
-                              </td>
-
-                              <td className="px-4 py-3">
-                                {
-                                  batch.createdBy ??
-                                  "Unavailable"
-                                }
-                              </td>
-
-                              <td className="max-w-sm px-4 py-3 text-xs text-muted-foreground">
-                                {
-                                  batch.errorSummary ??
-                                  "—"
-                                }
-                              </td>
-                            </tr>
-                          ),
-                        )
-                      }
-                    </tbody>
-                  </table>
-                </div>
+                <ImportHistoryList
+                  history={
+                    history
+                  }
+                />
               )
         }
       </section>

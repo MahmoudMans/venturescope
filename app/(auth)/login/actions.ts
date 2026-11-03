@@ -4,6 +4,7 @@ import { AuthError } from "next-auth";
 
 import { signIn } from "@/auth";
 import type { LoginFormState } from "@/lib/auth/form-state";
+import { DEFAULT_RETURN_PATH, safeReturnPath } from "@/lib/auth/return-path";
 import { loginSchema } from "@/lib/validation/auth";
 
 export async function loginAction(
@@ -22,11 +23,15 @@ export async function loginAction(
     };
   }
 
+  // The page the person wanted. Any other address, and any address that is not a page of the app,
+  // is replaced by the dashboard.
+  const returnTo = safeReturnPath(formData.get("next")) ?? DEFAULT_RETURN_PATH;
+
   try {
     await signIn("credentials", {
       email: parsed.data.email,
       password: parsed.data.password,
-      redirectTo: "/dashboard",
+      redirectTo: returnTo,
     });
 
     return {};

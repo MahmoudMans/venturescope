@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   Button,
 } from "@/components/ui/button";
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   formatCompactCurrencyValue,
   formatCustomerValue,
@@ -35,7 +36,7 @@ export function ScenarioComparisonTable({
 
   return (
     <div className="overflow-hidden rounded-xl border bg-background">
-      <div className="overflow-x-auto">
+      <ScrollRegion label="Scenario comparison">
         <table className="w-max min-w-full text-sm">
           <thead>
             <tr className="border-b bg-muted/40">
@@ -200,7 +201,7 @@ export function ScenarioComparisonTable({
             </tr>
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   formatCompactCurrencyValue,
   formatLongMonthKey,
@@ -115,7 +116,7 @@ export function DemoScenarioTable({
 
   return (
     <div className="overflow-hidden rounded-xl border bg-background">
-      <div className="overflow-x-auto">
+      <ScrollRegion label="Scenario comparison">
         <table className="w-max min-w-full text-sm">
           <thead>
             <tr className="border-b bg-muted/40">
@@ -188,7 +189,7 @@ export function DemoScenarioTable({
             )}
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
     </div>
   );
 }

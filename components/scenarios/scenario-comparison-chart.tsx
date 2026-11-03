@@ -11,6 +11,12 @@ import {
   YAxis,
 } from "recharts";
 
+import {
+  AccessibleChart,
+} from "@/components/charts/accessible-chart";
+import {
+  buildScenarioComparisonText,
+} from "@/lib/charts/chart-text";
 import type {
   ScenarioComparisonItem,
 } from "@/lib/finance/types";
@@ -51,8 +57,22 @@ export function ScenarioComparisonChart({
       }),
     );
 
+  const text =
+    buildScenarioComparisonText(
+      comparison,
+      currency,
+    );
+
   return (
-    <div className="h-[360px] w-full">
+    <AccessibleChart
+      label={
+        text.label
+      }
+      table={
+        text.table
+      }
+      className="h-[360px] w-full"
+    >
       <ResponsiveContainer
         width="100%"
         height="100%"
@@ -180,6 +200,6 @@ export function ScenarioComparisonChart({
           />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </AccessibleChart>
   );
 }

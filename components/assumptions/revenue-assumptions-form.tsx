@@ -19,6 +19,10 @@ import {
 import {
   AssumptionSaveButton,
 } from "@/components/assumptions/assumption-save-button";
+import { FieldError } from "@/components/forms/field-error";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
+import { UnsavedChangesNotice } from "@/components/forms/unsaved-changes-notice";
+import { useUnsavedChangesWarning } from "@/components/forms/use-unsaved-changes-warning";
 import {
   Badge,
 } from "@/components/ui/badge";
@@ -43,6 +47,7 @@ import type {
   CustomerRevenueAssumptions,
   DirectRevenueAssumptions,
 } from "@/lib/finance/assumptions/types";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 
 type RevenueAssumptionsFormProps = {
   projectId: string;
@@ -75,12 +80,20 @@ export function RevenueAssumptionsForm({
     initialAssumptionActionState,
   );
 
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
+  const dirty = useUnsavedChangesWarning(formRef, state.status === "success" ? state : null);
+
   const direct =
     revenueMode ===
     "DIRECT";
 
   return (
     <form
+      ref={formRef}
       action={action}
     >
       <input
@@ -109,8 +122,8 @@ export function RevenueAssumptionsForm({
 
               <CardDescription className="mt-1 max-w-2xl">
                 {direct
-                  ? "Revenue will later be forecast directly from the starting monthly revenue and growth assumptions."
-                  : "Revenue will later be generated from customer acquisition, churn and ARPU."}
+                  ? "Revenue is forecast directly from the starting monthly revenue and growth assumptions."
+                  : "Revenue is generated from customer acquisition, churn and ARPU."}
               </CardDescription>
             </div>
 
@@ -164,7 +177,9 @@ export function RevenueAssumptionsForm({
           )}
         </CardContent>
 
-        <CardFooter className="justify-end border-t py-5">
+        <CardFooter className="flex-wrap justify-end gap-3 border-t py-5">
+          <UnsavedChangesNotice dirty={dirty} />
+
           <AssumptionSaveButton
             label="Save revenue assumptions"
           />
@@ -292,7 +307,7 @@ function CustomerFields({
             </div>
 
             <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              Customer acquisition will later use the monthly
+              Customer acquisition uses the monthly
               marketing budget configured under Expenses.
               The current value is{" "}
               <strong className="font-medium text-foreground">
@@ -306,7 +321,7 @@ function CustomerFields({
 
             <Link
               href={`/projects/${projectId}/expenses`}
-              className="mt-2 inline-block text-sm font-medium underline underline-offset-4"
+              className="touch-reach mt-2 inline-block text-sm font-medium underline underline-offset-4"
             >
               Configure marketing expenses
             </Link>
@@ -495,6 +510,7 @@ function FinancialField({
         <Input
           id={id}
           name={name}
+          {...fieldErrorProps(id, error)}
           type="number"
           defaultValue={
             defaultValue
@@ -523,11 +539,7 @@ function FinancialField({
         {help}
       </p>
 
-      {error ? (
-        <p className="text-sm text-destructive">
-          {error}
-        </p>
-      ) : null}
+      <FieldError fieldId={id} message={error} />
     </div>
   );
 }

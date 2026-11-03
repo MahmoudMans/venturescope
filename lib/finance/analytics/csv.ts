@@ -115,6 +115,9 @@ function normalizeHeader(
 export function parseCsvTable(
   value:
     string,
+  delimiter:
+    string =
+      ",",
 ): string[][] {
   const rows:
     string[][] =
@@ -194,7 +197,7 @@ export function parseCsvTable(
 
     if (
       character ===
-      ","
+      delimiter
     ) {
       row.push(
         field,

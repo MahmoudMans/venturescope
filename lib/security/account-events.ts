@@ -9,7 +9,13 @@ export function logAccountSecurityEvent(
     | "sessions.revoked"
     | "account.deleted"
     | "password.change.rejected"
-    | "account.delete.rejected",
+    | "account.delete.rejected"
+    | "data.exported"
+    | "data.export.rejected"
+    | "email.changed"
+    | "email.change.rejected"
+    | "workspace.transferred"
+    | "workspace.transfer.rejected",
   userId:
     string,
   metadata:

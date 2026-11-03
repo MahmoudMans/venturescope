@@ -10,6 +10,12 @@ import {
   CreateProjectWizard,
 } from "@/components/projects/create-project-wizard";
 import {
+  ImportModelForm,
+} from "@/components/projects/import-model-form";
+import {
+  SampleModelForm,
+} from "@/components/projects/sample-model-form";
+import {
   Button,
 } from "@/components/ui/button";
 import {
@@ -49,7 +55,7 @@ export default async function NewProjectPage() {
       </Button>
 
       <div className="mb-8">
-        <div className="text-sm font-medium text-muted-foreground">
+        <div className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
           New financial model
         </div>
 
@@ -59,9 +65,19 @@ export default async function NewProjectPage() {
 
         <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
           Start with the company and forecasting structure.
-          Financial assumptions will be configured in the
-          next development phase.
+          Right after creating the model you will add general,
+          revenue and expense assumptions to activate forecasts
+          and scenarios.
         </p>
+
+        <div className="mt-5 flex flex-col gap-3 rounded-xl border border-dashed bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm leading-6 text-muted-foreground">
+            Want to look around first? Open a ready-made example with assumptions, scenarios and
+            financing.
+          </p>
+
+          <SampleModelForm size="default" className="shrink-0" />
+        </div>
       </div>
 
       <CreateProjectWizard
@@ -69,6 +85,17 @@ export default async function NewProjectPage() {
           defaultStartMonth
         }
       />
+
+      <section className="mt-8 rounded-xl border bg-background p-5 sm:p-6">
+        <h2 className="text-base font-semibold">Restore from a backup</h2>
+
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Choose a file you downloaded from the Settings page of a model. It is restored as a new
+          model, and nothing you already have is changed.
+        </p>
+
+        <ImportModelForm className="mt-4 max-w-md" />
+      </section>
     </div>
   );
 }

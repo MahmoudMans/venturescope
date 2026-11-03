@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   buildScenarioDecisionMatrix,
   cleanScenarioChangePath,
@@ -43,13 +44,13 @@ function divergenceTone(
       return "text-destructive";
 
     case "MODERATE":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "LOW":
-      return "text-blue-700 dark:text-blue-400";
+      return "text-info";
 
     case "IDENTICAL":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
   }
 }
 
@@ -62,7 +63,7 @@ function changeTone(
     kind
   ) {
     case "ADDED":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "REMOVED":
       return "text-destructive";
@@ -83,7 +84,7 @@ function numericDirectionTone(
   return direction ===
     "INCREASED"
     ?
-      "text-emerald-700 dark:text-emerald-400"
+      "text-success"
     :
       "text-destructive";
 }
@@ -285,7 +286,7 @@ export function ScenarioComparisonWorkspace({
 
         <Link
           href={`/projects/${projectId}/scenarios`}
-          className="mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Open Scenarios
         </Link>
@@ -310,7 +311,7 @@ export function ScenarioComparisonWorkspace({
 
         <Link
           href={`/projects/${projectId}/scenarios`}
-          className="mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link mt-5 inline-flex rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Create another scenario
         </Link>
@@ -433,14 +434,14 @@ export function ScenarioComparisonWorkspace({
                   referenceId,
                 );
               }}
-              className="h-10 rounded-lg border px-4 text-sm font-medium"
+              className="touch-target h-10 rounded-lg border px-4 text-sm font-medium"
             >
               Swap
             </button>
 
             <Link
               href={`/projects/${projectId}/scenarios`}
-              className="inline-flex h-10 items-center rounded-lg border px-4 text-sm font-medium"
+              className="touch-link inline-flex h-10 items-center rounded-lg border px-4 text-sm font-medium"
             >
               Manage scenarios
             </Link>
@@ -573,7 +574,7 @@ export function ScenarioComparisonWorkspace({
                             )
                           :
                             (
-                              <div className="overflow-x-auto">
+                              <ScrollRegion label="Driver comparison">
                                 <table className="w-full min-w-[1200px] text-sm">
                                   <thead>
                                     <tr className="border-b bg-muted/30">
@@ -696,7 +697,7 @@ export function ScenarioComparisonWorkspace({
                                     }
                                   </tbody>
                                 </table>
-                              </div>
+                              </ScrollRegion>
                             )
                       }
                     </section>
@@ -717,7 +718,7 @@ export function ScenarioComparisonWorkspace({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Scenario decision matrix">
           <table className="w-full min-w-[1050px] text-sm">
             <thead>
               <tr className="border-b bg-muted/30">
@@ -840,7 +841,7 @@ export function ScenarioComparisonWorkspace({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="rounded-xl border bg-muted/20 p-5">

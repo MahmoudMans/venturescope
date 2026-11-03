@@ -1,6 +1,6 @@
 export default function VersionDiffLoading() {
   return (
-    <main className="mx-auto w-full max-w-7xl animate-pulse space-y-6 px-5 py-8 lg:px-8">
+    <div className="mx-auto w-full max-w-7xl animate-pulse space-y-6 px-5 py-8 lg:px-8">
       <div className="h-9 w-72 rounded bg-muted" />
 
       <div className="h-52 rounded-xl bg-muted" />
@@ -27,6 +27,6 @@ export default function VersionDiffLoading() {
       </div>
 
       <div className="h-80 rounded-xl bg-muted" />
-    </main>
+    </div>
   );
 }

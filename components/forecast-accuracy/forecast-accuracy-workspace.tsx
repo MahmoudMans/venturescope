@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
@@ -152,7 +153,7 @@ function accuracyTone(
     value >=
     0.9
   ) {
-    return "text-emerald-700 dark:text-emerald-400";
+    return "text-success";
   }
 
 
@@ -160,7 +161,7 @@ function accuracyTone(
     value >=
     0.8
   ) {
-    return "text-amber-700 dark:text-amber-400";
+    return "text-warning";
   }
 
 
@@ -658,7 +659,7 @@ export function ForecastAccuracyWorkspace({
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <ScrollRegion label="Forecast reliability by metric">
           <table className="w-full min-w-[1050px] text-sm">
             <thead>
               <tr className="border-b bg-muted/30">
@@ -825,7 +826,7 @@ export function ForecastAccuracyWorkspace({
               }
             </tbody>
           </table>
-        </div>
+        </ScrollRegion>
       </section>
 
       <section className="rounded-xl border bg-background p-5 sm:p-6">

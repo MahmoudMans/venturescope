@@ -3,6 +3,11 @@ import {
   reopenFinancialPeriodAction,
 } from "@/app/(app)/projects/[projectId]/period-close/actions";
 
+import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import type {
   FinancialPeriodEventView,
   FinancialPeriodRegister,
@@ -130,7 +135,7 @@ export function PeriodCloseWorkspace({
             Open
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-amber-700 dark:text-amber-400">
+          <p className="mt-2 text-3xl font-semibold text-warning">
             {
               register.summary
                 .openPeriods
@@ -143,7 +148,7 @@ export function PeriodCloseWorkspace({
             Closed
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-emerald-700 dark:text-emerald-400">
+          <p className="mt-2 text-3xl font-semibold text-success">
             {
               register.summary
                 .closedPeriods
@@ -235,7 +240,7 @@ export function PeriodCloseWorkspace({
                   </p>
                 </div>
 
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Financial-period register">
                   <table className="w-full min-w-[1400px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -299,9 +304,9 @@ export function PeriodCloseWorkspace({
                                 row.status ===
                                   "CLOSED"
                                   ?
-                                    "text-emerald-700 dark:text-emerald-400"
+                                    "text-success"
                                   :
-                                    "text-amber-700 dark:text-amber-400"
+                                    "text-warning"
                               }`}>
                                 {
                                   row.status
@@ -431,6 +436,7 @@ export function PeriodCloseWorkspace({
                                                 required
                                                 name="confirmation"
                                                 placeholder={`CLOSE ${row.periodKey}`}
+                                                aria-label={`Type CLOSE ${row.periodKey} to confirm`}
                                                 className="h-9 w-full rounded-lg border bg-background px-3 text-xs"
                                               />
 
@@ -440,15 +446,15 @@ export function PeriodCloseWorkspace({
                                                   1000
                                                 }
                                                 placeholder="Optional close note"
+                                                aria-label="Optional close note"
                                                 className="h-9 w-full rounded-lg border bg-background px-3 text-xs"
                                               />
 
-                                              <button
-                                                type="submit"
+                                              <PendingButton
                                                 className="rounded-lg bg-foreground px-3 py-2 text-xs font-medium text-background"
                                               >
                                                 Close period
-                                              </button>
+                                              </PendingButton>
                                             </form>
                                           )
                                         :
@@ -487,6 +493,7 @@ export function PeriodCloseWorkspace({
                                                 required
                                                 name="confirmation"
                                                 placeholder={`REOPEN ${row.periodKey}`}
+                                                aria-label={`Type REOPEN ${row.periodKey} to confirm`}
                                                 className="h-9 w-full rounded-lg border bg-background px-3 text-xs"
                                               />
 
@@ -503,15 +510,15 @@ export function PeriodCloseWorkspace({
                                                 }
                                                 name="reason"
                                                 placeholder="Required reason for reopening this closed month"
+                                                aria-label="Reason for reopening this closed month"
                                                 className="w-full rounded-lg border bg-background px-3 py-2 text-xs"
                                               />
 
-                                              <button
-                                                type="submit"
+                                              <PendingButton
                                                 className="rounded-lg border px-3 py-2 text-xs font-medium text-destructive"
                                               >
                                                 Reopen period
-                                              </button>
+                                              </PendingButton>
                                             </form>
                                           )
                                         :
@@ -528,7 +535,7 @@ export function PeriodCloseWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               </section>
             )
       }
@@ -555,7 +562,7 @@ export function PeriodCloseWorkspace({
               )
             :
               (
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Financial-close audit history">
                   <table className="w-full min-w-[900px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -615,7 +622,7 @@ export function PeriodCloseWorkspace({
                                 event.action ===
                                   "CLOSED"
                                   ?
-                                    "text-emerald-700 dark:text-emerald-400"
+                                    "text-success"
                                   :
                                     "text-destructive"
                               }`}>
@@ -650,7 +657,7 @@ export function PeriodCloseWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               )
         }
       </section>

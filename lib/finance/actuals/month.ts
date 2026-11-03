@@ -82,6 +82,57 @@ const MONTHS:
 
     december:
       12,
+
+    janvier:
+      1,
+
+    janv:
+      1,
+
+    fevrier:
+      2,
+
+    fevr:
+      2,
+
+    fev:
+      2,
+
+    mars:
+      3,
+
+    avril:
+      4,
+
+    avr:
+      4,
+
+    mai:
+      5,
+
+    juin:
+      6,
+
+    juillet:
+      7,
+
+    juil:
+      7,
+
+    aout:
+      8,
+
+    septembre:
+      9,
+
+    octobre:
+      10,
+
+    novembre:
+      11,
+
+    decembre:
+      12,
   };
 
 
@@ -98,6 +149,25 @@ function validYear(
     year <=
       MAX_YEAR
   );
+}
+
+
+/** Excel writes a month as "Jan-27": a year with two digits means 20 and those digits. */
+function fullYear(
+  text:
+    string,
+): number {
+  return text.length ===
+    2
+    ?
+      2000 +
+      Number(
+        text,
+      )
+    :
+      Number(
+        text,
+      );
 }
 
 
@@ -182,6 +252,10 @@ function monthNumber(
  * January 2027
  * 2027 Jan
  * 2027 January
+ * Jan-27 and janv.-27 (the way Excel writes a month)
+ * 27-Jan-2027 and 1 janvier 2027
+ *
+ * Accents are ignored, so fevr. and fevr are the same. English and French month names are known.
  */
 export function parseMonthKey(
   raw:
@@ -189,7 +263,15 @@ export function parseMonthKey(
 ): string |
   null {
   const trimmed =
-    raw.trim();
+    raw
+      .trim()
+      .normalize(
+        "NFD",
+      )
+      .replace(
+        /[\u0300-\u036f]/g,
+        "",
+      );
 
 
   if (
@@ -248,7 +330,7 @@ export function parseMonthKey(
 
 
   const namedMonthYear =
-    /^([A-Za-z]{3,9})[\s,/-]+(\d{4})$/u.exec(
+    /^([A-Za-z]{3,9})[\s,/.-]+(\d{2}|\d{4})$/u.exec(
       trimmed,
     );
 
@@ -270,7 +352,7 @@ export function parseMonthKey(
         null
       :
         key(
-          Number(
+          fullYear(
             namedMonthYear[
               2
             ],
@@ -281,7 +363,7 @@ export function parseMonthKey(
 
 
   const yearNamedMonth =
-    /^(\d{4})[\s,/-]+([A-Za-z]{3,9})$/u.exec(
+    /^(\d{4})[\s,/-]+([A-Za-z]{3,9})\.?$/u.exec(
       trimmed,
     );
 
@@ -306,6 +388,51 @@ export function parseMonthKey(
           Number(
             yearNamedMonth[
               1
+            ],
+          ),
+          month,
+        );
+  }
+
+
+  const dayNamedMonthYear =
+    /^(\d{1,2})[\s,/.-]+([A-Za-z]{3,9})[\s,/.-]+(\d{2}|\d{4})$/u.exec(
+      trimmed,
+    );
+
+
+  if (
+    dayNamedMonthYear &&
+    Number(
+      dayNamedMonthYear[
+        1
+      ],
+    ) >=
+      1 &&
+    Number(
+      dayNamedMonthYear[
+        1
+      ],
+    ) <=
+      31
+  ) {
+    const month =
+      monthNumber(
+        dayNamedMonthYear[
+          2
+        ],
+      );
+
+
+    return month ===
+      null
+      ?
+        null
+      :
+        key(
+          fullYear(
+            dayNamedMonthYear[
+              3
             ],
           ),
           month,

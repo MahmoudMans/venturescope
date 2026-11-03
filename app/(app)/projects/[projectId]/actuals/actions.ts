@@ -17,6 +17,10 @@ import {
 } from "@/lib/projects/project-access";
 
 import {
+  decodeCsvBytes,
+} from "@/lib/data-import/decode";
+
+import {
   parseActualsCsv,
 } from "@/lib/finance/actuals/csv";
 
@@ -123,7 +127,11 @@ export async function importActualsAction(
 
     const rows =
       parseActualsCsv(
-        await uploaded.text(),
+        decodeCsvBytes(
+          new Uint8Array(
+            await uploaded.arrayBuffer(),
+          ),
+        ),
       );
 
 

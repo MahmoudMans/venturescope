@@ -34,12 +34,12 @@ export function FinancialKpiCard({
             {label}
           </CardDescription>
 
-          <CardTitle className="mt-2 truncate text-2xl tracking-tight">
+          <CardTitle className="mt-2 break-words text-2xl tracking-tight tabular-nums">
             {value}
           </CardTitle>
         </div>
 
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-muted">
+        <div className="hidden size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary @min-[11rem]/card-header:flex">
           <Icon
             className="size-4"
             aria-hidden="true"

@@ -13,6 +13,10 @@ import {
 import {
   updateProjectSettingsAction,
 } from "@/app/(app)/projects/settings-actions";
+import { FieldError } from "@/components/forms/field-error";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
+import { UnsavedChangesNotice } from "@/components/forms/unsaved-changes-notice";
+import { useUnsavedChangesWarning } from "@/components/forms/use-unsaved-changes-warning";
 import {
   SettingsActionMessage,
 } from "@/components/settings/settings-action-message";
@@ -33,6 +37,7 @@ import {
 import {
   Label,
 } from "@/components/ui/label";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 import {
   PROJECT_CURRENCIES,
   PROJECT_HORIZONS,
@@ -70,8 +75,16 @@ export function ProjectSettingsForm({
     initialProjectSettingsActionState,
   );
 
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
+  const dirty = useUnsavedChangesWarning(formRef, state.status === "success" ? state : null);
+
   return (
     <form
+      ref={formRef}
       action={
         action
       }
@@ -122,21 +135,14 @@ export function ProjectSettingsForm({
                 <Input
                   id="settings-name"
                   name="name"
+                  {...fieldErrorProps("settings-name", state.errors?.name?.[0])}
                   defaultValue={
                     project.name
                   }
                   required
                 />
 
-                {state.errors
-                  ?.name?.[0] ? (
-                  <p className="text-sm text-destructive">
-                    {
-                      state.errors
-                        .name[0]
-                    }
-                  </p>
-                ) : null}
+                <FieldError fieldId="settings-name" message={state.errors?.name?.[0]} />
               </div>
 
               <div className="space-y-2">
@@ -147,6 +153,7 @@ export function ProjectSettingsForm({
                 <Input
                   id="settings-industry"
                   name="industry"
+                  {...fieldErrorProps("settings-industry", state.errors?.industry?.[0])}
                   defaultValue={
                     project.industry ??
                     ""
@@ -154,15 +161,7 @@ export function ProjectSettingsForm({
                   placeholder="B2B SaaS"
                 />
 
-                {state.errors
-                  ?.industry?.[0] ? (
-                  <p className="text-sm text-destructive">
-                    {
-                      state.errors
-                        .industry[0]
-                    }
-                  </p>
-                ) : null}
+                <FieldError fieldId="settings-industry" message={state.errors?.industry?.[0]} />
               </div>
             </div>
           </section>
@@ -196,6 +195,7 @@ export function ProjectSettingsForm({
                 <Input
                   id="settings-start-month"
                   name="startMonth"
+                  {...fieldErrorProps("settings-start-month", state.errors?.startMonth?.[0])}
                   type="month"
                   defaultValue={
                     startMonth
@@ -203,15 +203,7 @@ export function ProjectSettingsForm({
                   required
                 />
 
-                {state.errors
-                  ?.startMonth?.[0] ? (
-                  <p className="text-sm text-destructive">
-                    {
-                      state.errors
-                        .startMonth[0]
-                    }
-                  </p>
-                ) : null}
+                <FieldError fieldId="settings-start-month" message={state.errors?.startMonth?.[0]} />
               </div>
 
               <div className="space-y-2">
@@ -222,6 +214,7 @@ export function ProjectSettingsForm({
                 <select
                   id="settings-horizon"
                   name="horizonMonths"
+                  {...fieldErrorProps("settings-horizon", state.errors?.horizonMonths?.[0])}
                   defaultValue={
                     String(
                       project.horizonMonths,
@@ -250,15 +243,7 @@ export function ProjectSettingsForm({
                   )}
                 </select>
 
-                {state.errors
-                  ?.horizonMonths?.[0] ? (
-                  <p className="text-sm text-destructive">
-                    {
-                      state.errors
-                        .horizonMonths[0]
-                    }
-                  </p>
-                ) : null}
+                <FieldError fieldId="settings-horizon" message={state.errors?.horizonMonths?.[0]} />
               </div>
             </div>
           </section>
@@ -291,6 +276,7 @@ export function ProjectSettingsForm({
               <select
                 id="settings-currency"
                 name="currency"
+                {...fieldErrorProps("settings-currency", state.errors?.currency?.[0])}
                 defaultValue={
                   project.currency
                 }
@@ -323,15 +309,7 @@ export function ProjectSettingsForm({
                 )}
               </select>
 
-              {state.errors
-                ?.currency?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state.errors
-                      .currency[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId="settings-currency" message={state.errors?.currency?.[0]} />
             </div>
           </section>
 
@@ -363,6 +341,7 @@ export function ProjectSettingsForm({
               <select
                 id="settings-revenue-mode"
                 name="revenueMode"
+                {...fieldErrorProps("settings-revenue-mode", state.errors?.revenueMode?.[0])}
                 defaultValue={
                   project.revenueMode
                 }
@@ -388,15 +367,7 @@ export function ProjectSettingsForm({
                 )}
               </select>
 
-              {state.errors
-                ?.revenueMode?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state.errors
-                      .revenueMode[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId="settings-revenue-mode" message={state.errors?.revenueMode?.[0]} />
             </div>
           </section>
 
@@ -414,7 +385,9 @@ export function ProjectSettingsForm({
           </div>
         </CardContent>
 
-        <CardFooter className="justify-end border-t py-5">
+        <CardFooter className="flex-wrap justify-end gap-3 border-t py-5">
+          <UnsavedChangesNotice dirty={dirty} />
+
           <SettingsSubmitButton />
         </CardFooter>
       </Card>

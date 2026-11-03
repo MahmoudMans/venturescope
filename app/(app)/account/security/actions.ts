@@ -491,6 +491,6 @@ export async function deleteAccountAction(
 
   await signOut({
     redirectTo:
-      "/?account=deleted",
+      "/login?security=account-deleted",
   });
 }

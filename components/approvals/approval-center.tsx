@@ -7,6 +7,10 @@ import {
 } from "@/app/(app)/projects/[projectId]/approvals/actions";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import {
   APPROVAL_REQUEST_STATUSES,
   APPROVAL_REQUEST_TYPES,
   type ApprovalRequestView,
@@ -54,13 +58,13 @@ function statusTone(
     status
   ) {
     case "APPROVED":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "REJECTED":
       return "text-destructive";
 
     case "PENDING":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "CANCELLED":
       return "text-muted-foreground";
@@ -130,7 +134,7 @@ export function ApprovalCenter({
             Pending
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-amber-700 dark:text-amber-400">
+          <p className="mt-2 text-3xl font-semibold text-warning">
             {
               summary.pending
             }
@@ -142,7 +146,7 @@ export function ApprovalCenter({
             Approved
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-emerald-700 dark:text-emerald-400">
+          <p className="mt-2 text-3xl font-semibold text-success">
             {
               summary.approved
             }
@@ -347,12 +351,11 @@ export function ApprovalCenter({
                   </label>
 
                   <div className="sm:col-span-2">
-                    <button
-                      type="submit"
+                    <PendingButton
                       className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
                     >
                       Submit approval request
-                    </button>
+                    </PendingButton>
                   </div>
                 </form>
               </section>
@@ -472,14 +475,14 @@ export function ApprovalCenter({
           <div className="flex flex-wrap gap-2 md:col-span-3">
             <button
               type="submit"
-              className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
+              className="touch-target rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background"
             >
               Apply
             </button>
 
             <a
               href="?"
-              className="rounded-lg border px-4 py-2 text-sm font-medium"
+              className="touch-link rounded-lg border px-4 py-2 text-sm font-medium"
             >
               Clear
             </a>
@@ -741,15 +744,15 @@ export function ApprovalCenter({
                                                       }
                                                       name="decisionNote"
                                                       placeholder="Required approval rationale"
+                                                      aria-label="Approval rationale"
                                                       className="w-full rounded-lg border bg-background px-3 py-2 text-xs"
                                                     />
 
-                                                    <button
-                                                      type="submit"
+                                                    <PendingButton
                                                       className="rounded-lg bg-foreground px-3 py-2 text-xs font-medium text-background"
                                                     >
                                                       Approve request
-                                                    </button>
+                                                    </PendingButton>
                                                   </form>
 
                                                   <form
@@ -793,15 +796,15 @@ export function ApprovalCenter({
                                                       }
                                                       name="decisionNote"
                                                       placeholder="Required rejection rationale"
+                                                      aria-label="Rejection rationale"
                                                       className="w-full rounded-lg border bg-background px-3 py-2 text-xs"
                                                     />
 
-                                                    <button
-                                                      type="submit"
+                                                    <PendingButton
                                                       className="rounded-lg border px-3 py-2 text-xs font-medium text-destructive"
                                                     >
                                                       Reject request
-                                                    </button>
+                                                    </PendingButton>
                                                   </form>
                                                 </>
                                               )
@@ -834,12 +837,11 @@ export function ApprovalCenter({
                                                     }
                                                   />
 
-                                                  <button
-                                                    type="submit"
+                                                  <PendingButton
                                                     className="rounded-lg border px-3 py-2 text-xs font-medium"
                                                   >
                                                     Cancel my request
-                                                  </button>
+                                                  </PendingButton>
                                                 </form>
                                               )
                                             :
@@ -864,35 +866,35 @@ export function ApprovalCenter({
       <section className="flex flex-wrap gap-2 rounded-xl border bg-muted/20 p-5">
         <Link
           href={`/projects/${projectId}/activity`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Activity Center
         </Link>
 
         <Link
           href={`/projects/${projectId}/alerts`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Alert Inbox
         </Link>
 
         <Link
           href={`/projects/${projectId}/decision-center`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Decision Center
         </Link>
 
         <Link
           href={`/projects/${projectId}/period-close`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Financial Close
         </Link>
 
         <Link
           href={`/projects/${projectId}/board-room`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Board Room
         </Link>

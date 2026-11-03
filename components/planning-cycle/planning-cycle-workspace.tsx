@@ -7,6 +7,11 @@ import {
 } from "react";
 
 import {
+  PendingButton,
+} from "@/components/forms/pending-button";
+
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import {
   normalizeForecastCsv,
 } from "@/lib/finance/analytics/csv";
 
@@ -168,7 +173,7 @@ function varianceTone(
   return value >
     0
     ?
-      "text-emerald-700 dark:text-emerald-400"
+      "text-success"
     :
       "text-destructive";
 }
@@ -543,15 +548,14 @@ export function PlanningCycleWorkspace({
                     </select>
                   </label>
 
-                  <button
-                    type="submit"
+                  <PendingButton
                     disabled={
                       !forecastCsv
                     }
                     className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Freeze baseline
-                  </button>
+                  </PendingButton>
                 </form>
               </section>
             )
@@ -635,7 +639,7 @@ export function PlanningCycleWorkspace({
                                   .value,
                               );
                             }}
-                            className="h-10 min-w-64 rounded-lg border bg-background px-3 text-sm"
+                            className="h-10 w-full max-w-full rounded-lg border bg-background px-3 text-sm sm:w-auto sm:min-w-64"
                           >
                             {
                               baselines.map(
@@ -832,7 +836,7 @@ export function PlanningCycleWorkspace({
                                   </p>
                                 </div>
 
-                                <div className="overflow-x-auto">
+                                <ScrollRegion label="Baseline bridge">
                                   <table className="w-full min-w-[850px] text-sm">
                                     <thead>
                                       <tr className="border-b bg-muted/30">
@@ -947,7 +951,7 @@ export function PlanningCycleWorkspace({
                                       }
                                     </tbody>
                                   </table>
-                                </div>
+                                </ScrollRegion>
                               </section>
 
                               <section className="overflow-hidden rounded-xl border bg-background">
@@ -961,7 +965,7 @@ export function PlanningCycleWorkspace({
                                   </p>
                                 </div>
 
-                                <div className="max-h-[520px] overflow-auto">
+                                <ScrollRegion label="Rolling actuals + forecast" className="max-h-[520px] overflow-y-auto">
                                   <table className="w-full min-w-[700px] text-sm">
                                     <thead className="sticky top-0 bg-background">
                                       <tr className="border-b">
@@ -1058,7 +1062,7 @@ export function PlanningCycleWorkspace({
                                       }
                                     </tbody>
                                   </table>
-                                </div>
+                                </ScrollRegion>
                               </section>
                             </>
                           )

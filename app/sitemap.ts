@@ -5,6 +5,10 @@ import type {
 import {
   getPublicSiteUrl,
 } from "@/lib/seo/site";
+import {
+  INFO_PAGES_UPDATED_ISO,
+  PUBLIC_INFO_LINKS,
+} from "@/lib/site/public-pages";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const site =
@@ -43,5 +47,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority:
         0.9,
     },
+
+    ...PUBLIC_INFO_LINKS.map(
+      (
+        link,
+      ) => ({
+        url:
+          `${site}${link.href}`,
+
+        lastModified:
+          new Date(
+            INFO_PAGES_UPDATED_ISO,
+          ),
+
+        changeFrequency:
+          "yearly" as const,
+
+        priority:
+          0.5,
+      }),
+    ),
   ];
 }

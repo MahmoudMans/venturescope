@@ -2,11 +2,18 @@
 
 import Link from "next/link";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import { ConfirmAction } from "@/components/workspaces/confirm-action";
+
 import {
   useEffect,
   useMemo,
   useState,
 } from "react";
+
+import {
+  PendingButton,
+} from "@/components/forms/pending-button";
 
 import {
   normalizeForecastCsv,
@@ -243,10 +250,10 @@ function statusTone(
     status
   ) {
     case "ON_TRACK":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "AT_RISK":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "OFF_TRACK":
       return "text-destructive";
@@ -265,10 +272,10 @@ function statusSurface(
     status
   ) {
     case "ON_TRACK":
-      return "bg-emerald-500/5";
+      return "bg-success/5";
 
     case "AT_RISK":
-      return "bg-amber-500/5";
+      return "bg-warning/5";
 
     case "OFF_TRACK":
       return "bg-destructive/5";
@@ -586,7 +593,7 @@ export function ScorecardWorkspace({
             On track
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-emerald-700 dark:text-emerald-400">
+          <p className="mt-2 text-3xl font-semibold text-success">
             {
               scorecard.summary
                 .onTrack
@@ -599,7 +606,7 @@ export function ScorecardWorkspace({
             At risk
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-amber-700 dark:text-amber-400">
+          <p className="mt-2 text-3xl font-semibold text-warning">
             {
               scorecard.summary
                 .atRisk
@@ -805,8 +812,7 @@ export function ScorecardWorkspace({
                   </label>
 
                   <div className="sm:col-span-2 xl:col-span-3">
-                    <button
-                      type="submit"
+                    <PendingButton
                       className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background"
                     >
                       {
@@ -816,7 +822,7 @@ export function ScorecardWorkspace({
                           :
                             "Add KPI target"
                       }
-                    </button>
+                    </PendingButton>
                   </div>
                 </form>
               </section>
@@ -857,7 +863,7 @@ export function ScorecardWorkspace({
                   </p>
                 </div>
 
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Management scorecard">
                   <table className="w-full min-w-[1280px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -1056,39 +1062,22 @@ export function ScorecardWorkspace({
                                                     "center",
                                                 });
                                             }}
-                                            className="rounded-lg border px-3 py-2 text-xs font-medium"
+                                            className="touch-target rounded-lg border px-3 py-2 text-xs font-medium"
                                           >
                                             Edit
                                           </button>
 
-                                          <form
-                                            action={
-                                              deleteKpiTargetAction
-                                            }
+                                          <ConfirmAction
+                                            action={deleteKpiTargetAction}
+                                            fields={{ projectId, targetId: row.target.id }}
+                                            title="Delete this KPI target?"
+                                            description="The target is removed from the scorecard. The forecast and the actuals are not changed."
+                                            confirmLabel="Delete target"
+                                            triggerVariant="outline"
+                                            triggerClassName="text-destructive hover:text-destructive"
                                           >
-                                            <input
-                                              type="hidden"
-                                              name="projectId"
-                                              value={
-                                                projectId
-                                              }
-                                            />
-
-                                            <input
-                                              type="hidden"
-                                              name="targetId"
-                                              value={
-                                                row.target.id
-                                              }
-                                            />
-
-                                            <button
-                                              type="submit"
-                                              className="rounded-lg border px-3 py-2 text-xs font-medium text-destructive"
-                                            >
-                                              Delete
-                                            </button>
-                                          </form>
+                                            Delete
+                                          </ConfirmAction>
                                         </div>
                                       </td>
                                     )
@@ -1101,7 +1090,7 @@ export function ScorecardWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               </section>
             )
       }
@@ -1145,35 +1134,35 @@ export function ScorecardWorkspace({
       <section className="flex flex-wrap gap-2 rounded-xl border bg-muted/20 p-5">
         <Link
           href={`/projects/${projectId}/actuals`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Actuals
         </Link>
 
         <Link
           href={`/projects/${projectId}/forecast`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Forecast
         </Link>
 
         <Link
           href={`/projects/${projectId}/forecast-accuracy`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Forecast Accuracy
         </Link>
 
         <Link
           href={`/projects/${projectId}/risk-center`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Risk Center
         </Link>
 
         <Link
           href={`/projects/${projectId}/decision-center`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Decision Center
         </Link>

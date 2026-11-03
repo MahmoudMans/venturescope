@@ -1,3 +1,4 @@
+import { ScrollRegion } from "@/components/ui/scroll-region";
 import {
   cn,
 } from "@/lib/utils";
@@ -39,7 +40,7 @@ export function FinancialTable({
 }: FinancialTableProps) {
   return (
     <div className="overflow-hidden rounded-xl border bg-background">
-      <div className="overflow-x-auto">
+      <ScrollRegion label={caption}>
         <table className="w-max min-w-full border-collapse text-sm">
           <caption className="sr-only">
             {caption}
@@ -161,7 +162,7 @@ export function FinancialTable({
             )}
           </tbody>
         </table>
-      </div>
+      </ScrollRegion>
     </div>
   );
 }

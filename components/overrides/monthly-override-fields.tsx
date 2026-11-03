@@ -1,5 +1,6 @@
 "use client";
 
+import { FieldError } from "@/components/forms/field-error";
 import {
   Input,
 } from "@/components/ui/input";
@@ -10,6 +11,7 @@ import type {
   MonthlyOverrideValues,
   RevenueMode,
 } from "@/lib/finance/types";
+import { fieldErrorProps } from "@/lib/forms/field-errors";
 
 type MonthlyOverrideFieldsProps = {
   currency: string;
@@ -272,6 +274,7 @@ function OverrideField({
         <Input
           id={id}
           name={name}
+          {...fieldErrorProps(id, error)}
           type="number"
           min={min}
           max={max}
@@ -304,13 +307,7 @@ function OverrideField({
         }
       </p>
 
-      {error ? (
-        <p className="text-sm text-destructive">
-          {
-            error
-          }
-        </p>
-      ) : null}
+      <FieldError fieldId={id} message={error} />
     </div>
   );
 }

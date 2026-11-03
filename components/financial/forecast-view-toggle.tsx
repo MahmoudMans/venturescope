@@ -50,7 +50,7 @@ export function ForecastViewToggle({
           "monthly",
         )}
         className={cn(
-          "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+          "touch-link rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
           view ===
             "monthly"
             ? "bg-foreground text-background"
@@ -65,7 +65,7 @@ export function ForecastViewToggle({
           "annual",
         )}
         className={cn(
-          "rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+          "touch-link rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
           view ===
             "annual"
             ? "bg-foreground text-background"

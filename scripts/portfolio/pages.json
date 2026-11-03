@@ -1,0 +1,474 @@
+[
+  {
+    "slug": "landing",
+    "route": "/",
+    "title": "Landing page",
+    "group": "Public pages",
+    "caption": "The public home page: what VentureScope does and how a plan becomes a forecast, a scenario and a report.",
+    "notice": "The headline, the platform cards and the promise of a free stack with no paid APIs.",
+    "dark": true,
+    "mobile": true,
+    "full": true
+  },
+  {
+    "slug": "live-demo",
+    "route": "/demo",
+    "title": "Live demo",
+    "group": "Public pages",
+    "caption": "A read-only tour of the Orbit Analytics sample company, with Base, Bull and Bear scenarios and no sign-up.",
+    "notice": "Switch the scenario tabs and watch the charts and tables change.",
+    "dark": true,
+    "full": true
+  },
+  {
+    "slug": "help",
+    "route": "/help",
+    "title": "Help center",
+    "group": "Public pages",
+    "caption": "Answers, key terms and how the numbers work, in plain English.",
+    "notice": "The help page is open to everyone, even before sign-in."
+  },
+  {
+    "slug": "privacy",
+    "route": "/privacy",
+    "title": "Privacy notice",
+    "group": "Public pages",
+    "caption": "What VentureScope stores and why.",
+    "notice": "Short sections in plain words, with the date of the last update."
+  },
+  {
+    "slug": "terms",
+    "route": "/terms",
+    "title": "Terms",
+    "group": "Public pages",
+    "caption": "The rules for using VentureScope.",
+    "notice": "Same layout as the privacy notice, so both documents read the same way."
+  },
+  {
+    "slug": "sign-in",
+    "route": "/login",
+    "title": "Sign in",
+    "group": "Public pages",
+    "caption": "Email and password sign-in that sends you back to the page you asked for.",
+    "notice": "A show-password button, and a Forgot password link that leads to the recovery-key reset.",
+    "dark": true,
+    "mobile": true
+  },
+  {
+    "slug": "register",
+    "route": "/register",
+    "title": "Create an account",
+    "group": "Public pages",
+    "caption": "Registration with a name, an email and a password that is typed twice.",
+    "notice": "Each field shows its own clear message when something is wrong."
+  },
+  {
+    "slug": "forgot-password",
+    "route": "/forgot-password",
+    "title": "Forgot password",
+    "group": "Public pages",
+    "caption": "Password reset without any email: enter your email, your saved recovery key and a new password.",
+    "notice": "VentureScope sends no emails, so the recovery key replaces the usual reset link."
+  },
+  {
+    "slug": "not-found",
+    "route": "/dashbord",
+    "title": "Page not found",
+    "group": "Public pages",
+    "caption": "A not-found page that helps: it explains what happened and offers ways to go on.",
+    "notice": "No dead end: links and suggestions instead of an empty error.",
+    "status": 404
+  },
+  {
+    "slug": "dashboard",
+    "route": "/dashboard",
+    "title": "Dashboard",
+    "group": "App shell",
+    "caption": "The home of a signed-in person: every financial model with live portfolio numbers and a needs-attention panel.",
+    "notice": "Model cards, portfolio KPIs and attention items marked Critical, Watch or Setup.",
+    "dark": true,
+    "mobile": true,
+    "full": true
+  },
+  {
+    "slug": "command-palette",
+    "route": "/dashboard",
+    "title": "Search with Ctrl/Cmd + K",
+    "group": "App shell",
+    "caption": "Press Ctrl or Cmd + K anywhere in the app to jump to a model or a page.",
+    "notice": "Models, workspace pages and help pages in one list that works with the arrow keys and Enter.",
+    "action": "palette"
+  },
+  {
+    "slug": "mobile-menu",
+    "route": "/dashboard",
+    "title": "Mobile menu",
+    "group": "App shell",
+    "caption": "On a phone the side menu becomes a menu button, and every page stays reachable.",
+    "notice": "Workspace and account links in one drop-down menu.",
+    "mobile": true,
+    "action": "mobile-menu",
+    "desktop": false
+  },
+  {
+    "slug": "workspaces",
+    "route": "/workspaces",
+    "title": "Workspaces",
+    "group": "App shell",
+    "caption": "Teams and shared models: create a workspace, accept invitations and see the workspaces you belong to.",
+    "notice": "Owner, editor and viewer roles decide who can change what."
+  },
+  {
+    "slug": "workspace",
+    "route": "/workspaces/:workspace",
+    "title": "Workspace detail",
+    "group": "App shell",
+    "caption": "One workspace with its shared models, its collaborators and roles, invitation links and owner actions.",
+    "notice": "Invitation links are one-time links that work for 7 days."
+  },
+  {
+    "slug": "new-model",
+    "route": "/projects/new",
+    "title": "Create a model",
+    "group": "App shell",
+    "caption": "Start a model with company, industry, currency and forecast horizon, open a ready-made example, or restore a backup.",
+    "notice": "Base, Bull and Bear scenarios are created automatically."
+  },
+  {
+    "slug": "profile",
+    "route": "/account/profile",
+    "title": "Profile",
+    "group": "App shell",
+    "caption": "Your display name and account details, and the button to download all of your data.",
+    "notice": "Download my data returns one ZIP file with your models as JSON and CSV."
+  },
+  {
+    "slug": "security",
+    "route": "/account/security",
+    "title": "Account security",
+    "group": "App shell",
+    "caption": "Email, password, recovery key, active sessions and account deletion in one place.",
+    "notice": "A security check-up card gives three plain facts about the account."
+  },
+  {
+    "slug": "overview",
+    "route": "/projects/:project/overview",
+    "title": "Model overview",
+    "group": "Model inputs",
+    "caption": "The overview of one model: key numbers and charts calculated from the assumptions.",
+    "notice": "The header shows currency, horizon, number of scenarios and revenue mode on every model page.",
+    "dark": true,
+    "mobile": true,
+    "full": true
+  },
+  {
+    "slug": "assumptions",
+    "route": "/projects/:project/assumptions",
+    "title": "Assumptions",
+    "group": "Model inputs",
+    "caption": "Starting cash, tax rate, cost of goods sold and operating costs. They drive every forecast.",
+    "notice": "One source of numbers: forecast, scenarios and reports all read these assumptions."
+  },
+  {
+    "slug": "revenue",
+    "route": "/projects/:project/revenue",
+    "title": "Revenue assumptions",
+    "group": "Model inputs",
+    "caption": "How the business earns money: customers, price per customer, churn, acquisition cost and organic sign-ups.",
+    "notice": "Fields accept numbers pasted from a spreadsheet."
+  },
+  {
+    "slug": "expenses",
+    "route": "/projects/:project/expenses",
+    "title": "Expense assumptions",
+    "group": "Model inputs",
+    "caption": "Payroll, rent, marketing, cost of goods sold and other recurring operating expenses.",
+    "notice": "Each cost is set on its own, so the forecast shows what drives the burn."
+  },
+  {
+    "slug": "financing",
+    "route": "/projects/:project/financing",
+    "title": "Financing",
+    "group": "Model inputs",
+    "caption": "Equity rounds, debt, grants and other financing events. Financing changes cash flow, never operating revenue.",
+    "notice": "Financing events appear in the cash-flow forecast and the runway."
+  },
+  {
+    "slug": "timeline",
+    "route": "/projects/:project/timeline",
+    "title": "Planning timeline",
+    "group": "Model inputs",
+    "caption": "One-off monthly changes (overrides) without touching the long-term baseline.",
+    "notice": "Global overrides apply first, and scenario overrides take precedence."
+  },
+  {
+    "slug": "forecast",
+    "route": "/projects/:project/forecast",
+    "title": "Financial forecast",
+    "group": "Forecast and analysis",
+    "caption": "Monthly and annual forecasts generated from the assumptions by one deterministic engine.",
+    "notice": "P&L, cash flow and reports read the same forecast, so the numbers always agree.",
+    "dark": true,
+    "mobile": true,
+    "full": true
+  },
+  {
+    "slug": "pnl",
+    "route": "/projects/:project/pnl",
+    "title": "Profit and loss",
+    "group": "Forecast and analysis",
+    "caption": "Revenue, gross profit, operating expenses, EBITDA and net income.",
+    "notice": "A table you can scroll sideways with the keyboard on a small screen."
+  },
+  {
+    "slug": "cash-flow",
+    "route": "/projects/:project/cash-flow",
+    "title": "Cash flow",
+    "group": "Forecast and analysis",
+    "caption": "A simplified cash-flow forecast: operating cash flow, financing, debt repayment, burn and runway.",
+    "notice": "Runway shows how many months the cash lasts."
+  },
+  {
+    "slug": "customers",
+    "route": "/projects/:project/customers",
+    "title": "Customer analytics",
+    "group": "Forecast and analysis",
+    "caption": "Acquisition, churn, active customers, price per customer and monthly recurring revenue.",
+    "notice": "The customer engine moves every month with acquisition and churn."
+  },
+  {
+    "slug": "scenarios",
+    "route": "/projects/:project/scenarios",
+    "title": "Scenario analysis",
+    "group": "Forecast and analysis",
+    "caption": "Stress-test the model with Base, Bull, Bear and custom scenarios.",
+    "notice": "Each scenario runs through the same engine. Only its modifiers differ."
+  },
+  {
+    "slug": "scenario-comparison",
+    "route": "/projects/:project/scenario-comparison",
+    "title": "Scenario comparison",
+    "group": "Forecast and analysis",
+    "caption": "Compare scenarios side by side and see which drivers differ and how far each one is from the reference.",
+    "notice": "Pick any scenario as the reference.",
+    "full": true
+  },
+  {
+    "slug": "sensitivity-lab",
+    "route": "/projects/:project/sensitivity-lab",
+    "title": "Sensitivity lab",
+    "group": "Forecast and analysis",
+    "caption": "Explore combinations of revenue downside and cost inflation and what they do to liquidity and the cash floor.",
+    "notice": "Revenue downside and cost inflation are changed together, not one at a time.",
+    "full": true
+  },
+  {
+    "slug": "analytics",
+    "route": "/projects/:project/analytics",
+    "title": "Advanced analytics",
+    "group": "Forecast and analysis",
+    "caption": "Valuation, operating efficiency, unit economics, cash-generation quality and DCF sensitivity.",
+    "notice": "All figures come from the current forecast.",
+    "full": true
+  },
+  {
+    "slug": "actuals",
+    "route": "/projects/:project/actuals",
+    "title": "Actuals vs forecast",
+    "group": "Actuals and control",
+    "caption": "Actual monthly results against the plan, with favorable and unfavorable variances.",
+    "notice": "The demo has nine months of results, and the newest month has just ended.",
+    "dark": true,
+    "full": true
+  },
+  {
+    "slug": "forecast-accuracy",
+    "route": "/projects/:project/forecast-accuracy",
+    "title": "Forecast accuracy",
+    "group": "Actuals and control",
+    "caption": "How closely the plan tracked reality, whether the forecast is biased, and whether it is getting better.",
+    "notice": "Bias shows if the plan is too low or too high month after month."
+  },
+  {
+    "slug": "variance-review",
+    "route": "/projects/:project/variance-review",
+    "title": "Variance review",
+    "group": "Actuals and control",
+    "caption": "Explain why actuals differed from the forecast, classify root causes and track corrective actions.",
+    "notice": "Commentary is linked to the month it explains."
+  },
+  {
+    "slug": "scorecard",
+    "route": "/projects/:project/scorecard",
+    "title": "KPI scorecard",
+    "group": "Actuals and control",
+    "caption": "KPI targets compared with actuals, the live forecast, runway and past forecast accuracy.",
+    "notice": "Targets are goals set by management, not forecasts.",
+    "full": true
+  },
+  {
+    "slug": "period-close",
+    "route": "/projects/:project/period-close",
+    "title": "Financial close",
+    "group": "Actuals and control",
+    "caption": "Lock finished months so numbers cannot change silently, and keep a record of every close and reopen.",
+    "notice": "The demo closes the first six months and reopens one with an approval."
+  },
+  {
+    "slug": "imports",
+    "route": "/projects/:project/imports",
+    "title": "Data import center",
+    "group": "Actuals and control",
+    "caption": "Preview, validate and apply CSV files for actuals, KPI targets and variance comments, with an import history.",
+    "notice": "A file is checked before anything is written, and the history shows what was loaded."
+  },
+  {
+    "slug": "planning-cycle",
+    "route": "/projects/:project/planning-cycle",
+    "title": "Planning cycle",
+    "group": "Planning and risk",
+    "caption": "Freeze approved plans as baselines, compare them with the live forecast and build a rolling outlook from actuals.",
+    "notice": "The demo has two baselines: the original budget and the forecast after the price change.",
+    "full": true
+  },
+  {
+    "slug": "risk-center",
+    "route": "/projects/:project/risk-center",
+    "title": "Liquidity risk center",
+    "group": "Planning and risk",
+    "caption": "Cash guardrails, runway, monthly burn, EBITDA resilience and downside liquidity.",
+    "notice": "Rules set by the company turn the numbers into clear warnings.",
+    "dark": true,
+    "mobile": true,
+    "full": true
+  },
+  {
+    "slug": "capital-planning",
+    "route": "/projects/:project/capital-planning",
+    "title": "Capital planning",
+    "group": "Planning and risk",
+    "caption": "The size of the funding gap, and what equity, debt or a mix would do to cash, dilution and debt service.",
+    "notice": "Three funding structures are compared on the same page.",
+    "full": true
+  },
+  {
+    "slug": "decision-center",
+    "route": "/projects/:project/decision-center",
+    "title": "Decision center",
+    "group": "Planning and risk",
+    "caption": "Turn financial exceptions into prioritized decisions with owners, due dates and statuses.",
+    "notice": "The demo has decisions in several statuses, such as open, in progress and blocked."
+  },
+  {
+    "slug": "templates",
+    "route": "/projects/:project/templates",
+    "title": "Planning templates",
+    "group": "Planning and risk",
+    "caption": "Industry reference models to compare assumptions, KPIs and risks for common business types.",
+    "notice": "A starting point for a planning talk, not a prediction."
+  },
+  {
+    "slug": "approvals",
+    "route": "/projects/:project/approvals",
+    "title": "Approval center",
+    "group": "Governance",
+    "caption": "Formal approval of important decisions, with separate requester and approver and a recorded reason.",
+    "notice": "The demo has requests that are approved, rejected and still waiting.",
+    "mobile": true
+  },
+  {
+    "slug": "activity",
+    "route": "/projects/:project/activity",
+    "title": "Activity center",
+    "group": "Governance",
+    "caption": "An unchangeable audit trail of closes, decisions, targets, comments and reviews.",
+    "notice": "Events are spread over the whole story, because each one is written on its own day.",
+    "dark": true,
+    "full": true
+  },
+  {
+    "slug": "versions",
+    "route": "/projects/:project/versions",
+    "title": "Version history",
+    "group": "Governance",
+    "caption": "Save checkpoints and restore an earlier model without rewriting history.",
+    "notice": "The demo has three saved versions: Seed plan, Pricing update and Retention programme."
+  },
+  {
+    "slug": "version-diff",
+    "route": "/projects/:project/version-diff",
+    "title": "Model diff",
+    "group": "Governance",
+    "caption": "Compare two saved versions and see exactly what changed: assumptions, scenarios, financing or settings.",
+    "notice": "The result tells which part of the model changed."
+  },
+  {
+    "slug": "board-room",
+    "route": "/projects/:project/board-room",
+    "title": "Board room",
+    "group": "Governance",
+    "caption": "Run executive reviews, freeze a snapshot of the numbers and compare it later with the live model.",
+    "notice": "The demo has a frozen board review of the latest month.",
+    "dark": true,
+    "full": true
+  },
+  {
+    "slug": "board-pack",
+    "route": "/projects/:project/board-pack",
+    "title": "Board pack",
+    "group": "Governance",
+    "caption": "A board-ready report package that can be printed or saved as a PDF.",
+    "notice": "The page is built for print, so the menus disappear on paper.",
+    "full": true
+  },
+  {
+    "slug": "alerts",
+    "route": "/projects/:project/alerts",
+    "title": "Alert inbox",
+    "group": "Governance",
+    "caption": "Current management exceptions about liquidity, funding, KPIs, close and governance in one list.",
+    "notice": "The inbox collects signals from other pages and does not repeat their calculations."
+  },
+  {
+    "slug": "portfolio",
+    "route": "/projects/:project/portfolio",
+    "title": "Portfolio dashboard",
+    "group": "Portfolio and output",
+    "caption": "Compare the models you can access, see where attention is needed and the liquidity by currency.",
+    "notice": "Every row opens the decision or reporting page of that model.",
+    "full": true
+  },
+  {
+    "slug": "consolidation",
+    "route": "/projects/:project/consolidation",
+    "title": "Consolidation center",
+    "group": "Portfolio and output",
+    "caption": "Convert and add up the models of a workspace in one reporting currency, with dated exchange rates entered by hand.",
+    "notice": "Missing rates are shown clearly, never guessed."
+  },
+  {
+    "slug": "reports",
+    "route": "/projects/:project/reports",
+    "title": "Executive report",
+    "group": "Portfolio and output",
+    "caption": "A report with CSV and PDF export, made without any paid service.",
+    "notice": "Sample exports are saved in the exports folder of the portfolio.",
+    "full": true
+  },
+  {
+    "slug": "release-readiness",
+    "route": "/projects/:project/release-readiness",
+    "title": "Release readiness",
+    "group": "Portfolio and output",
+    "caption": "A read-only page with the capability map, governance controls and the expectations for a production release.",
+    "notice": "It shows what the product can do and how it is controlled, in one place."
+  },
+  {
+    "slug": "settings",
+    "route": "/projects/:project/settings",
+    "title": "Model settings",
+    "group": "Portfolio and output",
+    "caption": "Model details, structure settings and explicit operations such as sharing, copying and deleting.",
+    "notice": "Dangerous actions ask for confirmation."
+  }
+]

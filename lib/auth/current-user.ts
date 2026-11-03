@@ -7,6 +7,10 @@ import {
 } from "@/auth";
 
 import {
+  loginAddressForRequest,
+} from "@/lib/auth/request-path";
+
+import {
   prisma,
 } from "@/lib/db/prisma";
 
@@ -62,7 +66,7 @@ export async function requireCurrentUserIdentity(): Promise<
     !email
   ) {
     redirect(
-      "/login",
+      await loginAddressForRequest(),
     );
   }
 
@@ -87,7 +91,7 @@ export async function requireCurrentUserIdentity(): Promise<
     !user
   ) {
     redirect(
-      "/login",
+      await loginAddressForRequest(),
     );
   }
 

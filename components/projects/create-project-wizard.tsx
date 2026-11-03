@@ -18,6 +18,8 @@ import {
 import {
   createProjectAction,
 } from "@/app/(app)/projects/actions";
+import { FieldError } from "@/components/forms/field-error";
+import { useFormErrorRecovery } from "@/components/forms/use-form-error-recovery";
 import {
   CreateProjectSubmitButton,
 } from "@/components/projects/create-project-submit-button";
@@ -41,6 +43,7 @@ import {
 import {
   Label,
 } from "@/components/ui/label";
+import { fieldErrorId, fieldErrorProps } from "@/lib/forms/field-errors";
 import {
   initialCreateProjectState,
 } from "@/lib/projects/action-state";
@@ -50,6 +53,7 @@ import {
   REVENUE_MODE_OPTIONS,
   type RevenueModeValue,
 } from "@/lib/projects/project-options";
+import { errorsBelongToStepOne } from "@/lib/projects/wizard-step";
 import {
   cn,
 } from "@/lib/utils";
@@ -114,6 +118,36 @@ export function CreateProjectWizard({
     createProjectAction,
     initialCreateProjectState,
   );
+
+  const formRef =
+    useFormErrorRecovery(
+      state.errors,
+    );
+
+  const [
+    seenErrors,
+    setSeenErrors,
+  ] = useState(
+    state.errors,
+  );
+
+  if (
+    state.errors !==
+    seenErrors
+  ) {
+    setSeenErrors(
+      state.errors,
+    );
+
+    if (
+      errorsBelongToStepOne(
+        state.errors,
+      )
+    ) {
+      setStep(1);
+    }
+  }
+
 function continueToRevenue() {
     setLocalError(
       undefined,
@@ -146,6 +180,7 @@ function continueToRevenue() {
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="space-y-6"
     >
@@ -249,6 +284,7 @@ function continueToRevenue() {
 
                   <Input
                     id="project-name"
+                    {...fieldErrorProps("project-name", state.errors?.name?.[0])}
                     value={name}
                     onChange={(
                       event,
@@ -267,16 +303,7 @@ function continueToRevenue() {
                     autoFocus
                   />
 
-                  {state.errors
-                    ?.name?.[0] ? (
-                    <p className="text-sm text-destructive">
-                      {
-                        state
-                          .errors
-                          .name[0]
-                      }
-                    </p>
-                  ) : null}
+                  <FieldError fieldId="project-name" message={state.errors?.name?.[0]} />
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
@@ -289,6 +316,7 @@ function continueToRevenue() {
 
                   <Input
                     id="project-industry"
+                    {...fieldErrorProps("project-industry", state.errors?.industry?.[0])}
                     value={industry}
                     onChange={(
                       event,
@@ -302,16 +330,7 @@ function continueToRevenue() {
                     placeholder="B2B SaaS"
                   />
 
-                  {state.errors
-                    ?.industry?.[0] ? (
-                    <p className="text-sm text-destructive">
-                      {
-                        state
-                          .errors
-                          .industry[0]
-                      }
-                    </p>
-                  ) : null}
+                  <FieldError fieldId="project-industry" message={state.errors?.industry?.[0]} />
                 </div>
 
                 <div className="space-y-2">
@@ -321,6 +340,7 @@ function continueToRevenue() {
 
                   <select
                     id="project-currency"
+                    {...fieldErrorProps("project-currency", state.errors?.currency?.[0])}
                     value={currency}
                     onChange={(
                       event,
@@ -359,16 +379,7 @@ function continueToRevenue() {
                     )}
                   </select>
 
-                  {state.errors
-                    ?.currency?.[0] ? (
-                    <p className="text-sm text-destructive">
-                      {
-                        state
-                          .errors
-                          .currency[0]
-                      }
-                    </p>
-                  ) : null}
+                  <FieldError fieldId="project-currency" message={state.errors?.currency?.[0]} />
                 </div>
 
                 <div className="space-y-2">
@@ -378,6 +389,7 @@ function continueToRevenue() {
 
                   <Input
                     id="project-start-month"
+                    {...fieldErrorProps("project-start-month", state.errors?.startMonth?.[0])}
                     type="month"
                     value={startMonth}
                     onChange={(
@@ -391,22 +403,13 @@ function continueToRevenue() {
                     }
                   />
 
-                  {state.errors
-                    ?.startMonth?.[0] ? (
-                    <p className="text-sm text-destructive">
-                      {
-                        state
-                          .errors
-                          .startMonth[0]
-                      }
-                    </p>
-                  ) : null}
+                  <FieldError fieldId="project-start-month" message={state.errors?.startMonth?.[0]} />
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <Label>
+                  <Label id="project-horizon-label">
                     Forecast horizon
                   </Label>
 
@@ -415,7 +418,16 @@ function continueToRevenue() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                <div
+                  role="group"
+                  aria-labelledby="project-horizon-label"
+                  aria-describedby={
+                    state.errors?.horizonMonths?.[0]
+                      ? fieldErrorId("project-horizon")
+                      : undefined
+                  }
+                  className="grid grid-cols-2 gap-2 sm:grid-cols-5"
+                >
                   {PROJECT_HORIZONS.map(
                     (
                       horizon,
@@ -432,6 +444,9 @@ function continueToRevenue() {
                             horizon
                           }
                           type="button"
+                          aria-pressed={
+                            active
+                          }
                           onClick={() =>
                             setHorizonMonths(
                               String(
@@ -468,16 +483,7 @@ function continueToRevenue() {
                   )}
                 </div>
 
-                {state.errors
-                  ?.horizonMonths?.[0] ? (
-                  <p className="text-sm text-destructive">
-                    {
-                      state
-                        .errors
-                        .horizonMonths[0]
-                    }
-                  </p>
-                ) : null}
+                <FieldError fieldId="project-horizon" message={state.errors?.horizonMonths?.[0]} />
               </div>
 
               <div className="grid gap-3 rounded-xl border bg-muted/30 p-4 text-sm sm:grid-cols-3">
@@ -562,7 +568,16 @@ function continueToRevenue() {
                 </div>
               ) : null}
 
-              <div className="grid gap-4 lg:grid-cols-2">
+              <div
+                role="group"
+                aria-label="Revenue model"
+                aria-describedby={
+                  state.errors?.revenueMode?.[0]
+                    ? fieldErrorId("project-revenue-mode")
+                    : undefined
+                }
+                className="grid gap-4 lg:grid-cols-2"
+              >
                 {REVENUE_MODE_OPTIONS.map(
                   (
                     option,
@@ -647,16 +662,7 @@ function continueToRevenue() {
                 )}
               </div>
 
-              {state.errors
-                ?.revenueMode?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {
-                    state
-                      .errors
-                      .revenueMode[0]
-                  }
-                </p>
-              ) : null}
+              <FieldError fieldId="project-revenue-mode" message={state.errors?.revenueMode?.[0]} />
 
               <div className="rounded-xl border bg-muted/30 p-5">
                 <div className="text-sm font-medium">

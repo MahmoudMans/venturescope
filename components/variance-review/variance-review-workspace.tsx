@@ -2,11 +2,18 @@
 
 import Link from "next/link";
 
+import { ScrollRegion } from "@/components/ui/scroll-region";
+import { ConfirmAction } from "@/components/workspaces/confirm-action";
+
 import {
   useEffect,
   useMemo,
   useState,
 } from "react";
+
+import {
+  PendingButton,
+} from "@/components/forms/pending-button";
 
 import {
   normalizeForecastCsv,
@@ -203,7 +210,7 @@ function favorabilityTone(
     value
   ) {
     case "FAVORABLE":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "UNFAVORABLE":
       return "text-destructive";
@@ -226,7 +233,7 @@ function materialityTone(
       return "text-destructive";
 
     case "REVIEW":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "IMMATERIAL":
     case "UNAVAILABLE":
@@ -243,16 +250,16 @@ function commentaryStatusTone(
     status
   ) {
     case "RESOLVED":
-      return "text-emerald-700 dark:text-emerald-400";
+      return "text-success";
 
     case "MONITORING":
-      return "text-amber-700 dark:text-amber-400";
+      return "text-warning";
 
     case "OPEN":
       return "text-destructive";
 
     case "ACCEPTED":
-      return "text-blue-700 dark:text-blue-400";
+      return "text-info";
 
     default:
       return "text-muted-foreground";
@@ -622,7 +629,7 @@ export function VarianceReviewWorkspace({
               ?
                 "text-destructive"
               :
-                "text-emerald-700 dark:text-emerald-400"
+                "text-success"
           }`}>
             {
               review.summary
@@ -667,7 +674,7 @@ export function VarianceReviewWorkspace({
             Resolved
           </p>
 
-          <p className="mt-2 text-3xl font-semibold text-emerald-700 dark:text-emerald-400">
+          <p className="mt-2 text-3xl font-semibold text-success">
             {
               review.summary
                 .resolvedCommentaries
@@ -822,7 +829,7 @@ export function VarianceReviewWorkspace({
               )
             :
               (
-                <div className="overflow-x-auto">
+                <ScrollRegion label="Monthly variance register">
                   <table className="w-full min-w-[1500px] text-sm">
                     <thead>
                       <tr className="border-b bg-muted/30">
@@ -1051,7 +1058,7 @@ export function VarianceReviewWorkspace({
                                                   "start",
                                               });
                                           }}
-                                          className="rounded-lg border px-3 py-2 text-xs font-medium"
+                                          className="touch-target rounded-lg border px-3 py-2 text-xs font-medium"
                                         >
                                           {
                                             row.commentary
@@ -1072,7 +1079,7 @@ export function VarianceReviewWorkspace({
                       }
                     </tbody>
                   </table>
-                </div>
+                </ScrollRegion>
               )
         }
       </section>
@@ -1084,7 +1091,7 @@ export function VarianceReviewWorkspace({
             (
               <section
                 id="variance-commentary-editor"
-                className="scroll-mt-8 rounded-xl border bg-background p-5 sm:p-6"
+                className="rounded-xl border bg-background p-5 sm:p-6"
               >
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
                   <div>
@@ -1130,7 +1137,7 @@ export function VarianceReviewWorkspace({
                         null,
                       );
                     }}
-                    className="rounded-lg border px-3 py-2 text-sm"
+                    className="touch-target rounded-lg border px-3 py-2 text-sm"
                   >
                     Close
                   </button>
@@ -1366,12 +1373,11 @@ export function VarianceReviewWorkspace({
                   </label>
 
                   <div className="flex items-end">
-                    <button
-                      type="submit"
+                    <PendingButton
                       className="h-10 rounded-lg bg-foreground px-4 text-sm font-medium text-background"
                     >
                       Save explanation
-                    </button>
+                    </PendingButton>
                   </div>
                 </form>
 
@@ -1379,35 +1385,19 @@ export function VarianceReviewWorkspace({
                   selectedRow.commentary
                     ?
                       (
-                        <form
-                          action={
-                            deleteVarianceCommentaryAction
-                          }
-                          className="mt-4"
-                        >
-                          <input
-                            type="hidden"
-                            name="projectId"
-                            value={
-                              projectId
-                            }
-                          />
-
-                          <input
-                            type="hidden"
-                            name="commentaryId"
-                            value={
-                              selectedRow.commentary.id
-                            }
-                          />
-
-                          <button
-                            type="submit"
-                            className="rounded-lg border px-3 py-2 text-sm font-medium text-destructive"
+                        <div className="mt-4">
+                          <ConfirmAction
+                            action={deleteVarianceCommentaryAction}
+                            fields={{ projectId, commentaryId: selectedRow.commentary.id }}
+                            title="Delete this explanation?"
+                            description="The written explanation for this row is removed. The forecast and the actuals are not changed."
+                            confirmLabel="Delete explanation"
+                            triggerVariant="outline"
+                            triggerClassName="text-destructive hover:text-destructive"
                           >
                             Delete explanation
-                          </button>
-                        </form>
+                          </ConfirmAction>
+                        </div>
                       )
                     :
                       null
@@ -1433,35 +1423,35 @@ export function VarianceReviewWorkspace({
       <section className="flex flex-wrap gap-2 rounded-xl border bg-muted/20 p-5">
         <Link
           href={`/projects/${projectId}/actuals`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Actuals
         </Link>
 
         <Link
           href={`/projects/${projectId}/forecast-accuracy`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Forecast Accuracy
         </Link>
 
         <Link
           href={`/projects/${projectId}/scorecard`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Scorecard
         </Link>
 
         <Link
           href={`/projects/${projectId}/decision-center`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Decision Center
         </Link>
 
         <Link
           href={`/projects/${projectId}/board-room`}
-          className="rounded-lg border px-3 py-2 text-sm font-medium"
+          className="touch-link rounded-lg border px-3 py-2 text-sm font-medium"
         >
           Board Room
         </Link>
